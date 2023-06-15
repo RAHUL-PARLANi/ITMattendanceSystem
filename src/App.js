@@ -1,12 +1,17 @@
-import './App.css';
-import FingerprintScanner from './Components/fingerprintScanner';
+import React from 'react';
+import EnrollmentComponent from './Components/enrolmentcomponent';
+import VerificationComponent from './Components/VerificationComponent';
 
-function App() {
+const App = () => {
+  const enrolledStudents = [];
+
   return (
-    <div className="App">
-      <FingerprintScanner/>
+    <div>
+      <h1>Biometric Student Management</h1>
+      <EnrollmentComponent />
+      <VerificationComponent enrolledStudents={enrolledStudents} />
     </div>
   );
-}
+};
 
 export default App;
