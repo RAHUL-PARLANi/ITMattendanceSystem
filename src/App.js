@@ -9,7 +9,7 @@ const App = () => {
     <div>
       <h1>Biometric Student Management</h1>
       <EnrollmentComponent />
-      <VerificationComponent enrolledStudents={enrolledStudents} />
+      {/* <VerificationComponent enrolledStudents={enrolledStudents} /> */}
     </div>
   );
 };
