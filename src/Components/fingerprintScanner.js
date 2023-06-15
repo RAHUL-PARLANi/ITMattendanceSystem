@@ -1,36 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Fingerprint2 from 'fingerprintjs2';
 
-const FingerprintAuth = () => {
-  const handleFingerprintAuth = async () => {
-    try {
-      const credential = await navigator.credentials.get({
-        publicKey: {
-          timeout: 5000,
-        },
+const FingerprintScanner = () => {
+  const [credentialId, setCredentialId] = useState('');
+
+  useEffect(() => {
+    const scanFingerprint = async () => {
+      const fingerprint = await new Promise((resolve) => {
+        new Fingerprint2().get((result) => {
+          resolve(result);
+        });
       });
 
-      // Fingerprint authentication succeeded
-      // Process the credential or trigger further actions
+      const components = fingerprint.map((component) => component.value);
+      const credentialId = components.join('');
+      setCredentialId(credentialId);
+    };
 
-      // Example: Trigger a login function
-      loginWithFingerprint(credential);
-    } catch (error) {
-      // Fingerprint authentication failed
-      // Handle the error or show a message to the user
-    }
-  };
-
-  const loginWithFingerprint = (credential) => {
-    // Send the credential to the server for verification
-    // Perform any necessary authentication logic
-    console.log(credential)
-  };
+    scanFingerprint();
+  }, []);
 
   return (
-    <button onClick={handleFingerprintAuth}>
-      Authenticate with Fingerprint
-    </button>
+    <div>
+      <p>Place your finger on the scanner.</p>
+      <p>Credential ID: {credentialId}</p>
+    </div>
   );
 };
 
-export default FingerprintAuth;
+export default FingerprintScanner;
