@@ -28,7 +28,7 @@ const FingerprintScanner = () => {
       });
 
       console.log('Registered credentials:', publicKey);
-      setOutput(publicKey);
+      setOutput(JSON.stringify(publicKey));
       setIsRegistered(true);
     } catch (error) {
       console.error('Registration error:', error);
