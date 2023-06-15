@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const FingerprintScanner = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [output,setOutput]=useState('');
   const handleRegister = async () => {
     try {
       const publicKey = await navigator.credentials.create({
@@ -14,7 +14,7 @@ const FingerprintScanner = () => {
           attestation: 'direct',
           challenge: new Uint8Array(16), // Generate a random challenge
           rp: {
-            name: 'Your Web App Name',
+            name: 'ITM',
           },
           user: {
             id: new Uint8Array(16), // Generate a random user ID
@@ -28,6 +28,7 @@ const FingerprintScanner = () => {
       });
 
       console.log('Registered credentials:', publicKey);
+      setOutput(publicKey);
       setIsRegistered(true);
     } catch (error) {
       console.error('Registration error:', error);
@@ -61,6 +62,7 @@ const FingerprintScanner = () => {
         <button onClick={handleRegister}>Register Fingerprint</button>
       )}
       {errorMessage && <p>{errorMessage}</p>}
+      {output && <p>{output}</p>}
     </div>
   );
 };
