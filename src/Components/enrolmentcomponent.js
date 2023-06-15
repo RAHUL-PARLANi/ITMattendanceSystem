@@ -1,32 +1,45 @@
 import React, { useState } from 'react';
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import { create } from '@github/webauthn-json';
 
-const EnrollmentComponent = () => {
-  const [enrolledStudents, setEnrolledStudents] = useState([]);
+const FingerprintAuthenticator = () => {
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const enrollStudent = async () => {
-    const fp = await FingerprintJS.load();
-    const result = await fp.get();
+  const handleEnroll = async () => {
+    try {
+      const authenticator = create();
+      const credential = await authenticator.register();
+      // Send the credential to the server for storage
+      alert(credential);
+      setIsEnrolled(true);
+    } catch (error) {
+      console.error('Enrollment error:', error);
+    }
+  };
 
-    const enrolledStudent = {
-      studentId: 'sd',
-      fingerprintData: result.visitorId, // Store the fingerprint data provided by FingerprintJS
-    };
-
-    setEnrolledStudents([...enrolledStudents, enrolledStudent]);
+  const handleAuthenticate = async () => {
+    try {
+      const authenticator = create();
+      const assertion = await authenticator.authenticate();
+      // Send the assertion to the server for verification
+      console.log(assertion);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Authentication error:', error);
+    }
   };
 
   return (
     <div>
-      <h2>Enrollment</h2>
-      <button onClick={enrollStudent}>Enroll Student</button>
-      <ul>
-        {enrolledStudents.map((student) => (
-          <li key={student.studentId}>{student.studentId}</li>
-        ))}
-      </ul>
+      {!isEnrolled && (
+        <button onClick={handleEnroll}>Enroll fingerprint</button>
+      )}
+      {isEnrolled && !isAuthenticated && (
+        <button onClick={handleAuthenticate}>Authenticate fingerprint</button>
+      )}
+      {isAuthenticated && <p>User authenticated!</p>}
     </div>
   );
 };
 
-export default EnrollmentComponent;
+export default FingerprintAuthenticator
