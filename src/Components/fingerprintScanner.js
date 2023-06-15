@@ -1,29 +1,66 @@
-import React, { useEffect, useState } from 'react';
-import Fingerprint2 from 'fingerprintjs2';
+import React, { useState } from 'react';
 
 const FingerprintScanner = () => {
-  const [credentialId, setCredentialId] = useState('');
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    const scanFingerprint = async () => {
-      const fingerprint = await new Promise((resolve) => {
-        new Fingerprint2().get((result) => {
-          resolve(result);
-        });
+  const handleRegister = async () => {
+    try {
+      const publicKey = await navigator.credentials.create({
+        publicKey: {
+          authenticatorSelection: {
+            authenticatorAttachment: 'platform',
+          },
+          attestation: 'direct',
+          challenge: new Uint8Array(16), // Generate a random challenge
+          rp: {
+            name: 'Your Web App Name',
+          },
+          user: {
+            id: new Uint8Array(16), // Generate a random user ID
+            name: 'User Name',
+            displayName: 'User Display Name',
+          },
+          pubKeyCredParams: [
+            { type: 'public-key', alg: -7 }, // ES256 algorithm
+          ],
+        },
       });
 
-      const components = fingerprint.map((component) => component.value);
-      const credentialId = components.join('');
-      setCredentialId(credentialId);
-    };
+      console.log('Registered credentials:', publicKey);
+      setIsRegistered(true);
+    } catch (error) {
+      console.error('Registration error:', error);
+      setErrorMessage('Registration failed. Please try again.');
+    }
+  };
 
-    scanFingerprint();
-  }, []);
+  const handleAuthenticate = async () => {
+    try {
+      const assertion = await navigator.credentials.get({
+        publicKey: {
+          challenge: new Uint8Array(16), // Generate a random challenge
+          allowCredentials: [], // Retrieve allowed credentials from the server
+          userVerification: 'required',
+        },
+      });
+
+      console.log('Authentication assertion:', assertion);
+      // Process the authentication response from the server
+    } catch (error) {
+      console.error('Authentication error:', error);
+      setErrorMessage('Authentication failed. Please try again.');
+    }
+  };
 
   return (
     <div>
-      <p>Place your finger on the scanner.</p>
-      <p>Credential ID: {credentialId}</p>
+      {isRegistered ? (
+        <button onClick={handleAuthenticate}>Authenticate with Fingerprint</button>
+      ) : (
+        <button onClick={handleRegister}>Register Fingerprint</button>
+      )}
+      {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 };
