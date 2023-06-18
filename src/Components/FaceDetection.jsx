@@ -8,7 +8,6 @@ function App() {
   const [captureVideo, setCaptureVideo] = React.useState(false);
 
   const videoRef = React.useRef();
-  
   const videoHeight = 480;
   const videoWidth = 640;
   const canvasRef = React.useRef();
@@ -52,7 +51,7 @@ function App() {
 
         faceapi.matchDimensions(canvasRef.current, displaySize);
 
-        const detections = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions().withAgeAndGender();
+        const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
 
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
@@ -60,7 +59,6 @@ function App() {
         canvasRef && canvasRef.current && faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
-        //canvasRef && canvasRef.current && faceapi.draw.drawAgeAndGender(canvasRef.current, resizedDetections);
       }
     }, 100)
   }
