@@ -1,16 +1,13 @@
 import React from 'react';
-import EnrollmentComponent from './Components/enrolmentcomponent';
-import VerificationComponent from './Components/VerificationComponent';
+import FaceDetectionComponent from './Components/FaceDetection';
 
 const App = () => {
-  const enrolledStudents = [];
-
+ 
   return (
     <div>
-      <h1>Biometric Student Management</h1>
-      <EnrollmentComponent />
-      {/* <VerificationComponent enrolledStudents={enrolledStudents} /> */}
-    </div>
+      <h1>Student Management</h1>
+       <FaceDetectionComponent/>
+      </div>
   );
 };
 
