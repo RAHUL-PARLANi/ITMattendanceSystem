@@ -48,13 +48,14 @@ function App() {
           width: videoWidth,
           height: videoHeight
         }
-
+        
         faceapi.matchDimensions(canvasRef.current, displaySize);
 
         const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
-
+        console.log(videoRef.current)
+        console.log(detections)
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
-
+        console.log(resizedDetections)
         canvasRef && canvasRef.current && canvasRef.current.getContext('2d').clearRect(0, 0, videoWidth, videoHeight);
         canvasRef && canvasRef.current && faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
