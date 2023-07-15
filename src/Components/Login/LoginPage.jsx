@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../features/user";
-import useAxiosInstance from "../../axios";
+import useAxiosInstance from "../../axiosInstance";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);

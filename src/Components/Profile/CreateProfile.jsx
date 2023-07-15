@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useAxiosInstance from "../../axios";
+import useAxiosInstance from "../../axiosInstance";
 import { login } from "../../features/user";
 
 const CreateProfile = () => {

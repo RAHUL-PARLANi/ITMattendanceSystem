@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import useAxiosInstance from "../../axios";
+import useAxiosInstance from "../../axiosInstance";
 
 const EditProfile = () => {
   const axiosInstance = useAxiosInstance();

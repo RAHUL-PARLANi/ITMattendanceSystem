@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useAxiosInstance from "../../axios";
+import useAxiosInstance from "../../axiosInstance";
 import { Link } from "react-router-dom";
 
 const ShowBatches = () => {

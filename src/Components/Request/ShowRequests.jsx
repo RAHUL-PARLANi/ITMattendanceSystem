@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useAxiosInstance from "../../axios";
+import useAxiosInstance from "../../axiosInstance";
 import $ from "jquery";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
