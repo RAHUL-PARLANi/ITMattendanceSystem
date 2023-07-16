@@ -22,6 +22,7 @@ import ShowAttendanceSheet from './Components/AttendanceSheet/ShowAttendanceShee
 import CreateAttendanceSheet from './Components/AttendanceSheet/createAttendanceSheet';
 import ShowAllAttendanceSheets from './Components/AttendanceSheet/showAllAttendanceSheets';
 import EditAttendanceSheet from './Components/AttendanceSheet/editAttendanceSheet';
+import FaceDetection from './Components/FaceDetection/FaceDetection';
 
 
 const App = () => {
@@ -54,7 +55,9 @@ const App = () => {
               {/* <Route path='/' element={<LoginPage/>}/>*/}
               <Route path='/profile' element={isAuthenticated ?<MainLayout><CreateProfile/></MainLayout>:<LoginPage/>}/>
               <Route path="/" element={ isAuthenticated? <MainLayout><Dashboard/></MainLayout> : <LoginPage/>} />
+              <Route path="/test" element={ <FaceDetection/>} />
               
+
               {/*Attendance Sheets*/}
               <Route path="/showSheet/:id" element={isAuthenticated && role=='ADMIN'? <MainLayout><ShowAttendanceSheet/></MainLayout>:<LoginPage/>}/>
               <Route path="/editSheet/:id" element={isAuthenticated && role=='ADMIN'? <MainLayout><EditAttendanceSheet/></MainLayout>:<LoginPage/>}/>
