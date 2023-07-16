@@ -598,6 +598,13 @@ function FaceDetection() {
         detections.descriptor
       );
       console.log(dist);
+      if(dist<0.5){
+        alert('Verified')
+      }else{
+        alert('Face')
+      }
+    }else{
+      alert('No Detection Found')
     }
   };
 
