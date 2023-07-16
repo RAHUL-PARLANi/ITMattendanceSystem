@@ -445,6 +445,7 @@ function FaceDetection() {
   };
 
   const processImage = async () => {
+    alert('I am Hit')
     const image = await faceapi.fetchImage(imageUrl);
     const detections = await faceapi
       .detectSingleFace(image, new faceapi.TinyFaceDetectorOptions())

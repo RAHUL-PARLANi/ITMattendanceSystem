@@ -55,7 +55,7 @@ const App = () => {
               {/* <Route path='/' element={<LoginPage/>}/>*/}
               <Route path='/profile' element={isAuthenticated ?<MainLayout><CreateProfile/></MainLayout>:<LoginPage/>}/>
               <Route path="/" element={ isAuthenticated? <MainLayout><Dashboard/></MainLayout> : <LoginPage/>} />
-              <Route path="/test" element={ <FaceDetection/>} />
+              <Route path="/test" element={ <MainLayout><FaceDetection/></MainLayout>} />
               
 
               {/*Attendance Sheets*/}
