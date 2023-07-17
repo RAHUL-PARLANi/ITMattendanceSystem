@@ -236,7 +236,7 @@ const CreateProfile = () => {
   const startVideo = () => {
     setCaptureVideo(true);
     navigator.mediaDevices
-      .getUserMedia({ video: { height: 400 } })
+      .getUserMedia({ video: { height: 196,width:258} })
       .then((stream) => {
         let video = videoRef.current;
         video.srcObject = stream;
