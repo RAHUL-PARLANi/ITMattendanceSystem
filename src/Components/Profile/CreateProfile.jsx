@@ -203,7 +203,6 @@ const CreateProfile = () => {
         setIsLoading(false);
         if (res.data.isSuccessFullyRegistered) {
           alert("Successful");
-          dispatch(login());
         }
       })
       .catch((er) => {
