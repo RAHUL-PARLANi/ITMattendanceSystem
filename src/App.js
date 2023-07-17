@@ -31,6 +31,7 @@ const App = () => {
     (state) => state.users.value.isAuthenticated
   );
   let role = useSelector((state) => state.users.value.role);
+ // console.log(useSelector((state) => state.users.value))
   useEffect(() => {
    // if (localStorage.getItem("user")) {
    //   const data = JSON.parse(localStorage.getItem("user"));
