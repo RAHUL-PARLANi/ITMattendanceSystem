@@ -1,7 +1,7 @@
 .box {
     position:relative;
-    width: 258px;
-    height: 196px;
+    width: 300px;
+    height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;

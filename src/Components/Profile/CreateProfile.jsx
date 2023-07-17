@@ -197,6 +197,7 @@ const CreateProfile = () => {
       .patch("/users/" + userData.id, {
         ...formData,
         isSuccessFullyRegistered: true,
+        faceEmbbedingData:faceEmbedding
       })
       .then((res) => {
         setIsLoading(false);
@@ -215,8 +216,8 @@ const CreateProfile = () => {
   const [captureVideo, setCaptureVideo] = React.useState(false);
 
   const videoRef = React.useRef();
-  const videoHeight = 200;
-  const videoWidth = 250;
+  const videoHeight = 400;
+  const videoWidth = 300;
   const canvasRef = React.useRef();
 
   useEffect(() => {
@@ -236,7 +237,7 @@ const CreateProfile = () => {
   const startVideo = () => {
     setCaptureVideo(true);
     navigator.mediaDevices
-      .getUserMedia({ video: { height: 196,width:258} })
+      .getUserMedia({ video: { height: 400,width:300} })
       .then((stream) => {
         let video = videoRef.current;
         video.srcObject = stream;
@@ -270,13 +271,13 @@ const CreateProfile = () => {
             detections,
             displaySize
           );
-          const canvas = canvasRef.current;
-          canvas
-            .getContext("2d")
-            .clearRect(0, 0, canvas.width, canvas.height);
-          faceapi.draw.drawDetections(canvas, resizedDetections);
-          faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-          faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+         // const canvas = canvasRef.current;
+         // canvas
+         //   .getContext("2d")
+         //   .clearRect(0, 0, canvas.width, canvas.height);
+         // faceapi.draw.drawDetections(canvas, resizedDetections);
+         // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+         // faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
           console.log(detections.descriptor);
           
           if (detections.alignedRect.score > 0.8) {
@@ -489,7 +490,7 @@ const CreateProfile = () => {
                   <a
                     onClick={() => {
                       setPage(2);
-                      startVideo();
+                      
                     }}
                     className="nav-link"
                   >
@@ -764,7 +765,7 @@ const CreateProfile = () => {
                   <a
                     onClick={() => {
                       setPage(2);
-                      startVideo();
+                      
                     }}
                     className="nav-link"
                   >
@@ -822,7 +823,6 @@ const CreateProfile = () => {
                     onSubmit={(e) => {
                       e.preventDefault();
                       setPage(2);
-                      startVideo();
                     }}
                   >
                     <div className="row">
@@ -931,7 +931,6 @@ const CreateProfile = () => {
                   <a
                     onClick={() => {
                       setPage(2);
-                      startVideo();
                     }}
                     className="nav-link active"
                   >
@@ -1036,6 +1035,7 @@ const CreateProfile = () => {
                       <div>
                         {captureVideo && modelsLoaded ? (
                           <button
+                            className="btn btn-primary"
                             onClick={(e) => {
                               e.preventDefault();
                               closeWebcam();
@@ -1045,12 +1045,13 @@ const CreateProfile = () => {
                           </button>
                         ) : (
                           <button
+                          className="btn btn-primary"
                             onClick={(e) => {
                               e.preventDefault();
                               startVideo();
                             }}
                           >
-                            Open Webcam
+                            Scan my Face
                           </button>
                         )}
                       </div>
@@ -1063,7 +1064,7 @@ const CreateProfile = () => {
                             }}
                           >
                             <div
-                              className="box  border border-primary border-4 rounded"
+                              className="box  m-2 border border-primary border-4 rounded"
                               style={{
                                 display: "flex",
                                 justifyContent: "center",
@@ -1083,7 +1084,24 @@ const CreateProfile = () => {
                             </div>
                           </div>
                         ) : (
-                          <div>loading...</div>
+                          <div> 
+                             <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100vh",
+            width: "100%",
+          }}
+        >
+          <div
+            className="spinner-border spinner-border-lg text-primary"
+            role="status"
+          >
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>  
+                          </div>
                         )
                       ) : (
                         <></>
@@ -1092,10 +1110,10 @@ const CreateProfile = () => {
                     <div className="mt-2">
                       <button
                         type="submit"
-                        disabled={userData.isSuccessFullyRegistered === true}
+                        disabled={ faceEmbedding==[]}
                         className="btn btn-primary me-2"
                       >
-                        Save{" "}
+                        Save Details{" "}
                       </button>
                     </div>
                   </form>
