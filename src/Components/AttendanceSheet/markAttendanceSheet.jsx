@@ -9,6 +9,7 @@ const MarkAttendanceSheet = () => {
   const [isLoading, setIsLoading] = useState(true);
   const axiosInstance = useAxiosInstance();
   const [date, setDate] = useState("");
+  const [isVerified,setIsVerified]=useState(false);
 
   useEffect(() => {
     axiosInstance
@@ -238,6 +239,7 @@ const MarkAttendanceSheet = () => {
           console.log(dist);
           if (dist < 0.5) {
             alert("Verifed");
+            setIsVerified(true)
             closeWebcam();
           } else {
             alert("Your Face is not Matching with Our Data Base");
@@ -437,7 +439,7 @@ const MarkAttendanceSheet = () => {
                   Close
                 </button>
                 <button
-                  disabled={true}
+                  disabled={isVerified}
                   type="submit"
                   className="btn btn-primary"
                 >
