@@ -236,7 +236,7 @@ const MarkAttendanceSheet = () => {
             detections.descriptor
           );
           console.log(dist);
-          if (dist < 0.3) {
+          if (dist < 0.5) {
             alert("Verifed");
             closeWebcam();
           } else {
