@@ -439,7 +439,7 @@ const MarkAttendanceSheet = () => {
                   Close
                 </button>
                 <button
-                  disabled={isVerified}
+                  disabled={isVerified==false}
                   type="submit"
                   className="btn btn-primary"
                 >
