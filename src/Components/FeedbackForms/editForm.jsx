@@ -54,7 +54,7 @@ const EditFeedBackForm = () => {
         type: type,
         label: label,
         required: isRequired,
-        options: options,
+        options: options.split('|'),
     }
     axiosInstance.patch('/feedbackform/formField',Data).then(
       res=>{

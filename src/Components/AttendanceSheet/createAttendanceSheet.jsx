@@ -11,6 +11,9 @@ const CreateAttendanceSheet = () => {
   const [offDates, setOffDates] = useState([]);
   const [offDate, setOffDate] = useState("");
 
+  const [moderator, setModerator] = useState({});
+  const [modName, setModName] = useState("");
+  const [modData, setModeData] = useState([]);
   const [FormTillNow, setFormTillNow] = useState([
     {
       name: "sheetName",
@@ -69,7 +72,16 @@ const CreateAttendanceSheet = () => {
       .get("/batch/all")
       .then((res) => {
         setBatchData(res.data);
-        setIsLoading(false);
+        axiosInstance
+          .get("/users/allMod")
+          .then((res) => {
+            setIsLoading(false);
+            setModeData(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+            alert("Something went wrong");
+          });
       })
       .catch((err) => {
         alert("something went wrong");
@@ -84,20 +96,26 @@ const CreateAttendanceSheet = () => {
     });
   };
 
-  const handleSubmit=()=>{
-    setIsLoading(true)
-    const data={...formData,
-    students:students,
-    batch:batchName,
-    offDates:offDates
-    }
-    axiosInstance.post('/attendancesheet/',data).then(response=>{
-        alert(`${response.data.sheetName} created successfully!`)
-        setIsLoading(false)
-    }).catch(err=>{alert("Something Went Wrong")
-    setIsLoading(false)}
-    )
-  }
+  const handleSubmit = () => {
+    setIsLoading(true);
+    const data = {
+      ...formData,
+      students: students,
+      batch: batchName,
+      offDates: offDates,
+      moderator: moderator,
+    };
+    axiosInstance
+      .post("/attendancesheet/", data)
+      .then((response) => {
+        alert(`${response.data.sheetName} created successfully!`);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        alert("Something Went Wrong");
+        setIsLoading(false);
+      });
+  };
 
   if (isLoading) {
     return (
@@ -126,7 +144,7 @@ const CreateAttendanceSheet = () => {
         <form
           className="bg-white px-3 mt-4 py-3 mb-4 shadow-sm rounded"
           onSubmit={(e) => {
-            e.preventDefault()
+            e.preventDefault();
             handleSubmit();
           }}
         >
@@ -182,7 +200,6 @@ const CreateAttendanceSheet = () => {
                 className="form-control"
                 type={"date"}
                 id="offDates"
-                
                 value={offDate}
                 onChange={(e) => {
                   setOffDate(e.target.value);
@@ -263,6 +280,31 @@ const CreateAttendanceSheet = () => {
               </div>
             </div>
           )}
+
+          <div className="mb-3">
+            <label className="form-label">
+              Moderator :
+            </label>
+            <select
+              required
+              type="select"
+              value={modName}
+              onChange={(e) => {
+                setModName(e.target.value);
+                setModerator({
+                  name:e.target.value,
+                  modId:modData.find(elem=>elem.name==e.target.value)._id,
+                  faceEmbbedingData:modData.find(elem=>elem.name==e.target.value).faceEmbbedingData
+                })
+              }}
+              className="form-select select2"
+            >
+              <option value={""}>Choose</option>
+              {modData.map((elem) => {
+                return <option value={elem.name}>{elem.name}</option>;
+              })}
+            </select>
+          </div>
 
           <input
             type="submit"

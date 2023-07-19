@@ -11,7 +11,7 @@ import "datatables.net-buttons/js/buttons.print.js";
 import { Link } from "react-router-dom";
 
 const BoardGame = (props) => {
-  const { bg, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
+  const { bg,link, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
     props;
 
   const handleCheckboxChange = () => {
@@ -21,6 +21,9 @@ const BoardGame = (props) => {
   return (
     <tr>
       {keys?.map((key) => (
+        key=='view'?<td className="text-xs font-weight-bold" key={key}>
+         <Link to={'/'+link+'/'+bg["_id"]}><button className="btn btn-primary btn-sm">View</button></Link> 
+        </td>:
         <td className="text-xs font-weight-bold" key={key}>
           {bg[key]}
         </td>
@@ -37,10 +40,10 @@ const Table = ( props ) => {
   const axiosInstance = useAxiosInstance();
 
   useEffect(() => {
-    if (!$.fn.DataTable.isDataTable("#myTable")) {
+    if (!$.fn.DataTable.isDataTable(props.tableId || "#table")) {
       $(document).ready(function () {
         setTimeout(function () {
-          $("#table")
+          $(props.tableId || "#table")
             .DataTable({
               pagingType: "full_numbers",
               pageLength: 20,
@@ -156,6 +159,7 @@ const Table = ( props ) => {
           handleRowSelect={handleRowSelect}
           selectedRows={selectedRows}
           key={bg._id}
+          link={props.isLink}
         />
       );
     });
@@ -164,10 +168,10 @@ const Table = ( props ) => {
   return (
     <>
         <div className="mt-4">
-          <h4 className=" rounded shadow-sm p-2 bg-white">Data</h4>
+          {props.title ? <h4 className=" rounded shadow-sm p-2 bg-white">{props.title}</h4>:<h4 className=" rounded shadow-sm p-2 bg-white">Data</h4>}
           <div className="table-responsive bg-white rounded p-2 shadow-sm">
             <table
-              id="table"
+              id={props.tableId ||"table"}
               className="table table-striped align-items-center justify-content-center mb-0"
             >
               <thead>
@@ -194,7 +198,7 @@ const Table = ( props ) => {
                         type="text"
                         placeholder={"Search " + key}
                         onChange={(e) => {
-                          const table = $("#table").DataTable();
+                          const table = $(props.tableId || "#table").DataTable();
                           table
                             .column(key + ":name")
                             .search(e.target.value)

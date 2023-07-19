@@ -83,7 +83,7 @@ const CreateProfile = () => {
       name: "gender",
       label: "Gender",
       type: "select",
-      options: ["MALE", "FEMALE", "OTHERS"],
+      options: ["M", "F", "O"],
       required: "true",
     },
   ];
@@ -1109,7 +1109,7 @@ const CreateProfile = () => {
                     <div className="mt-2">
                       <button
                         type="submit"
-                        disabled={ faceEmbedding==[]}
+                        disabled={ formData['isSuccessFullyRegistered']==true || faceEmbedding==[]}
                         className="btn btn-primary me-2"
                       >
                         Save Details{" "}

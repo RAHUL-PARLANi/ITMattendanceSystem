@@ -23,6 +23,7 @@ import CreateAttendanceSheet from './Components/AttendanceSheet/createAttendance
 import ShowAllAttendanceSheets from './Components/AttendanceSheet/showAllAttendanceSheets';
 import EditAttendanceSheet from './Components/AttendanceSheet/editAttendanceSheet';
 import FaceDetection from './Components/FaceDetection/FaceDetection';
+import MarkAttendanceSheet from './Components/AttendanceSheet/markAttendanceSheet';
 
 
 const App = () => {
@@ -56,7 +57,7 @@ const App = () => {
               {/* <Route path='/' element={<LoginPage/>}/>*/}
               <Route path='/profile' element={isAuthenticated ?<MainLayout><CreateProfile/></MainLayout>:<LoginPage/>}/>
               <Route path="/" element={ isAuthenticated? <MainLayout><Dashboard/></MainLayout> : <LoginPage/>} />
-              <Route path="/test" element={ <MainLayout><FaceDetection/></MainLayout>} />
+              <Route path="/test/:id" element={ isAuthenticated? <MainLayout><MarkAttendanceSheet/></MainLayout> : <LoginPage/>} />
               
 
               {/*Attendance Sheets*/}
@@ -65,7 +66,6 @@ const App = () => {
               <Route path='/createSheet' element={isAuthenticated && role=='ADMIN'? <MainLayout><CreateAttendanceSheet/></MainLayout>:<LoginPage/>} />
               <Route path="/showSheets" element={isAuthenticated && role=='ADMIN'? <MainLayout><ShowAllAttendanceSheets/></MainLayout>:<LoginPage/>}/>
               
-
               {/*User Routes */}
               <Route path="/showusers" element={ isAuthenticated && role=='ADMIN'? <MainLayout><ShowAllUsers/></MainLayout> : <LoginPage/>} />
               <Route path="/requests" element={ isAuthenticated && role=='ADMIN'? <MainLayout><ShowRequests/></MainLayout> : <LoginPage/>} />
