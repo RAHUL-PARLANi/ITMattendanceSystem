@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import useAxiosInstance from "../../axiosInstance";
 import { useSelector } from "react-redux";
 import * as faceapi from "face-api.js";
 import Table from "../UnviersalComponents/Table";
+import MarkAttendanceTable from "./AttendanceMarkingTable";
 
 const MarkAttendanceSheet = () => {
   const userData = useSelector((state) => state.users.value);
@@ -11,10 +12,18 @@ const MarkAttendanceSheet = () => {
   const axiosInstance = useAxiosInstance();
   const [date, setDate] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [captureVideo, setCaptureVideo] = useState(false);
+  const videoRef = useRef();
+  const videoHeight = 400;
+  const videoWidth = 300;
+  const canvasRef = useRef();
+  let count = 0;
 
   useEffect(() => {
     axiosInstance
-      .get("/attendancesheet/" + window.location.href.split("/").pop())
+      .get("/attendancesheet/marksheet/" + window.location.href.split("/").pop())
       .then((elem) => {
         setData(elem.data);
         setIsLoading(false);
@@ -25,15 +34,6 @@ const MarkAttendanceSheet = () => {
         setIsLoading(false);
       });
   }, []);
-
-  //Face Verification Code
-  const [modelsLoaded, setModelsLoaded] = React.useState(false);
-  const [captureVideo, setCaptureVideo] = React.useState(false);
-
-  const videoRef = React.useRef();
-  const videoHeight = 400;
-  const videoWidth = 300;
-  const canvasRef = React.useRef();
 
   useEffect(() => {
     const loadModels = async () => {
@@ -63,45 +63,43 @@ const MarkAttendanceSheet = () => {
       });
   };
 
-  const handleVideoOnPlay = () => {
+  const handleVideoOnPlay = async () => {
     setInterval(async () => {
-      console.log(data.moderator);
-      if (canvasRef && captureVideo && canvasRef.current) {
+      if (canvasRef && captureVideo && canvasRef.current && !isVerified) {
         const video = videoRef.current;
-
         const displaySize = {
           width: video.offsetWidth,
           height: video.offsetHeight,
         };
 
-        faceapi.matchDimensions(canvasRef.current, displaySize);
+        try {
+          const detections = await faceapi
+            .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+            .withFaceLandmarks()
+            .withFaceExpressions()
+            .withFaceDescriptor();
 
-        const detections = await faceapi
-          .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
-          .withFaceLandmarks()
-          .withFaceExpressions()
-          .withFaceDescriptor();
+          if (detections && count < 5) {
+            const resizedDetections = faceapi.resizeResults(
+              detections,
+              displaySize
+            );
 
-        let count = 0;
-        if (detections && count < 5) {
-          const resizedDetections = faceapi.resizeResults(
-            detections,
-            displaySize
-          );
-          console.log(detections.descriptor);
-          const dist = faceapi.euclideanDistance(
-            Object.values(data.moderator.faceEmbbedingData[0]),
-            detections.descriptor
-          );
-          console.log(dist);
-          if (dist < 0.5) {
-            alert("Verifed");
-            setIsVerified(true);
-            closeWebcam();
-          } else {
-            alert("Your Face is not Matching with Our Data Base");
-            count++;
+            const dist = faceapi.euclideanDistance(
+              Object.values(data.moderator.faceEmbbedingData[0]),
+              detections.descriptor
+            );
+
+            if (dist < 0.5) {
+              setIsVerified(true)
+              closeWebcam()   
+            } else {
+              count++;
+              //setErrorMessage("Your Face is not Matching with Our Database");
+            }
           }
+        } catch (error) {
+        //  setErrorMessage("Error occurred during face detection.");
         }
       }
     }, 100);
@@ -136,7 +134,7 @@ const MarkAttendanceSheet = () => {
 
   return (
     <div className="container-fluid">
-    <div
+      <div
         className="modal fade"
         id="basicModal"
         tabIndex={-1}
@@ -150,9 +148,6 @@ const MarkAttendanceSheet = () => {
               </h5>
               <button
                 type="button"
-                onClick={() => {
-                  closeWebcam();
-                }}
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
@@ -243,80 +238,80 @@ const MarkAttendanceSheet = () => {
                   data-bs-dismiss="modal"
                   onClick={(e) => {
                     e.preventDefault();
-                    closeWebcam();
+                  //  closeWebcam();
                   }}
                 >
                   Close
-                </button>
-                <button
-                  disabled={isVerified == false}
-                  type="submit"
-                  className="btn btn-primary"
-                >
-                  Next
-                </button>
-                
-                
+                </button>  
               </div>
             </div>
           </div>
         </div>
     </div>  
-    {isVerified===true?<>
-    <Table title={'Student List'} tableKeys={['Sl.No.','FullName','RollNo']} tableData={data.attendanceData}/>
-    </>:
-    <>
-    <h3 className="p-2 h3 mt-4 mb-3 bg-white rounded shadow-sm">
-        {data.sheetName}
-      </h3>
-      <div className="bg-white p-2 shadow-sm rounded">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            startVideo();
-          }}
-        >
-          <div className="mb-3">
-            <label className="form-label">Select Date and Half :</label>
-            <select
-              required
-              type="select"
-              value={date}
-              onChange={(e) => {
-                setDate(e.target.value);
+      {errorMessage && (
+        <div className="alert alert-danger" role="alert">
+          {errorMessage}
+        </div>
+      )}
+      {isVerified ? (
+        <MarkAttendanceTable
+          title={"Student List"}
+          tableKeys={["Sl.No.", "FullName", "RollNo"]}
+          tableData={data.attendanceData}
+        />
+      ) : (
+        <>
+          <h3 className="p-2 h3 mt-4 mb-3 bg-white rounded shadow-sm">
+            {data.sheetName}
+          </h3>
+          <div className="bg-white p-2 shadow-sm rounded">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                startVideo();
               }}
-              className="form-select select2"
             >
-              <option value={""}>Choose</option>
-              {Object.keys(data.attendanceData[0])
-                .filter(
-                  (key) =>
-                    ![
-                      "Sl.No.",
-                      "FullName",
-                      "RollNo",
-                      "Branch",
-                      "faceEmbbedingData",
-                    ].includes(key)
-                )
-                .map((elem) => {
-                  return <option value={elem}>{elem}</option>;
-                })}
-            </select>
-            <input
-              type="submit"
-              value="Submit"
-              data-bs-toggle="modal"
-              data-bs-target="#basicModal"
-              className="btn btn-primary mt-4"
-            />
+              <div className="mb-3">
+                <label className="form-label">Select Date and Half :</label>
+                <select
+                  required
+                  type="select"
+                  value={date}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                  }}
+                  className="form-select select2"
+                >
+                  <option value={""}>Choose</option>
+                  {Object.keys(data.attendanceData[0])
+                    .filter(
+                      (key) =>
+                        ![
+                          "Sl.No.",
+                          "FullName",
+                          "RollNo",
+                          "Branch",
+                          "faceEmbbedingData",
+                        ].includes(key)
+                    )
+                    .map((elem) => {
+                      return <option value={elem}>{elem}</option>;
+                    })}
+                </select>
+                <input
+                  type="submit"
+                  value="Submit"
+                  data-bs-toggle="modal"
+                  data-bs-target="#basicModal"
+                  className="btn btn-primary mt-4"
+                />
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
-              
-    </>}
-      </div>  
-     );
+        </>
+      )}
+    </div>
+  );
 };
 
 export default MarkAttendanceSheet;
