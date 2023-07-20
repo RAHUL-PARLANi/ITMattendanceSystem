@@ -90,16 +90,18 @@ const MarkAttendanceSheet = () => {
               detections.descriptor
             );
 
-            if (dist < 0.5) {
+            if (dist < 0.456522) {
               setIsVerified(true)
-              closeWebcam()   
+              closeWebcam()
+              setErrorMessage('Admin Verified')   
             } else {
               count++;
-              //setErrorMessage("Your Face is not Matching with Our Database");
+              alert("Your Face is not Matching with Our Database");
             }
           }
         } catch (error) {
-        //  setErrorMessage("Error occurred during face detection.");
+        alert("Error occurred during face detection.");
+        console.log(error)
         }
       }
     }, 100);
@@ -249,14 +251,15 @@ const MarkAttendanceSheet = () => {
         </div>
     </div>  
       {errorMessage && (
-        <div className="alert alert-danger" role="alert">
+        <div className="alert alert-success" role="alert">
           {errorMessage}
         </div>
       )}
       {isVerified ? (
         <MarkAttendanceTable
           title={"Student List"}
-          tableKeys={["Sl.No.", "FullName", "RollNo"]}
+          date={date}
+          tableKeys={["Sl.No.", "FullName", "RollNo",date]}
           tableData={data.attendanceData}
         />
       ) : (

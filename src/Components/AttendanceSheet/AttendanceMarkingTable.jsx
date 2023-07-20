@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import useAxiosInstance from "../../axiosInstance";
 import $ from "jquery";
 import "datatables.net-dt/js/dataTables.dataTables";
@@ -9,10 +9,10 @@ import "datatables.net-buttons/js/buttons.flash.js";
 import "datatables.net-buttons/js/buttons.html5.js";
 import "datatables.net-buttons/js/buttons.print.js";
 import { Link } from "react-router-dom";
+import * as faceapi from "face-api.js";
 
 const BoardGame = (props) => {
-  const { bg, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
-    props;
+  const { bg, keys, scanFace, BlockBGS, handleRowSelect, selectedRows } = props;
 
   const handleCheckboxChange = () => {
     handleRowSelect(bg._id);
@@ -21,7 +21,11 @@ const BoardGame = (props) => {
   return (
     <tr>
       <td>
-        <button type="button" class="btn btn-icon btn-primary">
+        <button
+          onClick={() => scanFace(bg.faceEmbbedingData,bg['Sl.No.'])}
+          type="button"
+          class="btn btn-icon btn-primary"
+        >
           <span class="tf-icons bx bx-scan"></span>
         </button>
       </td>
@@ -47,6 +51,96 @@ const MarkAttendanceTable = (props) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const axiosInstance = useAxiosInstance();
   const [isLoading, setIsLoading] = useState(false);
+  const [sid,setSid] = useState("");
+
+  const [faceEmbbedingData, setFaceEmbeddingData] = useState([]);
+  const [isVerified, setIsVerified] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [captureVideo, setCaptureVideo] = useState(false);
+  const videoRef = useRef();
+  const canvasRef = useRef();
+  const videoHeight = 400;
+  const videoWidth = 300;
+  let count = 0;
+
+  useEffect(() => {
+    const loadModels = async () => {
+      const MODEL_URL = process.env.PUBLIC_URL + "/models";
+      await Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+        faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+      ]);
+      setModelsLoaded(true);
+    };
+    loadModels();
+  }, []);
+
+  const startVideo = () => {
+    setCaptureVideo(true);
+    navigator.mediaDevices
+      .getUserMedia({ video: { height: 400, width: 300 } })
+      .then((stream) => {
+        let video = videoRef.current;
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((err) => {
+        console.error("error:", err);
+      });
+  };
+
+  const handleVideoOnPlay = async () => {
+    setInterval(async () => {
+      if (canvasRef && captureVideo && canvasRef.current && !isVerified) {
+        const video = videoRef.current;
+        const displaySize = {
+          width: video.offsetWidth,
+          height: video.offsetHeight,
+        };
+
+        try {
+          const detections = await faceapi
+            .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+            .withFaceLandmarks()
+            .withFaceExpressions()
+            .withFaceDescriptor();
+
+          if (detections && count < 5) {
+            const resizedDetections = faceapi.resizeResults(
+              detections,
+              displaySize
+            );
+
+            const dist = faceapi.euclideanDistance(
+              Object.values(faceEmbbedingData[0]),
+              detections.descriptor
+            );
+
+            if (dist < 0.456522) {
+              setIsVerified(true);
+              closeWebcam();
+              setErrorMessage("Admin Verified");
+            } else {
+              count++;
+              alert("Your Face is not Matching with Our Database,press ok to try Again");
+            }
+          }
+        } catch (error) {
+          alert("Error occurred during face detection.");
+          console.log(error);
+        }
+      }
+    }, 100);
+  };
+
+  const closeWebcam = () => {
+    videoRef.current.pause();
+    videoRef.current.srcObject.getTracks()[0].stop();
+    setCaptureVideo(false);
+  };
 
   useEffect(() => {
     if (!$.fn.DataTable.isDataTable("#myTable")) {
@@ -137,35 +231,14 @@ const MarkAttendanceTable = (props) => {
     console.log(selectedRows);
   }, [selectedRows]);
 
-  const deleteBGS = (id) => {
-    var ans = window.confirm(
-      "You are trying to delete a USER, Do you want to continue ?"
-    );
-    if (ans) {
-      axiosInstance
-        .delete("/users/" + id)
-        .then((res) => alert(res.data.msg))
-        .catch((err) => {
-          alert("Something Went Wrong");
-        });
-      setBgs(bgs.filter((el) => el._id !== id));
-    }
+  const scanFace = (faceEmbbedingData,sid) => {
+    setIsVerified(false);
+    setFaceEmbeddingData(faceEmbbedingData);
+    setSid(sid)
+    startVideo();
   };
 
-  const BlockBGS = (id) => {
-    var ans = window.confirm(
-      "You are trying to Block a USER, Do you want to continue ?"
-    );
-    if (ans) {
-      axiosInstance
-        .patch("/users/block" + id)
-        .then((res) => alert(res.data.msg))
-        .catch((err) => {
-          alert("Something Went Wrong");
-        });
-      setBgs(bgs.filter((el) => el._id !== id));
-    }
-  };
+  const BlockBGS = (id) => {};
 
   const bgsList = () => {
     return bgs.map((bg) => {
@@ -173,7 +246,7 @@ const MarkAttendanceTable = (props) => {
         <BoardGame
           bg={bg}
           keys={keys}
-          deleteBGS={deleteBGS}
+          scanFace={scanFace}
           BlockBGS={BlockBGS}
           handleRowSelect={handleRowSelect}
           selectedRows={selectedRows}
@@ -204,9 +277,92 @@ const MarkAttendanceTable = (props) => {
         </div>
       ) : (
         <div className="" style={{ marginTop: "50px" }}>
+          {/*Scanner Component*/}
+          
+          {isVerified&& <>
+                <div className="bg-white mb-4 p-2 shadow-sm rounded">
+                    <h3>You Have Been Verified</h3>
+                    <h5>Click the button below to Mark Attendance</h5>
+                    <button 
+                    onClick={()=>{
+                        axiosInstance.patch('/attendancesheet/markattendance/'+window.location.href.split('/').pop(),{
+                            date:props.date,
+                            sid:sid
+                        })
+                        .then(res=>{
+                            if(res.data._id){
+                                alert("Your Attendance has been marked Successfully !")
+                                setIsVerified(false)
+                                setSid("")
+                            }
+                        }).catch(err=>{
+                            console.log(err)
+                        })
+                    }}
+                    className="btn btn-primary"><i class='bx bx-pin'></i> Mark</button>
+                </div>
+                </>
+            }
+
+          {captureVideo ? (
+            modelsLoaded ? (
+               
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div
+                      className="box  m-2 border border-primary border-4 rounded"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <video
+                        ref={videoRef}
+                        height={videoHeight}
+                        width={videoWidth}
+                        onPlay={handleVideoOnPlay}
+                        style={{ borderRadius: "10px" }}
+                      />
+                      <canvas
+                        ref={canvasRef}
+                        style={{ position: "absolute" }}
+                      />
+                    </div>
+                  </div>
+                </>
+              
+            ) : (
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100vh",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    className="spinner-border spinner-border-lg text-primary"
+                    role="status"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            )
+          ) : (
+            <></>
+          )}
+          <div></div>
+
           <div className="table-responsive  bg-white rounded p-2 shadow-sm">
             <h3>{props.title}</h3>
-
             <table
               id="table"
               className="table  align-items-center justify-content-center mb-0"
@@ -264,6 +420,7 @@ const MarkAttendanceTable = (props) => {
           </div>
         </div>
       )}
+      
     </>
   );
 };
