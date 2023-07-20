@@ -134,59 +134,9 @@ const MarkAttendanceSheet = () => {
     );
   }
 
-  if(isVerified===false){
-    
   return (
     <div className="container-fluid">
-      <h3 className="p-2 h3 mt-4 mb-3 bg-white rounded shadow-sm">
-        {data.sheetName}
-      </h3>
-      <div className="bg-white p-2 shadow-sm rounded">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            startVideo();
-          }}
-        >
-          <div className="mb-3">
-            <label className="form-label">Select Date and Half :</label>
-            <select
-              required
-              type="select"
-              value={date}
-              onChange={(e) => {
-                setDate(e.target.value);
-              }}
-              className="form-select select2"
-            >
-              <option value={""}>Choose</option>
-              {Object.keys(data.attendanceData[0])
-                .filter(
-                  (key) =>
-                    ![
-                      "Sl.No.",
-                      "FullName",
-                      "RollNo",
-                      "Branch",
-                      "faceEmbbedingData",
-                    ].includes(key)
-                )
-                .map((elem) => {
-                  return <option value={elem}>{elem}</option>;
-                })}
-            </select>
-            <input
-              type="submit"
-              value="Submit"
-              data-bs-toggle="modal"
-              data-bs-target="#basicModal"
-              className="btn btn-primary mt-4"
-            />
-          </div>
-        </form>
-      </div>
-      {/*Modal Verifier*/}
-      <div
+    <div
         className="modal fade"
         id="basicModal"
         tabIndex={-1}
@@ -305,21 +255,68 @@ const MarkAttendanceSheet = () => {
                 >
                   Next
                 </button>
+                
+                
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-  }
-  if(isVerified===true){
-    return (<>
-          <div className="container-fluid">
-          <Table title={'Student List'} tableKeys={["Sl.No.","FullName","RollNo","Branch"]} tableData={data.attendanceData}/>
+    </div>  
+    {isVerified===true?<>
+    <Table title={'Student List'} tableKeys={['Sl.No.','FullName','RollNo']} tableData={data.attendanceData}/>
+    </>:
+    <>
+    <h3 className="p-2 h3 mt-4 mb-3 bg-white rounded shadow-sm">
+        {data.sheetName}
+      </h3>
+      <div className="bg-white p-2 shadow-sm rounded">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            startVideo();
+          }}
+        >
+          <div className="mb-3">
+            <label className="form-label">Select Date and Half :</label>
+            <select
+              required
+              type="select"
+              value={date}
+              onChange={(e) => {
+                setDate(e.target.value);
+              }}
+              className="form-select select2"
+            >
+              <option value={""}>Choose</option>
+              {Object.keys(data.attendanceData[0])
+                .filter(
+                  (key) =>
+                    ![
+                      "Sl.No.",
+                      "FullName",
+                      "RollNo",
+                      "Branch",
+                      "faceEmbbedingData",
+                    ].includes(key)
+                )
+                .map((elem) => {
+                  return <option value={elem}>{elem}</option>;
+                })}
+            </select>
+            <input
+              type="submit"
+              value="Submit"
+              data-bs-toggle="modal"
+              data-bs-target="#basicModal"
+              className="btn btn-primary mt-4"
+            />
           </div>
-    </>)
-  }
+        </form>
+      </div>
+              
+    </>}
+      </div>  
+     );
 };
 
 export default MarkAttendanceSheet;
