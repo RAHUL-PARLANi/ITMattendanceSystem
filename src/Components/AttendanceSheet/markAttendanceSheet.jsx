@@ -1,4 +1,4 @@
-import React, { useEffect, useState ,useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import useAxiosInstance from "../../axiosInstance";
 import { useSelector } from "react-redux";
 import * as faceapi from "face-api.js";
@@ -21,9 +21,12 @@ const MarkAttendanceSheet = () => {
   const canvasRef = useRef();
   let count = 0;
 
+  const [refresh,setRefresh] = useState(0);
   useEffect(() => {
     axiosInstance
-      .get("/attendancesheet/marksheet/" + window.location.href.split("/").pop())
+      .get(
+        "/attendancesheet/marksheet/" + window.location.href.split("/").pop()
+      )
       .then((elem) => {
         setData(elem.data);
         setIsLoading(false);
@@ -33,7 +36,7 @@ const MarkAttendanceSheet = () => {
         alert("Something Went Wrong");
         setIsLoading(false);
       });
-  }, []);
+  }, [refresh]);
 
   useEffect(() => {
     const loadModels = async () => {
@@ -91,17 +94,17 @@ const MarkAttendanceSheet = () => {
             );
 
             if (dist < 0.456522) {
-              setIsVerified(true)
-              closeWebcam()
-              setErrorMessage('Admin Verified')   
+              setIsVerified(true);
+              closeWebcam();
+              setErrorMessage("Admin Verified");
             } else {
               count++;
-              alert("Your Face is not Matching with Our Database");
+              console.log("Your Face is not Matching with Our Database, trying again");
             }
           }
         } catch (error) {
-        alert("Error occurred during face detection.");
-        console.log(error)
+          console.log("Error occurred during face detection.");
+          console.log(error);
         }
       }
     }, 100);
@@ -240,28 +243,39 @@ const MarkAttendanceSheet = () => {
                   data-bs-dismiss="modal"
                   onClick={(e) => {
                     e.preventDefault();
-                  //  closeWebcam();
+                    //  closeWebcam();
                   }}
                 >
                   Close
-                </button>  
+                </button>
               </div>
             </div>
           </div>
         </div>
-    </div>  
+      </div>
       {errorMessage && (
         <div className="alert alert-success" role="alert">
           {errorMessage}
         </div>
       )}
       {isVerified ? (
+        <>
         <MarkAttendanceTable
-          title={"Student List"}
-          date={date}
-          tableKeys={["Sl.No.", "FullName", "RollNo",date]}
-          tableData={data.attendanceData}
-        />
+            title={"Student List"}
+            date={date}
+            tableKeys={["Sl.No.", "FullName", "RollNo", date]}
+            tableData={data.attendanceData}
+          />
+          {/* <button
+            onClick={() => {
+              setRefresh(refresh+1)
+            }}
+            className="btn btn-primary btn-sm mt-2"
+          >
+            <i class="bx bx-refresh"></i>
+          </button>
+           */}
+        </>
       ) : (
         <>
           <h3 className="p-2 h3 mt-4 mb-3 bg-white rounded shadow-sm">

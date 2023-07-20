@@ -15,7 +15,7 @@ const BoardGame = (props) => {
   const { bg, keys, scanFace, BlockBGS, handleRowSelect, selectedRows } = props;
 
   const handleCheckboxChange = () => {
-    handleRowSelect(bg._id);
+    handleRowSelect(bg['Sl.No.']);
   };
 
   return (
@@ -37,7 +37,7 @@ const BoardGame = (props) => {
       <td>
         <input
           type="checkbox"
-          checked={selectedRows.includes(bg._id)}
+          checked={selectedRows.includes(bg['Sl.No.'])}
           onChange={handleCheckboxChange}
         />
       </td>
@@ -72,7 +72,7 @@ const MarkAttendanceTable = (props) => {
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
         faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
-      ]);
+         ]);
       setModelsLoaded(true);
     };
     loadModels();
@@ -129,7 +129,7 @@ const MarkAttendanceTable = (props) => {
             }
           }
         } catch (error) {
-          alert("Error occurred during face detection.");
+          //alert("Error occurred during face detection.");
           console.log(error);
         }
       }
@@ -417,6 +417,47 @@ const MarkAttendanceTable = (props) => {
                 </tr>
               </tfoot>
             </table>
+            {selectedRows.length!=0 &&
+            <div>
+                
+            <button onClick={()=>{
+                let input=window.prompt('Enter Password')
+                axiosInstance.patch('/attendancesheet/markall/'+window.location.href.split('/').pop(),{
+                    date:props.date,
+                    password:input,
+                    sids:selectedRows
+                }).then(elem=>{
+                    if(elem.data._id){
+                        alert("Marked Successfully")
+                    }
+                    if(elem.data.message){
+                        alert(elem.data.message)
+                    }
+                }).catch(err=>{
+                    console.log('Something Went Wrong')
+                })
+            }} className='btn btn-warning btn-sm me-2'>Mark Selected(Admin)</button>
+            <button 
+            onClick={()=>{
+                let input=window.prompt('Enter Password')
+                axiosInstance.patch('/attendancesheet/unMarkall/'+window.location.href.split('/').pop(),{
+                    date:props.date,
+                    password:input,
+                    sids:selectedRows
+                }).then(elem=>{
+                    if(elem.data._id){
+                        alert("UnMarked Successfully")
+                    }
+                    if(elem.data.message){
+                        alert(elem.data.message)
+                    }
+                }).catch(err=>{
+                    console.log('Something Went Wrong')
+                })
+            }}
+            className="btn btn-dark btn-sm me-2">Unmark Selected(Admin)</button>
+            </div>
+            }
           </div>
         </div>
       )}
