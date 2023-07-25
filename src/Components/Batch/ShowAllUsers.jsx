@@ -192,12 +192,12 @@ const ShowAllUsers = () => {
     );
     if (ans) {
       axiosInstance
-        .patch("/users/block" + id)
-        .then((res) => alert(res.data.msg))
+        .patch("/users/block/" + id)
+        .then((res) => alert(`${res.data.name} is Blocked`))
         .catch((err) => {
           alert("Something Went Wrong");
         });
-      setBgs(bgs.filter((el) => el._id !== id));
+   //   setBgs(bgs.filter((el) => el._id !== id));
     }
   };
 

@@ -70,7 +70,7 @@ const ShowFormData = () => {
           {`${Data.isOn}`}{" "}
         </div>
       </div>
-      {keys && Data.length!=0 ?<Table tableKeys={keys} tableData={Data.data} />:<>No Data Avaliable</>}
+      {keys && Data.data.length!=0 ?<Table tableKeys={keys} tableData={Data.data} />:<div className="p-2 bg-white mt-4 rounded shadow-sm">No Data Avaliable</div>}
     </div>
   );
 };

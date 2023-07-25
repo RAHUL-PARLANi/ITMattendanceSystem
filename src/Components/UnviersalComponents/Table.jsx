@@ -168,7 +168,7 @@ const Table = ( props ) => {
   return (
     <>
         <div className="mt-4">
-          {props.title ? <h4 className=" rounded shadow-sm p-2 bg-white">{props.title}</h4>:<h4 className=" rounded shadow-sm p-2 bg-white">Data</h4>}
+          {props.title ? <h4 className=" rounded shadow-sm p-3 bg-white">{props.title}</h4>:<h4 className=" rounded shadow-sm p-3 bg-white">Data</h4>}
           <div className="table-responsive bg-white rounded p-2 shadow-sm">
             <table
               id={props.tableId ||"table"}
@@ -178,7 +178,7 @@ const Table = ( props ) => {
                 <tr>
                   {keys?.map((key) => (
                     <th
-                      className="text-xs text-primary font-weight-bold"
+                      className="text-xs text-primary fw-bold"
                       key={key}
                     >
                       {key}

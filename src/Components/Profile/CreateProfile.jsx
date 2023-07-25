@@ -197,7 +197,7 @@ const CreateProfile = () => {
       .patch("/users/" + userData.id, {
         ...formData,
         isSuccessFullyRegistered: true,
-        faceEmbbedingData:faceEmbedding
+        faceEmbbedingData: faceEmbedding,
       })
       .then((res) => {
         setIsLoading(false);
@@ -236,7 +236,7 @@ const CreateProfile = () => {
   const startVideo = () => {
     setCaptureVideo(true);
     navigator.mediaDevices
-      .getUserMedia({ video: { height: 400,width:300} })
+      .getUserMedia({ video: { height: 400, width: 300 } })
       .then((stream) => {
         let video = videoRef.current;
         video.srcObject = stream;
@@ -270,15 +270,15 @@ const CreateProfile = () => {
             detections,
             displaySize
           );
-         // const canvas = canvasRef.current;
-         // canvas
-         //   .getContext("2d")
-         //   .clearRect(0, 0, canvas.width, canvas.height);
-         // faceapi.draw.drawDetections(canvas, resizedDetections);
-         // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-         // faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+          // const canvas = canvasRef.current;
+          // canvas
+          //   .getContext("2d")
+          //   .clearRect(0, 0, canvas.width, canvas.height);
+          // faceapi.draw.drawDetections(canvas, resizedDetections);
+          // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+          // faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
           console.log(detections.descriptor);
-          
+
           if (detections.alignedRect.score > 0.8) {
             setFaceEmbedding(detections.descriptor);
             alert("Your Face Have Been Saved");
@@ -463,7 +463,7 @@ const CreateProfile = () => {
       <div>
         <div className="container-xxl flex-grow-1 container-p-y">
           <div className="row">
-            <div className="col-md-12">
+            <div className="col-lg-12 w-100">
               <ul className="nav nav-pills flex-column flex-md-row mb-3">
                 <li className="nav-item">
                   <a
@@ -489,7 +489,6 @@ const CreateProfile = () => {
                   <a
                     onClick={() => {
                       setPage(2);
-                      
                     }}
                     className="nav-link"
                   >
@@ -497,7 +496,7 @@ const CreateProfile = () => {
                   </a>
                 </li>
               </ul>
-              <div className="card mb-4">
+              <div className="card rounded shadow-sm w-100 mb-4">
                 <h5 className="card-header">Basic Details</h5>
                 {/* Account */}
                 {/* <div className="card-body">
@@ -764,7 +763,6 @@ const CreateProfile = () => {
                   <a
                     onClick={() => {
                       setPage(2);
-                      
                     }}
                     className="nav-link"
                   >
@@ -772,7 +770,7 @@ const CreateProfile = () => {
                   </a>
                 </li>
               </ul>
-              <div className="card mb-4">
+              <div className="card rounded shadow-sm w-100 mb-4">
                 <h5 className="card-header">Education Details</h5>
                 {/* Account */}
                 {/* <div className="card-body">
@@ -937,7 +935,7 @@ const CreateProfile = () => {
                   </a>
                 </li>
               </ul>
-              <div className="card mb-4">
+              <div className="card rounded shadow-sm w-100 mb-4">
                 <h5 className="card-header">Face Scan</h5>
                 {/* Account */}
                 {/* <div className="card-body">
@@ -1044,7 +1042,7 @@ const CreateProfile = () => {
                           </button>
                         ) : (
                           <button
-                          className="btn btn-primary"
+                            className="btn btn-primary"
                             onClick={(e) => {
                               e.preventDefault();
                               startVideo();
@@ -1083,23 +1081,25 @@ const CreateProfile = () => {
                             </div>
                           </div>
                         ) : (
-                          <div> 
-                             <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-            width: "100%",
-          }}
-        >
-          <div
-            className="spinner-border spinner-border-lg text-primary"
-            role="status"
-          >
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>  
+                          <div>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                height: "100vh",
+                                width: "100%",
+                              }}
+                            >
+                              <div
+                                className="spinner-border spinner-border-lg text-primary"
+                                role="status"
+                              >
+                                <span className="visually-hidden">
+                                  Loading...
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         )
                       ) : (
@@ -1109,7 +1109,10 @@ const CreateProfile = () => {
                     <div className="mt-2">
                       <button
                         type="submit"
-                        disabled={ formData['isSuccessFullyRegistered']==true || faceEmbedding==[]}
+                        disabled={
+                          formData["isSuccessFullyRegistered"] == true ||
+                          faceEmbedding == []
+                        }
                         className="btn btn-primary me-2"
                       >
                         Save Details{" "}

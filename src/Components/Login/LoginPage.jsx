@@ -13,13 +13,14 @@ const LoginPage = () => {
   const [passHide,setPassHide]=useState(true);
   const dispatch = useDispatch();
   const history = useNavigate();
-  // useEffect(() => {
-  //   if (localStorage.getItem("user")) {
-  //     const data = JSON.parse(localStorage.getItem("user"));
-  //     console.log(data)
-  //     dispatch(login({ username: data.username, tokin: data.tokin ,id:data.id,role:data.role}));
-  //   }
-  //   }, []);
+ useEffect(() => {
+   if (localStorage.getItem("ITM-Admin-User")) {
+     const data = JSON.parse(localStorage.getItem("ITM-Admin-User"));
+     //console.log(data)
+     setEmail(data.email)
+     setPassword(data.password)
+   }
+   }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -39,6 +40,7 @@ const LoginPage = () => {
             verified:res.data.user.verified
           })
         );
+        localStorage.setItem("ITM-Admin-User",JSON.stringify({email:email,password:password}))
         setIsLoading(false);
       })
       .catch((err) => {
@@ -75,7 +77,7 @@ const LoginPage = () => {
           <div className="authentication-wrapper authentication-basic container-p-y">
             <div className="authentication-inner">
               {/* Register */}
-              <div className="card">
+              <div className="card shadow-sm w-100">
                 <div className="card-body">
                   {/* Logo */}
                   <div className="app-brand justify-content-center">
@@ -89,7 +91,7 @@ const LoginPage = () => {
                     </a>
                   </div>
                   {/* /Logo */}
-                  <h4 className="mb-2">Welcome to TAP Cell 👋</h4>
+                  <h4 className="mb-2">Welcome to TAP Cell Admin Panel</h4>
                   <p className="mb-4">Please sign-in to your account</p>
                   <form className="mb-4" onSubmit={handleSubmit}>
                     <div className="mb-3">

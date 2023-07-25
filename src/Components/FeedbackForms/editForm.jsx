@@ -91,7 +91,7 @@ const EditFeedBackForm = () => {
       isOn: isOn,
       customFields: FormTillNow  
     }
-    axiosInstance.patch('/feedbackform/',data)
+    axiosInstance.patch('/feedbackform/'+window.location.href.split('/').pop(),data)
     .then(res=>{
       alert(`${res.data.formName} is Edited Successfully !`)
     })
@@ -124,7 +124,7 @@ const EditFeedBackForm = () => {
     <div>
       <div className="container-xxl flex-grow-1 container-p-y" >
       
-        <div className="card col-12 mb-4">
+        <div className="card w-100 col-12 mb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Edit Forms</h5>
           </div>
@@ -465,7 +465,7 @@ const EditFeedBackForm = () => {
           </div>
         </div> */}
 
-        <div className="card col-12 mb-4">
+        <div className="card w-100 col-12 mb-4">
           <div className="card-header">
             <h4 className="mb-0">{formName}</h4>
             <br/>

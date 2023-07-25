@@ -187,7 +187,7 @@ const CreateFeedBackForm = () => {
     <div>
       <div className="container-xxl flex-grow-1 container-p-y" >
       
-        <div className="card col-12 mb-4">
+        <div className="card w-100 col-12 mb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Create Forms</h5>
           </div>
@@ -304,7 +304,7 @@ const CreateFeedBackForm = () => {
           </div>
         </div>
 
-        <div className="card col-12 mb-4">
+        <div className="card w-100 col-12 mb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Create Fields</h5>
           </div>
@@ -403,7 +403,7 @@ const CreateFeedBackForm = () => {
           </div>
         </div>
 
-        <div className="card col-12 mb-4">
+        <div className="card w-100 col-12 mb-4">
           <div className="card-header">
             <h4 className="mb-0">{formName}</h4>
             <br/>

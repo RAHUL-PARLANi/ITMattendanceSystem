@@ -24,7 +24,7 @@ const MainLayout = (props) => {
         style={{overflowY:'scroll',height:'100%'}}
         >
         <div className="app-brand demo">
-          <Link to='/' className="app-brand-link">
+          <Link to='/admin' className="app-brand-link">
             {/* <span className="app-brand-logo demo ">
               <img height={'25px'} src='ITM_LOGO.png' alt='Logo' />
             </span> */}
@@ -47,7 +47,7 @@ const MainLayout = (props) => {
         <ul className="menu-inner py-1">
           {/* Dashboard */}
           
-            <NavLink exact="true" to="/" activeClassName="active" className="menu-item">
+            <NavLink exact="true" to="/admin" activeClassName="active" className="menu-item">
              
             <a  className="menu-link" >
               <i className="menu-icon tf-icons bx bx-home-circle" />
@@ -64,7 +64,7 @@ const MainLayout = (props) => {
           
           {/* Layouts */}
           <li className="menu-header small text-uppercase">
-            <span className="menu-header-text">User</span>
+            <span className="menu-header-text fw-bold">User</span>
           </li>
           <NavLink to='/showusers' activeClassName="active" className="menu-item">
             <a className="menu-link menu-toggle">
@@ -79,7 +79,7 @@ const MainLayout = (props) => {
             </a>
           </NavLink>
           <li className="menu-header small text-uppercase">
-            <span className="menu-header-text">FeedBack Forms</span>
+            <span className="menu-header-text fw-bold">FeedBack Forms</span>
           </li>
           {/* Cards */}
           <NavLink to={'/showform'} activeClassName="active" className="menu-item">
@@ -100,7 +100,7 @@ const MainLayout = (props) => {
          
           {/* Forms & Tables */}
           <li className="menu-header small text-uppercase">
-            <span className="menu-header-text">Attendance Sheets</span>
+            <span className="menu-header-text fw-bold">Attendance Sheets</span>
           </li>
           {/* Forms */}
           <NavLink to="/showSheets" activeClassName="active" className="menu-item">
@@ -117,7 +117,7 @@ const MainLayout = (props) => {
           </NavLink>
           {/* Tables */}
           <li className="menu-header small text-uppercase">
-            <span className="menu-header-text">BATCH</span>
+            <span className="menu-header-text fw-bold">BATCH</span>
           </li>
           {/* Forms */}
           

@@ -33,6 +33,9 @@ const ShowForm = () => {
                 setIsVisibile(false)
             }
         }
+        if(userData.role=="ADMIN"){
+          setIsVisibile(true)
+        }
       })
       .catch((err) => {
         alert("Something went wrong");
@@ -100,20 +103,20 @@ const ShowForm = () => {
 
   if(isVisibile===false){
     return(<div className="container-fluid mt-4">
-        <div className="card p-2">You don't have access to this form.</div>
+        <div className="card w-100 shadow-sm rounded p-2">You don't have access to this form.</div>
     </div>)
   }
 
   
   if(alreadyResponded){
     return(<div className="container-fluid mt-4">
-        <div className="card p-2">You have aready responed to this form.</div>
+        <div className="card w-100 shadow-sm rounded p-2">You have aready responed to this form.</div>
     </div>)
   }
 
   return (
     <div className="container-fluid mt-4">
-      <div className="card col-12 mb-4">
+      <div className="card w-100 col-12 shadow-sm rounded mb-4">
         <div className="card-header">
           <h4 className="mb-0 text-primary">{data.formName}</h4>
           <br />

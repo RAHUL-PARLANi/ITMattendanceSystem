@@ -50,10 +50,10 @@ const Dashboard = () => {
   }
   return (
     <div>
-      <div className="container-xxl flex-grow-1 container-p-y">
+      <div className="container-fluid flex-grow-1 container-p-y">
         <div className="row">
-          <div className="col-lg-12 mb-4 order-0">
-            <div className="card">
+          <div className="col-12 mb-4 order-0">
+            <div className="card w-100">
               <div className="d-flex align-items-end row">
                 <div className="col-sm-7">
                   <div className="card-body">
@@ -154,7 +154,7 @@ const Dashboard = () => {
             className="d-flex flex-wrap"
             style={{ justifyContent: "space-between" }}
           >
-            <div className="card mb-4  col-lg-3 col-md-6 col-12">
+            <div className="card mb-4  col-lg-3 col-md-6">
               <div className="card-body">
                 <div className="card-title d-flex align-items-start justify-content-between">
                   <div className="avatar flex-shrink-0">

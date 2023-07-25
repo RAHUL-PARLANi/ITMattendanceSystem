@@ -24,6 +24,16 @@ import ShowAllAttendanceSheets from './Components/AttendanceSheet/showAllAttenda
 import EditAttendanceSheet from './Components/AttendanceSheet/editAttendanceSheet';
 import FaceDetection from './Components/FaceDetection/FaceDetection';
 import MarkAttendanceSheet from './Components/AttendanceSheet/markAttendanceSheet';
+import UserMainLayout from './Components/UserPanel/NavBar/MainLayout';
+import UserLoginPage from './Components/UserPanel/Login/UserLoginPage';
+import Home from './Components/UserPanel/Home/Home';
+import BasePage from './Components/UserPanel/Home/BasePage';
+import ShowAllFormsUser from './Components/UserPanel/FeedBackForms/showAllFormsUser';
+import ShowAllAttendanceUser from './Components/UserPanel/AttendanceSheet/showAllAttendanceUser';
+import ShowAllBatchUser from './Components/UserPanel/Batch/showAllBatchUser';
+import ShowStudyMaterialUser from './Components/UserPanel/StudyMaterial/showStudyMaterialUser';
+import ShowAllNoticesUser from './Components/UserPanel/Notices/showAllNoticesUser';
+import ShowAttendanceSheetUser from './Components/UserPanel/AttendanceSheet/showAttendanceSheetUser';
 
 
 const App = () => {
@@ -54,9 +64,25 @@ const App = () => {
     <>
         <BrowserRouter>
             <Routes>
-              {/* <Route path='/' element={<LoginPage/>}/>*/}
-              <Route path='/profile' element={isAuthenticated ?<MainLayout><CreateProfile/></MainLayout>:<LoginPage/>}/>
-              <Route path="/" element={ isAuthenticated? <MainLayout><Dashboard/></MainLayout> : <LoginPage/>} />
+              <Route path='/' element={<BasePage/>}/> 
+              <Route path='/user/home' element={isAuthenticated ?<UserMainLayout><Home/></UserMainLayout>:<UserLoginPage/>}/>
+              <Route path='/user/profile' element={isAuthenticated ? <UserMainLayout><CreateProfile/></UserMainLayout>:<UserLoginPage/>}/>
+              
+              <Route path='/user/showforms' element={isAuthenticated ? <UserMainLayout><ShowAllFormsUser/></UserMainLayout>:<UserLoginPage/>} />
+              <Route path="/user/showForm/:id" element={ isAuthenticated ? <UserMainLayout><ShowForm/></UserMainLayout> : <LoginPage/>} />
+              
+              <Route path='/user/showsheets' element={isAuthenticated ? <UserMainLayout><ShowAllAttendanceUser/></UserMainLayout>:<UserLoginPage/>} />
+              <Route path='/user/showsheet/:id' element={isAuthenticated ? <UserMainLayout><ShowAttendanceSheetUser/></UserMainLayout>:<UserLoginPage/>} />
+              
+              <Route path='/user/batches'  element={isAuthenticated ? <UserMainLayout><ShowAllBatchUser/></UserMainLayout>:<UserLoginPage/>} />
+              <Route path='/user/studyMaterials'  element={isAuthenticated ? <UserMainLayout><ShowStudyMaterialUser/></UserMainLayout>:<UserLoginPage/>} />
+              <Route path='/user/Notices'  element={isAuthenticated ? <UserMainLayout><ShowAllNoticesUser/></UserMainLayout>:<UserLoginPage/>} />
+              
+
+              {/*Admin Routes Here */}
+
+              <Route path='/profile' element={isAuthenticated ? <MainLayout><CreateProfile/></MainLayout>:<LoginPage/>}/>
+              <Route path="/admin" element={ isAuthenticated? <MainLayout><Dashboard/></MainLayout> : <LoginPage/>} />
               <Route path="/test/:id" element={ isAuthenticated? <MainLayout><MarkAttendanceSheet/></MainLayout> : <LoginPage/>} />
               
 
