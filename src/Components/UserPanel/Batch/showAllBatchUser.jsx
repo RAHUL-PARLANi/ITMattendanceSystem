@@ -3,6 +3,7 @@ import useAxiosInstance from "../../../axiosInstance";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Table from "../../UnviersalComponents/Table";
+import { toast } from "react-toastify";
 
 const ShowAllBatchUser = () => {
   const [data, setData] = useState([]);
@@ -20,7 +21,7 @@ const ShowAllBatchUser = () => {
       })
       .catch((err) => {
         console.log(err);
-        alert("Something went wrong");
+        toast.error("Something went wrong");
         setIsLoading(false);
       });
   }, []);

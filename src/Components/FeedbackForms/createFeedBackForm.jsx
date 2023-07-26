@@ -65,7 +65,7 @@ const CreateFeedBackForm = () => {
       name: "gender",
       label: "Gender",
       type: "select",
-      options:['MALE',"FEMALE",'OTHERS'],
+      options:['M',"F",'O'],
       required: true,
       readOnly:true
     }

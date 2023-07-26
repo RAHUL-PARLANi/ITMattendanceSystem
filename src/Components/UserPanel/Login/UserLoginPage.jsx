@@ -6,6 +6,8 @@ import { login } from "../../../features/user";
 import useAxiosInstance from "../../../axiosInstance";
 import { GoogleLogin } from "@react-oauth/google";
 import { decodeToken } from "react-jwt";
+import { toast } from 'react-toastify';
+
 
 const UserLoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +32,8 @@ const UserLoginPage = () => {
         password: value.name + value.email,
       })
       .then((res) => {
-        if(res.data.user.verified){
+        if (res.data.user.verified) {
+          toast.success('Signed in Successfully')
           dispatch(
             login({
               username: res.data.user.name,
@@ -41,9 +44,11 @@ const UserLoginPage = () => {
               verified: res.data.user.verified,
             })
           );
-        }
-        else{
-          alert('You Have Been Banned From the Portal')
+          if(res.data.isSuccessFullyRegistered===false){
+            history('/user/profile')
+          }
+        } else {
+          toast.warning("You Have Been Banned From TAP Cell Portal");
         }
         setIsLoading(false);
       })
@@ -56,6 +61,7 @@ const UserLoginPage = () => {
             password: value.name + value.email,
           })
           .then((res) => {
+            toast.success('Signed Up Successfully!')
             dispatch(
               login({
                 username: res.data.user.name,
@@ -70,6 +76,7 @@ const UserLoginPage = () => {
             setIsLoading(false);
           })
           .catch((err) => {
+            toast.error('Something went Wrong!')
             console.log(err);
             setIsLoading(false);
           });
@@ -186,7 +193,7 @@ const UserLoginPage = () => {
                             );
                           }}
                           onError={() => {
-                            alert("Login Failed");
+                            toast.error("Login Failed");
                           }}
                         />
                       </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   let userData = useSelector((state) => state.users.value);
@@ -32,6 +33,11 @@ const Home = () => {
           </div>
         </div>
       </div>
+      {userData.isSuccessFullyRegistered === false && (
+        <div className="card rounded w-100 shadow-sm h6 py-2 px-3">
+         <span> Please Complete Your Profile <Link to={'/user/profile'}>here</Link> to continue further. 
+         </span></div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import * as faceapi from "face-api.js";
 import Table from "../UnviersalComponents/Table";
 import MarkAttendanceTable from "./AttendanceMarkingTable";
+import { toast } from "react-toastify";
 
 const MarkAttendanceSheet = () => {
   const userData = useSelector((state) => state.users.value);
@@ -33,7 +34,7 @@ const MarkAttendanceSheet = () => {
       })
       .catch((err) => {
         console.log(err);
-        alert("Something Went Wrong");
+        toast.error("Something Went Wrong");
         setIsLoading(false);
       });
   }, [refresh]);
@@ -82,8 +83,8 @@ const MarkAttendanceSheet = () => {
             .withFaceExpressions()
             .withFaceDescriptor();
 
-          if(count===5){
-            alert('Sorry your face is not matching with our Database')
+          if(count>=5){
+            toast.error('Sorry your face is not matching with our Database')
           }  
 
           if (detections && count < 5) {
@@ -100,10 +101,10 @@ const MarkAttendanceSheet = () => {
             if (dist < 0.456522) {
               setIsVerified(true);
               closeWebcam();
-              setErrorMessage("Admin Verified");
+              toast.success("Admin Verified");
             } else {
               count++;
-              console.log("Your Face is not Matching with Our Database, trying again");
+              toast.warning("Your Face is not Matching with Our Database, trying again");
             }
           }
         } catch (error) {

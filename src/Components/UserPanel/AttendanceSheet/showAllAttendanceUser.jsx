@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAxiosInstance from "../../../axiosInstance";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const ShowAllFormsUser = () => {
   const [data, setData] = useState([]);
@@ -18,7 +19,7 @@ const ShowAllFormsUser = () => {
       })
       .catch((err) => {
         console.log(err)
-        alert("Something went wrong");
+        toast.error("Something went wrong");
         setIsLoading(false)
       });
   }, []);

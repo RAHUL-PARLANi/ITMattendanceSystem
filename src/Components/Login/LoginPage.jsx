@@ -91,7 +91,7 @@ const LoginPage = () => {
                     </a>
                   </div>
                   {/* /Logo */}
-                  <h4 className="mb-2">Welcome to TAP Cell Admin Panel</h4>
+                  <h4 className="mb-2">Welcome to Admin Panel</h4>
                   <p className="mb-4">Please sign-in to your account</p>
                   <form className="mb-4" onSubmit={handleSubmit}>
                     <div className="mb-3">

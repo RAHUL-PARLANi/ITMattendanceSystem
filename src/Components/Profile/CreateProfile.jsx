@@ -5,6 +5,7 @@ import { login } from "../../features/user";
 import * as faceapi from "face-api.js";
 import "../FaceDetection/FaceDetection.css";
 import { CollegeData } from "./CollegeData";
+import { toast } from "react-toastify";
 const CreateProfile = () => {
   const axiosInstance = useAxiosInstance();
   const [page, setPage] = useState(0);
@@ -187,6 +188,9 @@ const CreateProfile = () => {
         setUnivercityName(res.data.currentUnivercity.name || "")
         setUnivercityType(res.data.currentUnivercity.type || "")
         setIsLoading(false);
+        if(res.data.isSuccessFullyRegistered===false){
+          toast.warning('Please Complete Your Profile')
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -210,11 +214,11 @@ const CreateProfile = () => {
       .then((res) => {
         setIsLoading(false);
         if (res.data.isSuccessFullyRegistered) {
-          alert("Successful");
+          toast.success("Successful");
         }
       })
       .catch((er) => {
-        alert("Something went Wrong");
+        toast.error("Something went Wrong");
         console.log(er);
       });
   };
@@ -289,7 +293,7 @@ const CreateProfile = () => {
 
           if (detections.alignedRect.score > 0.8) {
             setFaceEmbedding(detections.descriptor);
-            alert("Your Face Have Been Saved");
+            toast.success("Your Face Have Been Saved");
             closeWebcam();
           }
           // const myFace = {
@@ -694,11 +698,11 @@ const CreateProfile = () => {
                       })
                       .then((elem) => {
                         if (elem.data._id) {
-                          alert("Request Raised Successfully");
+                          toast.success("Request Raised Successfully");
                         }
                       })
                       .catch((err) => {
-                        alert("Something Went Wrong");
+                        toast.error("Something Went Wrong");
                       });
                   }}
                 >

@@ -1,68 +1,74 @@
 import React, { useEffect, useState } from "react";
 import useAxiosInstance from "../../axiosInstance";
 import { useSelector } from "react-redux";
+import { useNavigate  } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ShowForm = () => {
-  const userData=useSelector(state=>state.users.value)
+  const userData = useSelector((state) => state.users.value);
   const [data, setData] = useState([]);
   const axiosInstance = useAxiosInstance();
   const [isLoading, setIsLoading] = useState(true);
+  const history = useNavigate();
 
-  const [FormTillNow, setFormTillNow] = useState([])
-  const [formData,setFormData]=useState({});
-  
-  const [alreadyResponded,setAlreadyResponded]=useState(false);  
-  const [isVisibile,setIsVisibile]=useState();
-  
+  const [FormTillNow, setFormTillNow] = useState([]);
+  const [formData, setFormData] = useState({});
+
+  const [alreadyResponded, setAlreadyResponded] = useState(false);
+  const [isVisibile, setIsVisibile] = useState();
+
   useEffect(() => {
     axiosInstance
       .get("/feedbackform/" + window.location.href.split("/").pop())
       .then((res) => {
         setData(res.data);
-        setFormTillNow(res.data.customFields)
+        setFormTillNow(res.data.customFields);
         setIsLoading(false);
 
-        if(res.data.data.find(elem=>elem.submittedBy==userData.id)){
-            setAlreadyResponded(true)
+        if (res.data.data.find((elem) => elem.submittedBy == userData.id)) {
+          setAlreadyResponded(true);
         }
 
-        if(res.data.studentsId){
-            if(res.data.studentsId.find(elem=>elem==userData.id)){
-                setIsVisibile(true)
-            }else{
-                setIsVisibile(false)
-            }
+        if (res.data.studentsId) {
+          if (res.data.studentsId.find((elem) => elem == userData.id)) {
+            setIsVisibile(true);
+          } else {
+            setIsVisibile(false);
+          }
         }
-        if(userData.role=="ADMIN"){
-          setIsVisibile(true)
+        if (userData.role == "ADMIN") {
+          setIsVisibile(true);
         }
       })
       .catch((err) => {
-        alert("Something went wrong");
-        console.log(err)
-        setIsLoading(false)
+        toast.error("Something went wrong");
+        console.log(err);
+        setIsLoading(false);
       });
   }, []);
 
- useEffect(()=>{
-   axiosInstance.get('/users/'+userData.id).then(res=>{
-       setFormData({
-           ...formData,
-           submittedBy:res.data._id,
-           name:res.data.name,
-           fatherName:res.data.fatherName,
-           rollNo:res.data.rollNo,
-           WorkingEmailId:res.data.WorkingEmailId,
-           phoneNumber:res.data.phoneNumber,
-           branch:res.data.branch,
-           batch:res.data.batch,
-           dateOfBirth:res.data.dateOfBirth,
-           gender:res.data.gender,      
-       })
-   }).catch(err=>{
-       alert('Something went wrong')
-   })
- },[isLoading])
+  useEffect(() => {
+    axiosInstance
+      .get("/users/" + userData.id)
+      .then((res) => {
+        setFormData({
+          ...formData,
+          submittedBy: res.data._id,
+          name: res.data.name,
+          fatherName: res.data.fatherName,
+          rollNo: res.data.rollNo,
+          WorkingEmailId: res.data.WorkingEmailId,
+          phoneNumber: res.data.phoneNumber,
+          branch: res.data.branch,
+          batch: res.data.batch,
+          dateOfBirth: res.data.dateOfBirth,
+          gender: res.data.gender,
+        });
+      })
+      .catch((err) => {
+        toast.error("Something went wrong");
+      });
+  }, [isLoading]);
 
   const handleChange = (event) => {
     setFormData({
@@ -71,15 +77,22 @@ const ShowForm = () => {
     });
   };
 
-  const handleSubmit=(e)=>{
-    e.preventDefault()
-    axiosInstance.post('/feedbackform/submitData/'+window.location.href.split('/').pop(),{data:formData}).then(res=>{
-        alert('Your data has been successfully submitted!')
-        window.location=window.location.href;
-    }).catch(err=>{
-        console.log(err)
-    })
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axiosInstance
+      .post(
+        "/feedbackform/submitData/" + window.location.href.split("/").pop(),
+        { data: formData }
+      )
+      .then((res) => {
+        toast.success("Your data has been successfully submitted!");
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Something went Wrong!')
+      });
+  };
   if (isLoading) {
     return (
       <div
@@ -101,17 +114,24 @@ const ShowForm = () => {
     );
   }
 
-  if(isVisibile===false){
-    return(<div className="container-fluid mt-4">
-        <div className="card w-100 shadow-sm rounded p-2">You don't have access to this form.</div>
-    </div>)
+  if (isVisibile === false) {
+    return (
+      <div className="container-fluid mt-4">
+        <div className="card w-100 shadow-sm rounded p-2">
+          You don't have access to this form.
+        </div>
+      </div>
+    );
   }
 
-  
-  if(alreadyResponded){
-    return(<div className="container-fluid mt-4">
-        <div className="card w-100 shadow-sm rounded p-2">You have aready responed to this form.</div>
-    </div>)
+  if (alreadyResponded) {
+    return (
+      <div className="container-fluid mt-4">
+        <div className="card w-100 shadow-sm rounded p-2">
+          You have aready responed to this form.
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -121,7 +141,9 @@ const ShowForm = () => {
           <h4 className="mb-0 text-primary">{data.formName}</h4>
           <br />
           <h6 className="mb-2">{data.description}</h6>
-          {data.lastDate && <h6 className="mb-0">Last Date : {data.lastDate}</h6>}
+          {data.lastDate && (
+            <h6 className="mb-0">Last Date : {data.lastDate}</h6>
+          )}
         </div>
         <div className="card-body">
           <form onSubmit={handleSubmit}>
@@ -169,7 +191,11 @@ const ShowForm = () => {
                 </>
               );
             })}
-            <input type="submit" className="btn btn-primary" value={'Submit Response'}/>
+            <input
+              type="submit"
+              className="btn btn-primary"
+              value={"Submit Response"}
+            />
           </form>
         </div>
       </div>
