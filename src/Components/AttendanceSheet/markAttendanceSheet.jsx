@@ -82,6 +82,10 @@ const MarkAttendanceSheet = () => {
             .withFaceExpressions()
             .withFaceDescriptor();
 
+          if(count===5){
+            alert('Sorry your face is not matching with our Database')
+          }  
+
           if (detections && count < 5) {
             const resizedDetections = faceapi.resizeResults(
               detections,

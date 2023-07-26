@@ -53,7 +53,7 @@ const Dashboard = () => {
       <div className="container-fluid flex-grow-1 container-p-y">
         <div className="row">
           <div className="col-12 mb-4 order-0">
-            <div className="card w-100">
+            <div className="card w-100 rounded shadow-sm">
               <div className="d-flex align-items-end row">
                 <div className="col-sm-7">
                   <div className="card-body">
@@ -149,12 +149,13 @@ const Dashboard = () => {
           </div>
         </div> */}
 
-        <div className="col-lg-12 col-md-4 order-1">
+        <div className="col-lg-12 col-md-4 order-1 mb-4">
           <div
-            className="d-flex flex-wrap"
+            className="row g-4"
             style={{ justifyContent: "space-between" }}
           >
-            <div className="card mb-4  col-lg-3 col-md-6">
+            <div className="col-lg-6 col-md-6">
+            <div className="card w-100 rounded shadow-sm ">
               <div className="card-body">
                 <div className="card-title d-flex align-items-start justify-content-between">
                   <div className="avatar flex-shrink-0">
@@ -169,8 +170,10 @@ const Dashboard = () => {
                 <h3 className="card-title mb-2">{dashboardData.user.count}</h3>
               </div>
             </div>
-
-            <div className="card mb-4 col-lg-3 col-md-6 col-12">
+            </div>
+            
+            <div className="col-lg-6 col-md-6">
+            <div className="card w-100 rounded shadow-sm  ">
               <div className="card-body">
                 <div className="card-title d-flex align-items-start justify-content-between">
                   <div className="avatar flex-shrink-0">
@@ -187,8 +190,10 @@ const Dashboard = () => {
                 </h3>
               </div>
             </div>
+            </div>
 
-            <div className="card mb-4 col-lg-3 col-md-6 col-12">
+            <div className="col-lg-6 col-md-6">
+            <div className="card w-100 rounded shadow-sm  ">
               <div className="card-body">
                 <div className="card-title d-flex align-items-start justify-content-between">
                   <div className="avatar flex-shrink-0">
@@ -205,8 +210,10 @@ const Dashboard = () => {
                 </h3>
               </div>
             </div>
+            </div>
 
-            <div className="card mb-4 col-lg-2 col-md-6 col-12">
+            <div className="col-lg-6 col-md-6">
+            <div className="card w-100 rounded shadow-sm  ">
               <div className="card-body">
                 <div className="card-title d-flex align-items-start justify-content-between">
                   <div className="avatar flex-shrink-0">
@@ -222,6 +229,7 @@ const Dashboard = () => {
                   {dashboardData.batch.count}
                 </h3>
               </div>
+            </div>
             </div>
           </div>
         </div>

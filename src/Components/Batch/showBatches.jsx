@@ -34,10 +34,10 @@ const ShowBatches = () => {
   </div>
   }
   return (
-    <div className="container-fluid mt-2">
+    <div className="container-fluid mt-4">
       <div className="row mt-4">
         {data.map(elem=>{return <div className="col-md-6  col-lg-4">
-          <div className="card mb-3 ">
+          <div className="card w-100 rounded shadow-sm mb-3 ">
             <div className="card-body">
               <h5 className="card-title text-primary">{elem.name}</h5>
               <p className="card-text" style={{height:'100px',overflowY:'auto'}}>

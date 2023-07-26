@@ -140,7 +140,7 @@ const CreateAttendanceSheet = () => {
 
   return (
     <>
-      <div className="container-fluid">
+      <div className="container-fluid mt-4">
         <form
           className="bg-white px-3 mt-4 py-3 mb-4 shadow-sm rounded"
           onSubmit={(e) => {
@@ -148,7 +148,7 @@ const CreateAttendanceSheet = () => {
             handleSubmit();
           }}
         >
-          <h4 className="text-primary">Create Attendance Sheet</h4>
+          <h4 className="py-2 text-primary">Create Attendance Sheet</h4>
           {FormTillNow.map((field) => {
             return (
               <>

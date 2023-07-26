@@ -55,12 +55,13 @@ const MainLayout = (props) => {
             </a>
             
           </NavLink>
-          <li className="menu-item ">
+          
+          <NavLink  to='/MarkAttendance' activeClassName="active" className="menu-item ">
             <a  className="menu-link">
               <i className="menu-icon tf-icons bx bx-scan" />
               <div data-i18n="Analytics">Start Attendance</div>
             </a>
-          </li>
+          </NavLink>
           
           {/* Layouts */}
           <li className="menu-header small text-uppercase">

@@ -34,6 +34,7 @@ import ShowAllBatchUser from './Components/UserPanel/Batch/showAllBatchUser';
 import ShowStudyMaterialUser from './Components/UserPanel/StudyMaterial/showStudyMaterialUser';
 import ShowAllNoticesUser from './Components/UserPanel/Notices/showAllNoticesUser';
 import ShowAttendanceSheetUser from './Components/UserPanel/AttendanceSheet/showAttendanceSheetUser';
+import MarkAllAttendanceSheets from './Components/AttendanceSheet/MarkAllAttendanceSheet';
 
 
 const App = () => {
@@ -83,7 +84,8 @@ const App = () => {
 
               <Route path='/profile' element={isAuthenticated ? <MainLayout><CreateProfile/></MainLayout>:<LoginPage/>}/>
               <Route path="/admin" element={ isAuthenticated? <MainLayout><Dashboard/></MainLayout> : <LoginPage/>} />
-              <Route path="/test/:id" element={ isAuthenticated? <MainLayout><MarkAttendanceSheet/></MainLayout> : <LoginPage/>} />
+              <Route path="/markAttendance/:id" element={ isAuthenticated  && role=='ADMIN'? <MainLayout><MarkAttendanceSheet/></MainLayout> : <LoginPage/>} />
+              <Route path="/MarkAttendance" element={isAuthenticated && role=='ADMIN'? <MainLayout><MarkAllAttendanceSheets/></MainLayout>:<LoginPage/>}/>
               
 
               {/*Attendance Sheets*/}

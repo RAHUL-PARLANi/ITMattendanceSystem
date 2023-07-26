@@ -75,7 +75,7 @@ const ShowALLFeedBackForms = () => {
         {data.map((elem) => {
           return (
             <div className="col-md-6  col-lg-4">
-              <div className="card mb-3 ">
+              <div className="card w-100 rounded shadow-sm mb-3 ">
                 <div className="card-body">
                   <h5 className="card-title h4 text-primary mb-2">{elem.formName}</h5>
                   
