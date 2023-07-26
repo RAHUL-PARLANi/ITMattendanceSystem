@@ -4,11 +4,13 @@ import useAxiosInstance from "../../axiosInstance";
 import { login } from "../../features/user";
 import * as faceapi from "face-api.js";
 import "../FaceDetection/FaceDetection.css";
-
+import { CollegeData } from "./CollegeData";
 const CreateProfile = () => {
   const axiosInstance = useAxiosInstance();
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState({});
+  const [univercityType, setUnivercityType] = useState("");
+  const [univercityName, setUnivercityName] = useState("");
 
   //faceEmbedding
   const [faceEmbedding, setFaceEmbedding] = useState([]);
@@ -182,6 +184,8 @@ const CreateProfile = () => {
       .get("/users/" + userData.id)
       .then((res) => {
         setFormData(res.data);
+        setUnivercityName(res.data.currentUnivercity.name || "")
+        setUnivercityType(res.data.currentUnivercity.type || "")
         setIsLoading(false);
       })
       .catch((err) => {
@@ -196,6 +200,10 @@ const CreateProfile = () => {
     axiosInstance
       .patch("/users/" + userData.id, {
         ...formData,
+        currentUnivercity:{
+          name:univercityName,
+          type:univercityType
+        },
         isSuccessFullyRegistered: true,
         faceEmbbedingData: faceEmbedding,
       })
@@ -432,9 +440,9 @@ const CreateProfile = () => {
   };
 
   const closeWebcam = () => {
-    videoRef.current.pause();
-    videoRef.current.srcObject.getTracks()[0].stop();
-    setCaptureVideo(false);
+    if(videoRef.current){videoRef.current.pause();
+      videoRef.current.srcObject.getTracks()[0].stop();
+      setCaptureVideo(false);}
   };
 
   if (isLoading) {
@@ -498,48 +506,6 @@ const CreateProfile = () => {
               </ul>
               <div className="card rounded shadow-sm w-100 mb-4">
                 <h5 className="card-header">Basic Details</h5>
-                {/* Account */}
-                {/* <div className="card-body">
-                  <div className="d-flex align-items-start align-items-sm-center gap-4">
-                    <img
-                      src="../assets/img/avatars/1.png"
-                      alt="user-avatar"
-                      className="d-block rounded"
-                      height={100}
-                      width={100}
-                      id="uploadedAvatar"
-                    />
-                    <div className="button-wrapper">
-                      <label
-                        htmlFor="upload"
-                        className="btn btn-primary me-2 mb-4"
-                        
-                      >
-                        <span className="d-none d-sm-block">
-                          Upload new photo
-                        </span>
-                        <i className="bx bx-upload d-block d-sm-none" />
-                        <input
-                          type="file"
-                          id="upload"
-                          className="account-file-input form-control"
-                          hidden=""
-                          accept="image/png, image/jpeg"
-                        />
-                      </label>
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary account-image-reset mb-4"
-                      >
-                        <i className="bx bx-reset d-block d-sm-none" />
-                        <span className="d-none d-sm-block">Reset</span>
-                      </button>
-                      <p className="text-muted mb-0">
-                        Allowed JPG, GIF or PNG. Max size of 800K
-                      </p>
-                    </div>
-                  </div>
-                </div>*/}
                 <hr className="my-0" />
                 <div className="card-body">
                   <form
@@ -608,6 +574,69 @@ const CreateProfile = () => {
                           </>
                         );
                       })}
+                      <div className="mb-3 col-md-6">
+                        <label
+                          htmlFor="selectUnivercityType"
+                          className="form-label"
+                        >
+                          College Name
+                        </label>
+                        <select
+                          required
+                          type="select"
+                          id={"selectUnivercityType"}
+                          value={univercityType}
+                          onChange={(e) => {
+                            setUnivercityType(e.target.value);
+                            if (e.target.value === "itmGoi") {
+                              setUnivercityName("ITM GOI");
+                            } else if (e.target.value === "itmUnivercity") {
+                              setUnivercityName("ITM UNIVERCITY");
+                            }
+                          }}
+                          disabled={userData.isSuccessFullyRegistered === true}
+                          className="select2 text-black form-select"
+                        >
+                          <option value={""}>Choose</option>
+                          {[
+                            { value: "itmGoi", label: "ITM GOI" },
+                            { value: "itmUnivercity", label: "ITM UNIVERCITY" },
+                            { value: "others", label: "Others" },
+                          ].map((elem) => {
+                            return (
+                              <option value={elem.value}>{elem.label}</option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      {univercityType === "others" && (
+                        <div className="mb-3 col-md-6">
+                          <label
+                            htmlFor="selectUnivercityName"
+                            className="form-label"
+                          >
+                            if Others, Select One Of These
+                          </label>
+                          <select
+                            required
+                            type="select"
+                            id={"selectUnivercityName"}
+                            value={univercityName}
+                            onChange={(e) => {
+                              setUnivercityName(e.target.value);
+                            }}
+                            disabled={
+                              userData.isSuccessFullyRegistered === true
+                            }
+                            className="select2 text-black form-select"
+                          >
+                            <option value={""}>Choose</option>
+                            {CollegeData.map((elem) => {
+                              return <option value={elem}>{elem}</option>;
+                            })}
+                          </select>
+                        </div>
+                      )}
                     </div>
                     <div className="mt-2">
                       <button type="submit" className="btn btn-primary me-2">
@@ -1107,16 +1136,15 @@ const CreateProfile = () => {
                       )}
                     </div>
                     <div className="mt-2">
-                      <button
+                      {faceEmbedding.length!=0&&<button
                         type="submit"
                         disabled={
-                          formData["isSuccessFullyRegistered"] == true ||
-                          faceEmbedding == []
+                          formData["isSuccessFullyRegistered"] == true
                         }
                         className="btn btn-primary me-2"
                       >
                         Save Details{" "}
-                      </button>
+                      </button>}
                     </div>
                   </form>
                 </div>

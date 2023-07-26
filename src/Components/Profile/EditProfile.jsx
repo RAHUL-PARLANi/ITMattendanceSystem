@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useAxiosInstance from "../../axiosInstance";
+import { CollegeData } from "./CollegeData";
 
 const EditProfile = () => {
   const axiosInstance = useAxiosInstance();
   const [page, setPage] = useState(0);
   const userID=window.location.href.split('/').pop();
   const [formData, setFormData] = useState({});
+  const [univercityType, setUnivercityType] = useState("");
+  const [univercityName, setUnivercityName] = useState("");
+
   const handleChange = (event) => {
     setFormData({
       ...formData,
@@ -172,6 +176,8 @@ const EditProfile = () => {
   useEffect(() => {
     axiosInstance.get('/users/'+userID).then(res=>{
       setFormData(res.data)
+      setUnivercityName(res.data.currentUnivercity.name || "")
+      setUnivercityType(res.data.currentUnivercity.type || "")
       setIsLoading(false)
     }).catch(err=>{
        alert('Something Went Wrong') 
@@ -351,7 +357,67 @@ const EditProfile = () => {
                           </>
                         );
                       })}
+                      <div className="mb-3 col-md-6">
+                        <label
+                          htmlFor="selectUnivercityType"
+                          className="form-label"
+                        >
+                          College Name
+                        </label>
+                        <select
+                          required
+                          type="select"
+                          id={"selectUnivercityType"}
+                          value={univercityType}
+                          onChange={(e) => {
+                            setUnivercityType(e.target.value);
+                            if (e.target.value === "itmGoi") {
+                              setUnivercityName("ITM GOI");
+                            } else if (e.target.value === "itmUnivercity") {
+                              setUnivercityName("ITM UNIVERCITY");
+                            }
+                          }}
+                          className="select2 text-black form-select"
+                        >
+                          <option value={""}>Choose</option>
+                          {[
+                            { value: "itmGoi", label: "ITM GOI" },
+                            { value: "itmUnivercity", label: "ITM UNIVERCITY" },
+                            { value: "others", label: "Others" },
+                          ].map((elem) => {
+                            return (
+                              <option value={elem.value}>{elem.label}</option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      {univercityType === "others" && (
+                        <div className="mb-3 col-md-6">
+                          <label
+                            htmlFor="selectUnivercityName"
+                            className="form-label"
+                          >
+                            if Others, Select One Of These
+                          </label>
+                          <select
+                            required
+                            type="select"
+                            id={"selectUnivercityName"}
+                            value={univercityName}
+                            onChange={(e) => {
+                              setUnivercityName(e.target.value);
+                            }}
+                            className="select2 text-black form-select"
+                          >
+                            <option value={""}>Choose</option>
+                            {CollegeData.map((elem) => {
+                              return <option value={elem}>{elem}</option>;
+                            })}
+                          </select>
+                        </div>
+                      )}
                     </div>
+
                     <div className="mt-2">
                       <button type="submit" className="btn btn-primary me-2">
                         Next
