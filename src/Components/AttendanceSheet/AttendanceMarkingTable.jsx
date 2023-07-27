@@ -10,19 +10,20 @@ import "datatables.net-buttons/js/buttons.html5.js";
 import "datatables.net-buttons/js/buttons.print.js";
 import { Link } from "react-router-dom";
 import * as faceapi from "face-api.js";
+import { toast } from "react-toastify";
 
 const BoardGame = (props) => {
   const { bg, keys, scanFace, BlockBGS, handleRowSelect, selectedRows } = props;
 
   const handleCheckboxChange = () => {
-    handleRowSelect(bg['Sl.No.']);
+    handleRowSelect(bg["Sl.No."]);
   };
 
   return (
     <tr>
       <td>
         <button
-          onClick={() => scanFace(bg.faceEmbbedingData,bg['Sl.No.'])}
+          onClick={() => scanFace(bg.faceEmbbedingData, bg["Sl.No."])}
           type="button"
           class="btn btn-icon btn-primary"
         >
@@ -37,7 +38,7 @@ const BoardGame = (props) => {
       <td>
         <input
           type="checkbox"
-          checked={selectedRows.includes(bg['Sl.No.'])}
+          checked={selectedRows.includes(bg["Sl.No."])}
           onChange={handleCheckboxChange}
         />
       </td>
@@ -51,7 +52,7 @@ const MarkAttendanceTable = (props) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const axiosInstance = useAxiosInstance();
   const [isLoading, setIsLoading] = useState(false);
-  const [sid,setSid] = useState("");
+  const [sid, setSid] = useState("");
 
   const [faceEmbbedingData, setFaceEmbeddingData] = useState([]);
   const [isVerified, setIsVerified] = useState(false);
@@ -72,7 +73,7 @@ const MarkAttendanceTable = (props) => {
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
         faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
-         ]);
+      ]);
       setModelsLoaded(true);
     };
     loadModels();
@@ -108,6 +109,11 @@ const MarkAttendanceTable = (props) => {
             .withFaceExpressions()
             .withFaceDescriptor();
 
+          if (count >= 5) {
+            toast.error("Sorry your face didn't match with our database");
+            closeWebcam();
+          }
+
           if (detections && count < 5) {
             const resizedDetections = faceapi.resizeResults(
               detections,
@@ -122,10 +128,10 @@ const MarkAttendanceTable = (props) => {
             if (dist < 0.456522) {
               setIsVerified(true);
               closeWebcam();
-              setErrorMessage("Admin Verified");
+              toast.success("Face Verified");
             } else {
               count++;
-              alert("Your Face is not Matching with Our Database,press ok to try Again");
+              toast.info("Trying Again");
             }
           }
         } catch (error) {
@@ -231,10 +237,10 @@ const MarkAttendanceTable = (props) => {
     console.log(selectedRows);
   }, [selectedRows]);
 
-  const scanFace = (faceEmbbedingData,sid) => {
+  const scanFace = (faceEmbbedingData, sid) => {
     setIsVerified(false);
     setFaceEmbeddingData(faceEmbbedingData);
-    setSid(sid)
+    setSid(sid);
     startVideo();
   };
 
@@ -278,64 +284,71 @@ const MarkAttendanceTable = (props) => {
       ) : (
         <div className="" style={{ marginTop: "50px" }}>
           {/*Scanner Component*/}
-          
-          {isVerified&& <>
-                <div className="bg-white mb-4 p-2 shadow-sm rounded">
-                    <h3>You Have Been Verified</h3>
-                    <h5>Click the button below to Mark Attendance</h5>
-                    <button 
-                    onClick={()=>{
-                        axiosInstance.patch('/attendancesheet/markattendance/'+window.location.href.split('/').pop(),{
-                            date:props.date,
-                            sid:sid
-                        })
-                        .then(res=>{
-                            if(res.data._id){
-                                alert("Your Attendance has been marked Successfully !")
-                                setIsVerified(false)
-                                setSid("")
-                            }
-                        }).catch(err=>{
-                            console.log(err)
-                        })
-                    }}
-                    className="btn btn-primary"><i class='bx bx-pin'></i> Mark</button>
-                </div>
-                </>
-            }
+
+          {isVerified && (
+            <>
+              <div className="bg-white mb-4 p-2 shadow-sm rounded">
+                <h3>You Have Been Verified</h3>
+                <h5>Click the button below to Mark Attendance</h5>
+                <button
+                  onClick={() => {
+                    axiosInstance
+                      .patch(
+                        "/attendancesheet/markattendance/" +
+                          window.location.href.split("/").pop(),
+                        {
+                          date: props.date,
+                          sid: sid,
+                        }
+                      )
+                      .then((res) => {
+                        if (res.data._id) {
+                          toast.success(
+                            "Your Attendance has been marked Successfully !"
+                          );
+                          setIsVerified(false);
+                          setSid("");
+                        }
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  }}
+                  className="btn btn-primary"
+                >
+                  <i class="bx bx-pin"></i> Mark
+                </button>
+              </div>
+            </>
+          )}
 
           {captureVideo ? (
             modelsLoaded ? (
-               
-                <>
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
                   <div
+                    className="box  m-2 border border-primary border-4 rounded"
                     style={{
                       display: "flex",
                       justifyContent: "center",
                     }}
                   >
-                    <div
-                      className="box  m-2 border border-primary border-4 rounded"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <video
-                        ref={videoRef}
-                        height={videoHeight}
-                        width={videoWidth}
-                        onPlay={handleVideoOnPlay}
-                        style={{ borderRadius: "10px" }}
-                      />
-                      <canvas
-                        ref={canvasRef}
-                        style={{ position: "absolute" }}
-                      />
-                    </div>
+                    <video
+                      ref={videoRef}
+                      height={videoHeight}
+                      width={videoWidth}
+                      onPlay={handleVideoOnPlay}
+                      style={{ borderRadius: "10px" }}
+                    />
+                    <canvas ref={canvasRef} style={{ position: "absolute" }} />
                   </div>
-                </>
-              
+                </div>
+              </>
             ) : (
               <div>
                 <div
@@ -417,51 +430,71 @@ const MarkAttendanceTable = (props) => {
                 </tr>
               </tfoot>
             </table>
-            {selectedRows.length!=0 &&
-            <div>
-                
-            <button onClick={()=>{
-                let input=window.prompt('Enter Password')
-                axiosInstance.patch('/attendancesheet/markall/'+window.location.href.split('/').pop(),{
-                    date:props.date,
-                    password:input,
-                    sids:selectedRows
-                }).then(elem=>{
-                    if(elem.data._id){
-                        alert("Marked Successfully")
-                    }
-                    if(elem.data.message){
-                        alert(elem.data.message)
-                    }
-                }).catch(err=>{
-                    console.log('Something Went Wrong')
-                })
-            }} className='btn btn-warning btn-sm me-2'>Mark Selected(Admin)</button>
-            <button 
-            onClick={()=>{
-                let input=window.prompt('Enter Password')
-                axiosInstance.patch('/attendancesheet/unMarkall/'+window.location.href.split('/').pop(),{
-                    date:props.date,
-                    password:input,
-                    sids:selectedRows
-                }).then(elem=>{
-                    if(elem.data._id){
-                        alert("UnMarked Successfully")
-                    }
-                    if(elem.data.message){
-                        alert(elem.data.message)
-                    }
-                }).catch(err=>{
-                    console.log('Something Went Wrong')
-                })
-            }}
-            className="btn btn-dark btn-sm me-2">Unmark Selected(Admin)</button>
-            </div>
-            }
+            {selectedRows.length != 0 && (
+              <div>
+                <button
+                  onClick={() => {
+                    let input = window.prompt("Enter Password");
+                    axiosInstance
+                      .patch(
+                        "/attendancesheet/markall/" +
+                          window.location.href.split("/").pop(),
+                        {
+                          date: props.date,
+                          password: input,
+                          sids: selectedRows,
+                        }
+                      )
+                      .then((elem) => {
+                        if (elem.data._id) {
+                          toast.success("Marked Successfully");
+                        }
+                        if (elem.data.message) {
+                          toast.warning(elem.data.message);
+                        }
+                      })
+                      .catch((err) => {
+                        console.log("Something Went Wrong");
+                      });
+                  }}
+                  className="btn btn-warning btn-sm me-2"
+                >
+                  Mark Selected(Admin)
+                </button>
+                <button
+                  onClick={() => {
+                    let input = window.prompt("Enter Password");
+                    axiosInstance
+                      .patch(
+                        "/attendancesheet/unMarkall/" +
+                          window.location.href.split("/").pop(),
+                        {
+                          date: props.date,
+                          password: input,
+                          sids: selectedRows,
+                        }
+                      )
+                      .then((elem) => {
+                        if (elem.data._id) {
+                          toast.success("UnMarked Successfully");
+                        }
+                        if (elem.data.message) {
+                          toast.warning(elem.data.message);
+                        }
+                      })
+                      .catch((err) => {
+                        console.log("Something Went Wrong");
+                      });
+                  }}
+                  className="btn btn-dark btn-sm me-2"
+                >
+                  Unmark Selected(Admin)
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
-      
     </>
   );
 };

@@ -85,6 +85,7 @@ const MarkAttendanceSheet = () => {
 
           if(count>=5){
             toast.error('Sorry your face is not matching with our Database')
+            closeWebcam();
           }  
 
           if (detections && count < 5) {
