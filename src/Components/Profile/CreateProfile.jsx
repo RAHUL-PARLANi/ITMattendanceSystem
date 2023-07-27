@@ -13,6 +13,7 @@ const CreateProfile = () => {
   const [formData, setFormData] = useState({});
   const [univercityType, setUnivercityType] = useState("");
   const [univercityName, setUnivercityName] = useState("");
+  const [miniLoading, setMiniLoading] = useState(false);
 
   //faceEmbedding
   const [faceEmbedding, setFaceEmbedding] = useState([]);
@@ -198,9 +199,9 @@ const CreateProfile = () => {
         setIsLoading(false);
       });
   }, []);
-  const history =useNavigate()
+  const history = useNavigate();
   const handleSubmit = (e) => {
-    setIsLoading(true)
+    setIsLoading(true);
     e.preventDefault();
     setIsLoading(true);
     axiosInstance
@@ -217,7 +218,7 @@ const CreateProfile = () => {
         setIsLoading(false);
         if (res.data.isSuccessFullyRegistered) {
           toast.success("Successful");
-          history('/user/home')
+          history("/user/home");
         }
       })
       .catch((er) => {
@@ -279,7 +280,7 @@ const CreateProfile = () => {
         .withFaceDescriptor();
 
       if (detections) {
-
+        setMiniLoading(false)
         const resizedDetections = faceapi.resizeResults(
           detections,
           displaySize
@@ -296,7 +297,9 @@ const CreateProfile = () => {
           toast.success("Face detected!");
           setFaceEmbedding(detections.descriptor);
         } else {
-          toast.warning("No face detected or face score is low.Try again a face score of 0.85 is recommended");
+          toast.warning(
+            "No face detected or face score is low.Try again, a face score of 0.85 is recommended"
+          );
         }
       } else {
         toast.error("No face detected.");
@@ -843,9 +846,9 @@ const CreateProfile = () => {
                             <span>Click Your Selfie and upload it.</span>
                           </span>
                           <input
-                            disabled={
-                              userData.isSuccessFullyRegistered === true
-                            }
+                            //  disabled={
+                            //    userData.isSuccessFullyRegistered === true
+                            //  }
                             type="file"
                             id="upload"
                             className="account-file-input form-control"
@@ -865,12 +868,17 @@ const CreateProfile = () => {
                           <span className="d-none d-sm-block">Reset</span>
                         </button>
                         <p className="text-muted mb-0">
-                          This image will only be used for extracting your Face Data.
+                          This image will only be used for extracting your Face
+                          Data.
                         </p>
                       </div>
 
                       <br />
                       {uploadedImage ? (
+                        <>
+                        {miniLoading&&<div>
+                          Detecting Face.....
+                        </div>}
                         <div
                           style={{
                             position: "relative",
@@ -887,7 +895,10 @@ const CreateProfile = () => {
                               width: "100%",
                               height: "auto",
                             }}
-                            onLoad={handleImageDetection}
+                            onLoad={() => {
+                              setMiniLoading(true);
+                              handleImageDetection();
+                            }}
                           />
                           <canvas
                             ref={canvasRef}
@@ -899,6 +910,7 @@ const CreateProfile = () => {
                             }}
                           />
                         </div>
+                        </>
                       ) : (
                         <div>No image uploaded yet.</div>
                       )}
@@ -930,12 +942,12 @@ const CreateProfile = () => {
                       )}
                     </div>
                     <div className="mt-2">
-                      {
+                      {faceEmbedding.length!=0&&
                         <button
                           type="submit"
-                          disabled={
-                            formData["isSuccessFullyRegistered"] == true
-                          }
+                          //  disabled={
+                          //    formData["isSuccessFullyRegistered"] == true
+                          //  }
                           className="btn btn-primary me-2"
                         >
                           Save Details{" "}

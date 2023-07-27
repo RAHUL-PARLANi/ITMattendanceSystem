@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useAxiosInstance from "../../axiosInstance";
 import { useSelector } from "react-redux";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ShowForm = () => {
@@ -18,6 +18,7 @@ const ShowForm = () => {
   const [isVisibile, setIsVisibile] = useState();
 
   useEffect(() => {
+    setIsLoading(true);
     axiosInstance
       .get("/feedbackform/" + window.location.href.split("/").pop())
       .then((res) => {
@@ -48,9 +49,11 @@ const ShowForm = () => {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     axiosInstance
       .get("/users/" + userData.id)
       .then((res) => {
+        setIsLoading(false);
         setFormData({
           ...formData,
           submittedBy: res.data._id,
@@ -67,8 +70,9 @@ const ShowForm = () => {
       })
       .catch((err) => {
         toast.error("Something went wrong");
+        setIsLoading(false);
       });
-  }, [isLoading]);
+  }, []);
 
   const handleChange = (event) => {
     setFormData({
@@ -90,7 +94,7 @@ const ShowForm = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error('Something went Wrong!')
+        toast.error("Something went Wrong!");
       });
   };
   if (isLoading) {

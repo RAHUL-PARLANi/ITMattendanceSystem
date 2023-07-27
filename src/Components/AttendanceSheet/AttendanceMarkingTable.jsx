@@ -241,7 +241,7 @@ const MarkAttendanceTable = (props) => {
   }, [selectedRows]);
 
   const scanFace = (faceEmbbedingData, sid) => {
-    videoComponentRef.current.scrollIntoView()
+   // videoComponentRef.current.scrollIntoView()
     setIsVerified(false);
     setFaceEmbeddingData(faceEmbbedingData);
     setSid(sid);
@@ -293,7 +293,7 @@ const MarkAttendanceTable = (props) => {
           {isVerified && (
             <>
               <div className="bg-white mb-4 p-2 shadow-sm rounded">
-                <h3>You Have Been Verified</h3>
+                <h3>You (Serial Number {sid}) Have Been Verified</h3>
                 <h5>Click the button below to Mark Attendance</h5>
                 <button
                   onClick={() => {
@@ -331,7 +331,7 @@ const MarkAttendanceTable = (props) => {
             modelsLoaded ? (
               <>
                 <div
-                  ref={videoComponentRef}
+                  //ref={videoComponentRef}
                   style={{
                     display: "flex",
                     justifyContent: "center",
