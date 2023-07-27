@@ -97,19 +97,19 @@ const CreateProfile = () => {
     {
       name: "noOfCurrentBacklogs",
       label: "No. of Current Backlogs",
-      type: "text",
+      type: "Number",
       required: true,
     },
     {
       name: "historyOfBacklogs",
       label: "History of Backlogs",
-      type: "text",
+      type: "Number",
       required: true,
     },
     {
       name: "tenthMarksPercentage",
       label: "10th Marks Percentage",
-      type: "text",
+      type: "Number",
       required: true,
     },
     {
@@ -127,7 +127,7 @@ const CreateProfile = () => {
     {
       name: "tweelthMarksPercentage",
       label: "12th Marks Percentage",
-      type: "text",
+      type: "Number",
       required: true,
     },
     {
@@ -151,7 +151,7 @@ const CreateProfile = () => {
     {
       name: "aggregatePercentageGraduation",
       label: "Aggregate Percentage (Graduation)",
-      type: "text",
+      type: "Number",
       required: true,
     },
     {
