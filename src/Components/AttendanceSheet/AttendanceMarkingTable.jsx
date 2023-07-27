@@ -62,8 +62,9 @@ const MarkAttendanceTable = (props) => {
   const videoRef = useRef();
   const canvasRef = useRef();
   const videoHeight = 400;
-  const videoWidth = 300;
-  let count = 0;
+  const videoWidth = 260;
+  const  [count,setCount] = useState(0);
+  const videoComponentRef = useRef();
 
   useEffect(() => {
     const loadModels = async () => {
@@ -82,7 +83,7 @@ const MarkAttendanceTable = (props) => {
   const startVideo = () => {
     setCaptureVideo(true);
     navigator.mediaDevices
-      .getUserMedia({ video: { height: 400, width: 300 } })
+      .getUserMedia({ video: { height: 400, width: 260 } })
       .then((stream) => {
         let video = videoRef.current;
         video.srcObject = stream;
@@ -103,12 +104,14 @@ const MarkAttendanceTable = (props) => {
         };
 
         try {
-          const detections = await faceapi
+          let detections;
+          if(count<=5){
+          detections = await faceapi
             .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
             .withFaceLandmarks()
             .withFaceExpressions()
             .withFaceDescriptor();
-
+          }  
           if (count >= 5) {
             toast.error("Sorry your face didn't match with our database");
             closeWebcam();
@@ -130,7 +133,7 @@ const MarkAttendanceTable = (props) => {
               closeWebcam();
               toast.success("Face Verified");
             } else {
-              count++;
+              setCount(count+1);
               toast.info("Trying Again");
             }
           }
@@ -238,9 +241,11 @@ const MarkAttendanceTable = (props) => {
   }, [selectedRows]);
 
   const scanFace = (faceEmbbedingData, sid) => {
+    videoComponentRef.current.scrollIntoView()
     setIsVerified(false);
     setFaceEmbeddingData(faceEmbbedingData);
     setSid(sid);
+    setCount(0)
     startVideo();
   };
 
@@ -326,13 +331,14 @@ const MarkAttendanceTable = (props) => {
             modelsLoaded ? (
               <>
                 <div
+                  ref={videoComponentRef}
                   style={{
                     display: "flex",
                     justifyContent: "center",
                   }}
                 >
                   <div
-                    className="box  m-2 border border-primary border-4 rounded"
+                    className="box m-2 "
                     style={{
                       display: "flex",
                       justifyContent: "center",
@@ -343,7 +349,7 @@ const MarkAttendanceTable = (props) => {
                       height={videoHeight}
                       width={videoWidth}
                       onPlay={handleVideoOnPlay}
-                      style={{ borderRadius: "10px" }}
+                      //style={{ borderRadius: "10px" }}
                     />
                     <canvas ref={canvasRef} style={{ position: "absolute" }} />
                   </div>

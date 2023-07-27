@@ -18,7 +18,7 @@ const MarkAttendanceSheet = () => {
   const [captureVideo, setCaptureVideo] = useState(false);
   const videoRef = useRef();
   const videoHeight = 400;
-  const videoWidth = 300;
+  const videoWidth = 260;
   const canvasRef = useRef();
   let count = 0;
 
@@ -56,7 +56,7 @@ const MarkAttendanceSheet = () => {
   const startVideo = () => {
     setCaptureVideo(true);
     navigator.mediaDevices
-      .getUserMedia({ video: { height: 400, width: 300 } })
+      .getUserMedia({ video: { height: 400, width: 260 } })
       .then((stream) => {
         let video = videoRef.current;
         video.srcObject = stream;
@@ -198,7 +198,7 @@ const MarkAttendanceSheet = () => {
                       }}
                     >
                       <div
-                        className="box  m-2 border border-primary border-4 rounded"
+                        className="box  m-2 "
                         style={{
                           display: "flex",
                           justifyContent: "center",
