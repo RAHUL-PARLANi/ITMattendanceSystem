@@ -187,6 +187,7 @@ const CreateProfile = () => {
       .get("/users/" + userData.id)
       .then((res) => {
         setFormData(res.data);
+        setFaceEmbedding(res.data.faceEmbbedingData)
         setUnivercityName(res.data.currentUnivercity.name || "");
         setUnivercityType(res.data.currentUnivercity.type || "");
         setIsLoading(false);
@@ -830,9 +831,9 @@ const CreateProfile = () => {
                             <span>Click Your Selfie and upload it.</span>
                           </span>
                           <input
-                            //  disabled={
-                            //    userData.isSuccessFullyRegistered === true
-                            //  }
+                              disabled={
+                                userData.isSuccessFullyRegistered === true
+                              }
                             type="file"
                             id="upload"
                             className="account-file-input form-control"
