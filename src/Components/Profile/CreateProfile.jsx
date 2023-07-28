@@ -217,8 +217,12 @@ const CreateProfile = () => {
       .then((res) => {
         setIsLoading(false);
         if (res.data.isSuccessFullyRegistered) {
-          toast.success("Successful");
-          history("/user/home");
+          toast.success(
+            "Successfully Registered, Now the Page will be reloaded"
+          );
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         }
       })
       .catch((er) => {
@@ -280,7 +284,7 @@ const CreateProfile = () => {
         .withFaceDescriptor();
 
       if (detections) {
-        setMiniLoading(false)
+        setMiniLoading(false);
         const resizedDetections = faceapi.resizeResults(
           detections,
           displaySize
@@ -328,7 +332,7 @@ const CreateProfile = () => {
         </div>
       </>
     );
-  } else if (page == 0) {
+  } else if (page == 1) {
     return (
       <div>
         <div className="container-xxl flex-grow-1 container-p-y">
@@ -336,33 +340,18 @@ const CreateProfile = () => {
             <div className="col-lg-12 w-100">
               <ul className="nav nav-pills flex-column flex-md-row mb-3">
                 <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(0);
-                    }}
-                    className="nav-link active"
-                  >
+                  <a className="nav-link">
+                    <i className="bx bx-scan me-1" /> Face Scan
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link active">
                     <i className="bx bx-user me-1" /> Basic Information
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(1);
-                    }}
-                    className="nav-link"
-                  >
+                  <a className="nav-link">
                     <i className="bx bx-bell me-1" /> Education Details
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(2);
-                    }}
-                    className="nav-link"
-                  >
-                    <i className="bx bx-scan me-1" /> Face Scan
                   </a>
                 </li>
               </ul>
@@ -373,7 +362,7 @@ const CreateProfile = () => {
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
-                      setPage(1);
+                      setPage(2);
                     }}
                   >
                     <div className="row">
@@ -501,9 +490,20 @@ const CreateProfile = () => {
                       )}
                     </div>
                     <div className="mt-2">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setPage(0);
+                        }}
+                        className="btn btn-outline-primary me-2"
+                      >
+                        back
+                      </button>
                       <button type="submit" className="btn btn-primary me-2">
                         Next
                       </button>
+
                       {userData.isSuccessFullyRegistered && (
                         <button
                           type="button"
@@ -623,7 +623,7 @@ const CreateProfile = () => {
         </div>
       </div>
     );
-  } else if (page == 1) {
+  } else if (page == 2) {
     return (
       <div>
         <div className="container-xxl flex-grow-1 container-p-y">
@@ -631,33 +631,18 @@ const CreateProfile = () => {
             <div className="col-md-12">
               <ul className="nav nav-pills flex-column flex-md-row mb-3">
                 <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(0);
-                    }}
-                    className="nav-link "
-                  >
+                  <a className="nav-link">
+                    <i className="bx bx-scan me-1" /> Face Scan
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link ">
                     <i className="bx bx-user me-1" /> Basic Information
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(1);
-                    }}
-                    className="nav-link active"
-                  >
+                  <a className="nav-link active">
                     <i className="bx bx-bell me-1" /> Education Details
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(2);
-                    }}
-                    className="nav-link"
-                  >
-                    <i className="bx bx-scan me-1" /> Face Scan
                   </a>
                 </li>
               </ul>
@@ -708,10 +693,7 @@ const CreateProfile = () => {
                 <hr className="my-0" />
                 <div className="card-body">
                   <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setPage(2);
-                    }}
+                    onSubmit={handleSubmit}
                   >
                     <div className="row">
                       {Page2Data.map((field) => {
@@ -775,8 +757,20 @@ const CreateProfile = () => {
                       })}
                     </div>
                     <div className="mt-2">
-                      <button type="submit" className="btn btn-primary me-2">
-                        Next
+                      <button
+                        className="btn btn-outline-primary me-2"
+                        onClick={() => {
+                          setPage(1);
+                        }}
+                      >
+                        Back
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={userData.isSuccessFullyRegistered === true}
+                        className="btn btn-primary me-2"
+                      >
+                        Save Details
                       </button>
                     </div>
                   </form>
@@ -788,7 +782,7 @@ const CreateProfile = () => {
         </div>
       </div>
     );
-  } else if (page == 2) {
+  } else if (page == 0) {
     return (
       <div>
         <div className="container-xxl flex-grow-1 container-p-y">
@@ -796,33 +790,18 @@ const CreateProfile = () => {
             <div className="col-md-12">
               <ul className="nav nav-pills flex-column flex-md-row mb-3">
                 <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(0);
-                    }}
-                    className="nav-link "
-                  >
+                  <a className="nav-link active">
+                    <i className="bx bx-scan me-1" /> Face Scan
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link ">
                     <i className="bx bx-user me-1" /> Basic Information
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(1);
-                    }}
-                    className="nav-link "
-                  >
+                  <a className="nav-link ">
                     <i className="bx bx-bell me-1" /> Education Details
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    onClick={() => {
-                      setPage(2);
-                    }}
-                    className="nav-link active"
-                  >
-                    <i className="bx bx-scan me-1" /> Face Scan
                   </a>
                 </li>
               </ul>
@@ -830,7 +809,12 @@ const CreateProfile = () => {
                 <h5 className="card-header">Face Scan</h5>
                 <hr className="my-0" />
                 <div className="card-body">
-                  <form onSubmit={handleSubmit}>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      setPage(1);
+                    }}
+                  >
                     {/* <FaceDetection/>  */}
 
                     <div>
@@ -876,40 +860,38 @@ const CreateProfile = () => {
                       <br />
                       {uploadedImage ? (
                         <>
-                        {miniLoading&&<div>
-                          Detecting Face.....
-                        </div>}
-                        <div
-                          style={{
-                            position: "relative",
-                            display: "inline-block",
-                            width: "300px",
-                          }}
-                        >
-                          <img
-                            ref={imageRef}
-                            src={uploadedImage}
-                            alt="Uploaded"
+                          {miniLoading && <div>Detecting Face.....</div>}
+                          <div
                             style={{
-                              borderRadius: "10px",
-                              width: "100%",
-                              height: "auto",
+                              position: "relative",
+                              display: "inline-block",
+                              width: "300px",
                             }}
-                            onLoad={() => {
-                              setMiniLoading(true);
-                              handleImageDetection();
-                            }}
-                          />
-                          <canvas
-                            ref={canvasRef}
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              borderRadius: "10px",
-                            }}
-                          />
-                        </div>
+                          >
+                            <img
+                              ref={imageRef}
+                              src={uploadedImage}
+                              alt="Uploaded"
+                              style={{
+                                borderRadius: "10px",
+                                width: "100%",
+                                height: "auto",
+                              }}
+                              onLoad={() => {
+                                setMiniLoading(true);
+                                handleImageDetection();
+                              }}
+                            />
+                            <canvas
+                              ref={canvasRef}
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                borderRadius: "10px",
+                              }}
+                            />
+                          </div>
                         </>
                       ) : (
                         <div>No image uploaded yet.</div>
@@ -942,17 +924,13 @@ const CreateProfile = () => {
                       )}
                     </div>
                     <div className="mt-2">
-                      {faceEmbedding.length!=0&&
-                        <button
-                          type="submit"
-                          //  disabled={
-                          //    formData["isSuccessFullyRegistered"] == true
-                          //  }
-                          className="btn btn-primary me-2"
-                        >
-                          Save Details{" "}
-                        </button>
-                      }
+                      <button
+                        type="submit"
+                        disabled={faceEmbedding.length == 0}
+                        className="btn btn-primary me-2"
+                      >
+                        Next{" "}
+                      </button>
                     </div>
                   </form>
                 </div>

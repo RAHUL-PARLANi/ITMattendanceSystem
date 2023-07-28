@@ -53,7 +53,6 @@ const ShowForm = () => {
     axiosInstance
       .get("/users/" + userData.id)
       .then((res) => {
-        setIsLoading(false);
         setFormData({
           ...formData,
           submittedBy: res.data._id,
@@ -67,6 +66,7 @@ const ShowForm = () => {
           dateOfBirth: res.data.dateOfBirth,
           gender: res.data.gender,
         });
+        setIsLoading(false);  
       })
       .catch((err) => {
         toast.error("Something went wrong");

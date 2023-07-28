@@ -145,6 +145,11 @@ const LoginPage = () => {
                       </button>
                     </div>
                   </form>
+                  <div style={{display:'flex',width:'100%',justifyContent:'center'}}>
+                  <button onClick={()=>{
+                    localStorage.removeItem("ITM-Admin-User")
+                  }} className="btn btn-outline-dark btn-sm">Remove Saved Passwword</button>
+                </div>
                 </div>
               </div>
               {/* /Register */}
