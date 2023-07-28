@@ -7,10 +7,12 @@ import usersReducer from "./features/user";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import attendanceAdmin from './features/attendanceAdmin';
 
 const store = configureStore({
   reducer: {
     users: usersReducer,
+    attendanceMod:attendanceAdmin
   },
 });
 

@@ -8,13 +8,14 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-buttons/js/buttons.flash.js";
 import "datatables.net-buttons/js/buttons.html5.js";
 import "datatables.net-buttons/js/buttons.print.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as faceapi from "face-api.js";
 import { toast } from "react-toastify";
 
 const BoardGame = (props) => {
-  const { bg, keys, scanFace, BlockBGS, handleRowSelect, selectedRows } = props;
-
+  const { bg, keys, scanFace, BlockBGS, handleRowSelect, selectedRows, date } =
+    props;
+  const history = useNavigate();
   const handleCheckboxChange = () => {
     handleRowSelect(bg["Sl.No."]);
   };
@@ -22,13 +23,20 @@ const BoardGame = (props) => {
   return (
     <tr>
       <td>
-        <button
-          onClick={() => scanFace(bg.faceEmbbedingData, bg["Sl.No."])}
-          type="button"
-          class="btn btn-icon btn-primary"
+        <Link
+          to={
+            "/markSingleAttendance/" +
+            date +
+            "/" +
+            bg["Sl.No."] +
+            "/" +
+            window.location.href.split("/").pop()
+          }
         >
-          <span class="tf-icons bx bx-scan"></span>
-        </button>
+          <button type="button" class="btn btn-icon btn-primary">
+            <span class="tf-icons bx bx-scan"></span>
+          </button>
+        </Link>
       </td>
       {keys.map((key) => (
         <td className="text-xs font-weight-bold" key={key}>
@@ -63,7 +71,7 @@ const MarkAttendanceTable = (props) => {
   const canvasRef = useRef();
   const videoHeight = 400;
   const videoWidth = 260;
-  const  [count,setCount] = useState(0);
+  const [count, setCount] = useState(0);
   const videoComponentRef = useRef();
 
   useEffect(() => {
@@ -105,13 +113,13 @@ const MarkAttendanceTable = (props) => {
 
         try {
           let detections;
-          if(count<=5){
-          detections = await faceapi
-            .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
-            .withFaceLandmarks()
-            .withFaceExpressions()
-            .withFaceDescriptor();
-          }  
+          if (count <= 5) {
+            detections = await faceapi
+              .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+              .withFaceLandmarks()
+              .withFaceExpressions()
+              .withFaceDescriptor();
+          }
           if (count >= 5) {
             toast.error("Sorry your face didn't match with our database");
             closeWebcam();
@@ -132,8 +140,9 @@ const MarkAttendanceTable = (props) => {
               setIsVerified(true);
               closeWebcam();
               toast.success("Face Verified");
+              faceEmbbedingData([]);
             } else {
-              setCount(count+1);
+              setCount(count + 1);
               toast.info("Trying Again");
             }
           }
@@ -241,11 +250,11 @@ const MarkAttendanceTable = (props) => {
   }, [selectedRows]);
 
   const scanFace = (faceEmbbedingData, sid) => {
-   // videoComponentRef.current.scrollIntoView()
+    // videoComponentRef.current.scrollIntoView()
     setIsVerified(false);
     setFaceEmbeddingData(faceEmbbedingData);
     setSid(sid);
-    setCount(0)
+    setCount(0);
     startVideo();
   };
 
@@ -262,6 +271,7 @@ const MarkAttendanceTable = (props) => {
           handleRowSelect={handleRowSelect}
           selectedRows={selectedRows}
           key={bg._id}
+          date={props.date}
         />
       );
     });

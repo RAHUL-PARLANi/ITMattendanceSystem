@@ -37,14 +37,21 @@ import ShowAttendanceSheetUser from "./Components/UserPanel/AttendanceSheet/show
 import MarkAllAttendanceSheets from "./Components/AttendanceSheet/MarkAllAttendanceSheet";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SingleStudentMarking from "./Components/AttendanceSheet/SingleStudentmarking";
+import VerifyAttendanceSheet from "./Components/AttendanceSheet/verifyAttendanceSheet";
 
 const App = () => {
   const dispatch = useDispatch();
+  const isModVerified = useSelector(
+    (state) => state.attendanceMod.value.isAuthenticated
+  );
   let isAuthenticated = useSelector(
     (state) => state.users.value.isAuthenticated
   );
   let role = useSelector((state) => state.users.value.role);
   // console.log(useSelector((state) => state.users.value))
+
+  console.log(isModVerified)
   useEffect(() => {
     // if (localStorage.getItem("user")) {
     //   const data = JSON.parse(localStorage.getItem("user"));
@@ -221,9 +228,35 @@ const App = () => {
             path="/markAttendance/:id"
             element={
               isAuthenticated && role == "ADMIN" ? (
-                <MainLayout>
-                  <MarkAttendanceSheet />
-                </MainLayout>
+                isModVerified ? (
+                  <MainLayout>
+                    <MarkAttendanceSheet />
+                  </MainLayout>
+                ) : (
+                  <MainLayout>
+                    <VerifyAttendanceSheet />
+                  </MainLayout>
+                )
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/markSingleAttendance/:date/:sid/:id"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                isModVerified ? (
+                  <MainLayout>
+                    <SingleStudentMarking />
+                  </MainLayout>
+                ) : (
+                  <>
+                    <MainLayout>
+                      <VerifyAttendanceSheet />
+                    </MainLayout>
+                  </>
+                )
               ) : (
                 <LoginPage />
               )
