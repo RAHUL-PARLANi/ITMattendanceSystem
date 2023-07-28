@@ -510,7 +510,7 @@ const CreateProfile = () => {
                           type="button"
                           data-bs-toggle="modal"
                           data-bs-target="#basicModal"
-                          className="btn btn-outline-primary me-2"
+                          className="btn btn-outline-primary mt-lg-0 mt-2"
                         >
                           Request Changes
                         </button>
