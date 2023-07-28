@@ -411,12 +411,12 @@ const MarkAttendanceTable = (props) => {
                   ))}
                   <th className="text-primary" scope="col">
                     Select{" "}
-                    <button
+                    {/* <button
                       onClick={handleSelectAll}
                       className="btn btn-primary btn-sm"
                     >
                       All
-                    </button>{" "}
+                    </button>{" "} */}
                   </th>
                 </tr>
               </thead>

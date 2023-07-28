@@ -169,7 +169,7 @@ const VerifyAttendanceSheet = () => {
                 display: "flex",
                 justifyContent: "center",
               }}
-            >
+            ><div>
               <div>
                 {captureVideo && modelsLoaded ? (
                   <button
@@ -200,6 +200,7 @@ const VerifyAttendanceSheet = () => {
                   justifyContent: "center",
                 }}
               >
+                
                 <video
                   ref={videoRef}
                   height={videoHeight}
@@ -209,6 +210,7 @@ const VerifyAttendanceSheet = () => {
                 />
                 <canvas ref={canvasRef} style={{ position: "absolute" }} />
               </div>
+            </div>
             </div>
           ) : (
             <div>
