@@ -176,8 +176,10 @@ const EditProfile = () => {
   useEffect(() => {
     axiosInstance.get('/users/'+userID).then(res=>{
       setFormData(res.data)
+      if(res.data.currentUnivercity){
       setUnivercityName(res.data.currentUnivercity.name || "")
       setUnivercityType(res.data.currentUnivercity.type || "")
+      }
       setIsLoading(false)
     }).catch(err=>{
        alert('Something Went Wrong') 
@@ -254,7 +256,7 @@ const EditProfile = () => {
                   </a>
                 </li>
               </ul>
-              <div className="card mb-4">
+              <div className="card rounded shadow-sm w-100 mb-4">
                 <h5 className="card-header">Basic Details</h5>
                 {/* Account */}
                 
@@ -427,7 +429,7 @@ const EditProfile = () => {
                   </a>
                 </li>
               </ul>
-              <div className="card mb-4">
+              <div className="card rounded shadow-sm w-100 mb-4">
                 <h5 className="card-header">Education Details</h5>
                 {/* Account */}
                 {/* <div className="card-body">
@@ -576,7 +578,7 @@ const EditProfile = () => {
                   </a>
                 </li>
               </ul>
-              <div className="card mb-4">
+              <div className="card rounded shadow-sm w-100 mb-4">
                 <h5 className="card-header">Face Scan</h5>
                 {/* Account */}
                 {/* <div className="card-body">

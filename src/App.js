@@ -31,14 +31,23 @@ import BasePage from "./Components/UserPanel/Home/BasePage";
 import ShowAllFormsUser from "./Components/UserPanel/FeedBackForms/showAllFormsUser";
 import ShowAllAttendanceUser from "./Components/UserPanel/AttendanceSheet/showAllAttendanceUser";
 import ShowAllBatchUser from "./Components/UserPanel/Batch/showAllBatchUser";
-import ShowStudyMaterialUser from "./Components/UserPanel/StudyMaterial/showStudyMaterialUser";
-import ShowAllNoticesUser from "./Components/UserPanel/Notices/showAllNoticesUser";
+import ShowMails from "./Components/UserPanel/Mails/showMails";
+import ShowAllCodes from "./Components/UserPanel/codes/showAllCodes";
 import ShowAttendanceSheetUser from "./Components/UserPanel/AttendanceSheet/showAttendanceSheetUser";
 import MarkAllAttendanceSheets from "./Components/AttendanceSheet/MarkAllAttendanceSheet";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SingleStudentMarking from "./Components/AttendanceSheet/SingleStudentmarking";
 import VerifyAttendanceSheet from "./Components/AttendanceSheet/verifyAttendanceSheet";
+import CreateMod from "./Components/ModPanel/AdminPanel/createMod";
+import ShowAllMods from "./Components/ModPanel/AdminPanel/showMods";
+import ModHome from "./Components/ModPanel/UserPanel/Homepage";
+import ModMainLayout from "./Components/ModPanel/UserPanel/ModMainLayout";
+import ModLoginPage from "./Components/ModPanel/UserPanel/modLogin";
+import ShowAllAttendanceSheetsMod from "./Components/ModPanel/UserPanel/showAllSheetMod";
+import MarkAttendanceSheetMod from "./Components/ModPanel/UserPanel/markAttendanceSheet";
+import VerifyAttendanceSheetMod from "./Components/ModPanel/UserPanel/verifyAttendanceSheet";
+import SingleStudentMarkingMod from "./Components/ModPanel/UserPanel/SingleStudentmarking";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -51,7 +60,7 @@ const App = () => {
   let role = useSelector((state) => state.users.value.role);
   // console.log(useSelector((state) => state.users.value))
 
-  console.log(isModVerified)
+  console.log(isModVerified);
   useEffect(() => {
     // if (localStorage.getItem("user")) {
     //   const data = JSON.parse(localStorage.getItem("user"));
@@ -174,11 +183,11 @@ const App = () => {
             }
           />
           <Route
-            path="/user/studyMaterials"
+            path="/user/mails"
             element={
               isAuthenticated ? (
                 <UserMainLayout>
-                  <ShowStudyMaterialUser />
+                  <ShowMails />
                 </UserMainLayout>
               ) : (
                 <UserLoginPage />
@@ -186,17 +195,96 @@ const App = () => {
             }
           />
           <Route
-            path="/user/Notices"
+            path="/user/codes"
             element={
               isAuthenticated ? (
                 <UserMainLayout>
-                  <ShowAllNoticesUser />
+                  <ShowAllCodes />
                 </UserMainLayout>
               ) : (
                 <UserLoginPage />
               )
             }
           />
+
+          {/* Moderator Panel */}   
+
+          <Route
+            path="/mod"
+            element={
+              isAuthenticated && role==='MOD' ? (
+                <ModMainLayout>
+                  <ModHome />
+                </ModMainLayout>
+              ) : (
+                <ModLoginPage />
+              )
+            }
+          />
+          <Route
+            path="/moderator/showSheets"
+            element={
+              isAuthenticated && role==='MOD' ? (
+                <ModMainLayout>
+                  <ShowAllAttendanceSheetsMod />
+                </ModMainLayout>
+              ) : (
+                <ModLoginPage />
+              )
+            }
+          />
+          <Route
+            path="/moderator/profile"
+            element={
+              isAuthenticated && role==='MOD' ? (
+                <ModMainLayout>
+                  <CreateProfile />
+                </ModMainLayout>
+              ) : (
+                <ModLoginPage />
+              )
+            }
+          />
+          <Route
+            path="/moderator/markAttendance/:id"
+            element={
+              isAuthenticated && role == "MOD" ? (
+                isModVerified ? (
+                  <ModMainLayout>
+                    <MarkAttendanceSheetMod />
+                  </ModMainLayout>
+                ) : (
+                  <ModMainLayout>
+                    <VerifyAttendanceSheetMod />
+                  </ModMainLayout>
+                )
+              ) : (
+                <ModLoginPage />
+              )
+            }
+          />
+          <Route
+            path="/moderator/markSingleAttendance/:date/:sid/:id"
+            element={
+              isAuthenticated && role == "MOD" ? (
+                isModVerified ? (
+                  <ModMainLayout>
+                    <SingleStudentMarkingMod />
+                  </ModMainLayout>
+                ) : (
+                  <>
+                    <ModMainLayout>
+                      <VerifyAttendanceSheetMod />
+                    </ModMainLayout>
+                  </>
+                )
+              ) : (
+                <ModLoginPage />
+              )
+            }
+          />
+          
+
 
           {/*Admin Routes Here */}
 
@@ -356,6 +444,32 @@ const App = () => {
               isAuthenticated && role == "ADMIN" ? (
                 <MainLayout>
                   <EditProfile />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+
+         {/* Moderator*/} 
+         <Route
+            path="/createMod"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                <MainLayout>
+                  <CreateMod />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/showAllMod"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                <MainLayout>
+                  <ShowAllMods />
                 </MainLayout>
               ) : (
                 <LoginPage />

@@ -187,7 +187,7 @@ const CreateProfile = () => {
       .get("/users/" + userData.id)
       .then((res) => {
         setFormData(res.data);
-        setFaceEmbedding(res.data.faceEmbbedingData)
+        setFaceEmbedding(res.data.faceEmbbedingData);
         setUnivercityName(res.data.currentUnivercity.name || "");
         setUnivercityType(res.data.currentUnivercity.type || "");
         setIsLoading(false);
@@ -229,6 +229,7 @@ const CreateProfile = () => {
       .catch((er) => {
         toast.error("Something went Wrong");
         console.log(er);
+        setIsLoading(false)
       });
   };
 
@@ -494,7 +495,7 @@ const CreateProfile = () => {
                       <button
                         type="button"
                         onClick={(e) => {
-                          e.preventDefault()
+                          e.preventDefault();
                           setPage(0);
                         }}
                         className="btn btn-outline-primary me-2"
@@ -693,9 +694,7 @@ const CreateProfile = () => {
                 </div> */}
                 <hr className="my-0" />
                 <div className="card-body">
-                  <form
-                    onSubmit={handleSubmit}
-                  >
+                  <form onSubmit={handleSubmit}>
                     <div className="row">
                       {Page2Data.map((field) => {
                         return (
@@ -828,12 +827,12 @@ const CreateProfile = () => {
                             className="d-sm-block"
                             style={{ display: "flex" }}
                           >
-                            <span>Click Your Selfie and upload it.</span>
+                            <span>Click Your Current Photo and upload it.</span>
                           </span>
                           <input
-                              disabled={
-                                userData.isSuccessFullyRegistered === true
-                              }
+                            disabled={
+                              userData.isSuccessFullyRegistered === true
+                            }
                             type="file"
                             id="upload"
                             className="account-file-input form-control"
@@ -852,9 +851,33 @@ const CreateProfile = () => {
                           <i className="bx bx-reset d-block d-sm-none" />
                           <span className="d-none d-sm-block">Reset</span>
                         </button>
-                        <p className="text-muted mb-0">
-                          This image will only be used for extracting your Face
-                          Data.
+                        <p className="mb-0">
+                          <h6>
+                            Make sure you keep the following points in mind, or
+                            else you might face problems during attendance
+                            marking.
+                          </h6>
+                          <li>
+                            The system might reject your photograph if the
+                            resolution or face score is less than 0.85. In such
+                            cases, click on the reset button and try again with
+                            another photo.
+                          </li>
+                          <li>
+                            This image will only be used for extracting your
+                            face data and will not be saved in our database.
+                          </li>
+                          <li>
+                            Please{" "}
+                            <span className="h6">don't wear glasses</span> and
+                            upload your{" "}
+                            <span className="h6">current image</span> using the
+                            camera option.
+                          </li>
+                          <li>
+                            Please make sure of{" "}
+                            <span className="h6">proper lighting</span>.
+                          </li>
                         </p>
                       </div>
 

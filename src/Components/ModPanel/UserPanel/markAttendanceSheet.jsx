@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import MarkAttendanceTable from "./AttendanceMarkingTable";
-import useAxiosInstance from "../../axiosInstance";
+import useAxiosInstance from "../../../axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { logout } from "../../features/attendanceAdmin";
+import { logout } from "../../../features/attendanceAdmin";
 
-const MarkAttendanceSheet = () => {
+
+const MarkAttendanceSheetMod = () => {
     
   const axiosInstance = useAxiosInstance();
   const [data, setData] = useState([]);
@@ -58,11 +59,11 @@ const MarkAttendanceSheet = () => {
         tableKeys={["Sl.No.", "FullName", "RollNo", date]}
         tableData={data.attendanceData}
       />
-      <button className="btn btn-warning mt-2 btn-sm" onClick={()=>{
+      <button onClick={()=>{
         dispatch(logout())
-      }}>DeAuthenticate this Sheet</button>
+      }} className="btn btn-primary mt-2 btn-sm">DeAuthenticate This Sheet</button>
     </div>
   );
 };
 
-export default MarkAttendanceSheet;
+export default MarkAttendanceSheetMod;

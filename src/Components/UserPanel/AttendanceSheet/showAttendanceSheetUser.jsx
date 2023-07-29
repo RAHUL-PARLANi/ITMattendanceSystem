@@ -54,7 +54,7 @@ const ShowAttendanceSheetUser = () => {
       <div className="card w-100 mt-4 shadow-sm  rounded">
         <div
           style={{ textTransform: "capitalize" }}
-          className="h4 text-center  mb-0 py-3 text-primary"
+          className="h4 mb-0 ps-3 py-3 text-primary"
         >
           {data.sheetName}
         </div>
@@ -101,12 +101,12 @@ const ShowAttendanceSheetUser = () => {
         </div>
         <div
           style={{ textTransform: "capitalize" }}
-          className="h4 ms-3 mb-0 py-3"
+          className="h4 ms-3 mb-0 py-3 text-primary"
         >
           Attendance Data
         </div>
         
-        {Object.keys(data.attendanceData).map(elem=>{return <div>
+        {Object.keys(data.attendanceData).filter(elem=>elem!='_id').map(elem=>{return <div>
             <div style={{display:'flex',justifyContent:'space-between'}} key={elem} className="mx-3 mt-1 h6">
               <span className="fw-bold">{elem}</span>{" "}
               <span className="text-capitalize">{data.attendanceData[elem]}</span>

@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import useAxiosInstance from "../../axiosInstance";
+import useAxiosInstance from "../../../axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import * as faceapi from "face-api.js";
-import Table from "../UnviersalComponents/Table";
-import MarkAttendanceTable from "./AttendanceMarkingTable";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const SingleStudentMarking = () => {
- 
+const SingleStudentMarkingMod = () => {
+  let count = 0;
   const [sid,setSid] = useState("");
   const userData = useSelector((state) => state.users.value);
   const [data, setData] = useState([]);
@@ -61,6 +59,7 @@ const SingleStudentMarking = () => {
   }, []);
 
   const startVideo = () => {
+    count=0;
     setCaptureVideo(true);
     navigator.mediaDevices
       .getUserMedia({ video: { height: 400, width: 260 } })
@@ -75,7 +74,7 @@ const SingleStudentMarking = () => {
   };
 
   const handleVideoOnPlay = async () => {
-    let count = 0;
+    
     setInterval(async () => {
       if (canvasRef && captureVideo && canvasRef.current && !isVerified) {
         const video = videoRef.current;
@@ -167,6 +166,7 @@ const SingleStudentMarking = () => {
             <h5>Click the button below to Mark Attendance</h5>
             <button
               onClick={() => {
+                setIsLoading(true)
                 axiosInstance
                   .patch(
                     "/attendancesheet/markattendance/" +
@@ -177,6 +177,7 @@ const SingleStudentMarking = () => {
                     }
                   )
                   .then((res) => {
+                    setIsLoading(false)
                     if (res.data._id) {
                       toast.success(
                         "Your Attendance has been marked Successfully !"
@@ -190,6 +191,7 @@ const SingleStudentMarking = () => {
                   })
                   .catch((err) => {
                     console.log(err);
+                    setIsLoading(false)
                   });
               }}
               className="btn btn-primary"
@@ -286,4 +288,4 @@ const SingleStudentMarking = () => {
   );
 };
 
-export default SingleStudentMarking;
+export default SingleStudentMarkingMod;

@@ -524,15 +524,16 @@ const BasePage = () => {
                   {/*/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. *** /*/}
                 </div>
                 <div className="col-md-6  text-center text-md-end">
-                  <div className="footer-menu text-white">
+                  <small className="footer-menu  text-white">
                     Developed By{" "}
                     <a
                       className="border-bottom"
                       href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"
                     >
-                      Rahul Parlani
+                      Rahul Parlani 
                     </a>
-                  </div>
+                    {" "}(ITM Student)
+                  </small>
                 </div>
               </div>
             </div>

@@ -135,6 +135,25 @@ const MainLayout = (props) => {
               <div data-i18n="Form Elements">Create Batch</div>
             </a>
           </NavLink>
+
+          <li className="menu-header small text-uppercase">
+            <span className="menu-header-text fw-bold">Attendance Moderators</span>
+          </li>
+          {/* Forms */}
+          
+          <NavLink to={'/showAllMod'} activeClassName="active" className="menu-item">
+            <a  className="menu-link menu-toggle">
+              <i className="menu-icon tf-icons bx bx-dock-top" />
+              <div data-i18n="Form Layouts">Show Moderators</div>
+            </a>
+          </NavLink>
+          
+          <NavLink to='/createMod' activeClassName="active" className="menu-item">
+            <a   className="menu-link menu-toggle">
+              <i className="menu-icon tf-icons bx bx-merge" />
+              <div data-i18n="Form Elements">Create Mod</div>
+            </a>
+          </NavLink>
           {/* Misc */}
         </ul>
         </div> 
@@ -236,7 +255,7 @@ const MainLayout = (props) => {
               <div className="mb-2 mb-md-0 text-left">
               Copyright © 2023 <b>ITM Gwalior®</b>. All rights reserved.
               </div>
-              <small>Developed by <a style={{color:'inherit'}} target="_blank" href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"><b>Rahul Parlani</b></a></small>
+              <small>Developed by <a style={{color:'inherit'}} target="_blank" href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"><b>Rahul Parlani </b>((ITM Student))</a></small>
             </div>
           </footer>
           {/* / Footer */}

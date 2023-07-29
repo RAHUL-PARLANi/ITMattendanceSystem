@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../features/user";
 import { NavLink, Link } from "react-router-dom";
 
-const UserMainLayout = (props) => {
+const ModMainLayout = (props) => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.users.value);
 
@@ -21,7 +21,7 @@ const UserMainLayout = (props) => {
             >
               <div style={{ overflowY: "scroll", height: "100%" }}>
                 <div className="app-brand demo">
-                  <Link to="/" className="app-brand-link">
+                  <Link to="/mod" className="app-brand-link">
                     {/* <span className="app-brand-logo demo ">
               <img height={'25px'} src='ITM_LOGO.png' alt='Logo' />
             </span> */}
@@ -52,8 +52,7 @@ const UserMainLayout = (props) => {
                   {/* Dashboard */}
 
                   <NavLink
-                    exact="true"
-                    to="/user/home"
+                    to="/mod"
                     activeClassName="active"
                     className="menu-item"
                   >
@@ -64,59 +63,16 @@ const UserMainLayout = (props) => {
                   </NavLink>
                   {/* Layouts */}
                   <NavLink
-                    to={"/user/showforms"}
+                    to={"/moderator/showSheets"}
                     activeClassName="active"
                     className="menu-item"
                   >
-                    <a className="menu-link ">
-                      <i className="menu-icon tf-icons bx  bx bx-collection" />
-                      <div data-i18n="Boxicons">Feedback Forms</div>
+                    <a className="menu-link menu-toggle">
+                      <i className="menu-icon tf-icons bx bx-dock-top" />
+                      <div data-i18n="Boxicons">Attendance Sheets</div>
                     </a>
                   </NavLink>
                   {/* Forms */}
-                  <NavLink
-                    to="/user/showSheets"
-                    activeClassName="active"
-                    className="menu-item"
-                  >
-                    <a className="menu-link ">
-                      <i className="menu-icon tf-icons bx bx-comment-edit" />
-                      <div data-i18n="Form Elements">Attendance</div>
-                    </a>
-                  </NavLink>
-                  <NavLink
-                    to={"/user/batches"}
-                    activeClassName="active"
-                    className="menu-item"
-                  >
-                    <a className="menu-link ">
-                      <i className="menu-icon tf-icons bx bx-label" />
-                      <div data-i18n="Form Layouts">Batches</div>
-                    </a>
-                  </NavLink>
-
-                  <NavLink
-                    to={"/user/mails"}
-                    activeClassName="active"
-                    className="menu-item"
-                  >
-                    <a className="menu-link ">
-                      <i className="menu-icon tf-icons bx bx-envelope" />
-                      <div data-i18n="Form Layouts">Mails</div>
-                    </a>
-                  </NavLink>
-
-                  <NavLink
-                    to={"/user/codes"}
-                    activeClassName="active"
-                    className="menu-item"
-                  >
-                    <a className="menu-link ">
-                   
-                      <i className="menu-icon tf-icons bx bx-qr-scan" />
-                      <div data-i18n="Form Layouts">Security Codes</div>
-                    </a>
-                  </NavLink>
                 </ul>
               </div>
             </aside>
@@ -148,7 +104,7 @@ const UserMainLayout = (props) => {
                   id="navbar-collapse"
                 >
                   <span className='app-brand-text h4 menu-text fw-bold mb-0'>
-                    ITM TAP Cell Portal 
+                    TAP Cell Mod Panel 
                   </span>
                   <ul className="navbar-nav flex-row align-items-center ms-auto">
                     {/* User */}
@@ -194,7 +150,7 @@ const UserMainLayout = (props) => {
                         </li>
                         <Link
                           style={{ color: "inherit", textDecoration: "none" }}
-                          to={"/user/profile"}
+                          to={"/moderator/profile"}
                         >
                           <li>
                             <a className="dropdown-item">
@@ -244,7 +200,7 @@ const UserMainLayout = (props) => {
                         target="_blank"
                         href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"
                       >
-                        <b>Rahul Parlani </b>(ITM Student)
+                        <b>Rahul Parlani</b> {" "} (ITM Student)
                       </a>
                     </small>
                   </div>
@@ -264,4 +220,4 @@ const UserMainLayout = (props) => {
   );
 };
 
-export default UserMainLayout;
+export default ModMainLayout;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useAxiosInstance from "../../axiosInstance";
+import useAxiosInstance from "../../../axiosInstance";
 import $ from "jquery";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -65,7 +65,7 @@ const BoardGame = (props) => {
   );
 };
 
-const ShowAllUsers = () => {
+const ShowAllMods = () => {
   const [bgs, setBgs] = useState([]);
   const [keys, setKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -74,20 +74,22 @@ const ShowAllUsers = () => {
 
   useEffect(() => {
     axiosInstance
-      .get("/users/all")
+      .get("/users/allMod")
       .then((res) => {
         setBgs(res.data);
-        const allKeys = Array.from(
-          new Set(
-            res.data.reduce((keys, obj) => {
-              return keys.concat(Object.keys(obj));
-            }, [])
-          )
-        );
-        setKeys(allKeys);
+        // const allKeys = Array.from(
+        //   new Set(
+        //     res.data.reduce((keys, obj) => {
+        //       return keys.concat(Object.keys(obj));
+        //     }, [])
+        //   )
+        // );
+        setKeys(['_id','name','email','role','gender','phoneNumber']);
         setIsLoading(false);
       })
-      .catch((error) => console.log(error));
+      .catch((error) =>{console.log(error)
+      setIsLoading(false)
+      });
   }, []);
   useEffect(() => {
     if (!$.fn.DataTable.isDataTable("#myTable")) {
@@ -150,17 +152,13 @@ const ShowAllUsers = () => {
         }, 2500);
       });
     }
-  }, [isLoading]);
-
+  }, [isLoading])
+  
   const handleSelectAll = () => {
     const table = $("#table").DataTable();
-    const filteredData = table
-      .rows({ search: "applied" })
-      .data()
-      .toArray()
-      .flatMap((elem) => elem[2]);
-    setSelectedRows(filteredData);
-  };
+    const filteredData = table.rows({ search: "applied" }).data().toArray().flatMap(elem=>elem[2])
+    setSelectedRows(filteredData)
+   };
   const handleRowSelect = (id) => {
     let updatedSelectedRows;
     if (selectedRows.includes(id)) {
@@ -177,7 +175,7 @@ const ShowAllUsers = () => {
 
   const deleteBGS = (id) => {
     var ans = window.confirm(
-      "You are trying to delete a user Record, Do you want to continue ?"
+      "You are trying to delete a Mod Record, Do you want to continue ?"
     );
     if (ans) {
       axiosInstance
@@ -199,7 +197,7 @@ const ShowAllUsers = () => {
         .patch("/users/block/" + id)
         .then((res) => {
           if(res.data.verified){
-            alert(`${res.data.name} is Blocked`)
+            alert(`${res.data.name} is blocked`)
           }else{
             alert(`${res.data.name} is unblocked`)
           }
@@ -207,7 +205,7 @@ const ShowAllUsers = () => {
         .catch((err) => {
           alert("Something Went Wrong");
         });
-      //   setBgs(bgs.filter((el) => el._id !== id));
+   //   setBgs(bgs.filter((el) => el._id !== id));
     }
   };
 
@@ -311,4 +309,4 @@ const ShowAllUsers = () => {
   );
 };
 
-export default ShowAllUsers;
+export default ShowAllMods;

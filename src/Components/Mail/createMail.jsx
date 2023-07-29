@@ -27,35 +27,6 @@ const BoardGame = (props) => {
           onChange={handleCheckboxChange}
         />
       </td>
-      <td className="text-xs font-weight-bold">
-        <Link to={"/edituser/" + bg._id}>
-          <button
-            onClick={() => {}}
-            type="button"
-            className="btn btn-icon btn-primary m-1"
-          >
-            <span className="tf-icons bx bx-edit-alt"></span>
-          </button>
-        </Link>
-        <button
-          onClick={() => {
-            deleteBGS(bg._id);
-          }}
-          type="button"
-          className="btn btn-icon btn-warning m-1"
-        >
-          <span className="tf-icons bx bx-trash"></span>
-        </button>
-        <button
-          onClick={() => {
-            BlockBGS(bg._id);
-          }}
-          type="button"
-          className="btn btn-icon btn-dark m-1"
-        >
-          <span className="tf-icons bx bx-lock-alt"></span>
-        </button>
-      </td>
       {keys.map((key) => (
         <td className="text-xs font-weight-bold" key={key}>
           {bg[key]}
@@ -65,12 +36,19 @@ const BoardGame = (props) => {
   );
 };
 
-const ShowAllUsers = () => {
+const CreateBatch = () => {
   const [bgs, setBgs] = useState([]);
   const [keys, setKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const axiosInstance = useAxiosInstance();
   const [isLoading, setIsLoading] = useState(true);
+
+  //Form Feilds
+
+  const [title, setTitle] = useState("");
+  const [subject, setSubject] = useState("");
+  const [studentList, setStudentList] = useState("");
+  const [contentObj,setContentObj] = useState([]);
 
   useEffect(() => {
     axiosInstance
@@ -158,9 +136,12 @@ const ShowAllUsers = () => {
       .rows({ search: "applied" })
       .data()
       .toArray()
-      .flatMap((elem) => elem[2]);
-    setSelectedRows(filteredData);
+      .flatMap((elem) => elem[1]);
+    setSelectedRows((prevState) => {
+      setSelectedRows([...prevState, ...filteredData]);
+    });
   };
+
   const handleRowSelect = (id) => {
     let updatedSelectedRows;
     if (selectedRows.includes(id)) {
@@ -177,7 +158,7 @@ const ShowAllUsers = () => {
 
   const deleteBGS = (id) => {
     var ans = window.confirm(
-      "You are trying to delete a user Record, Do you want to continue ?"
+      "You are trying to delete a USER, Do you want to continue ?"
     );
     if (ans) {
       axiosInstance
@@ -196,18 +177,12 @@ const ShowAllUsers = () => {
     );
     if (ans) {
       axiosInstance
-        .patch("/users/block/" + id)
-        .then((res) => {
-          if(res.data.verified){
-            alert(`${res.data.name} is Blocked`)
-          }else{
-            alert(`${res.data.name} is unblocked`)
-          }
-        })
+        .patch("/users/block" + id)
+        .then((res) => alert(res.data.msg))
         .catch((err) => {
           alert("Something Went Wrong");
         });
-      //   setBgs(bgs.filter((el) => el._id !== id));
+      setBgs(bgs.filter((el) => el._id !== id));
     }
   };
 
@@ -225,6 +200,30 @@ const ShowAllUsers = () => {
         />
       );
     });
+  };
+
+  const HandleSubmit = (e) => {
+    e.preventDefault();
+    try {
+      var data = {
+        title: title,
+        subject: subject,
+        studentsId: selectedRows,
+        content: contentObj
+      };
+      axiosInstance
+        .post("/mail/", data)
+        .then((result) => {
+          if (result.data) {
+            alert(`${result.data.name} Created Successfully`);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log("Something went Wrong");
+    }
   };
 
   return (
@@ -248,11 +247,70 @@ const ShowAllUsers = () => {
         </div>
       ) : (
         <div className="container-fluid" style={{ marginTop: "50px" }}>
-          <h1>All Users</h1>
-          <div className="table-responsive bg-white rounded p-2 shadow-sm">
+          <form
+            className="bg-white rounded shadow-sm p-2"
+            onSubmit={HandleSubmit}
+          >
+            <div className="mb-3">
+              <label
+                className="form-label text-primary fw-bold"
+                htmlFor="basic-default-BatchName"
+              >
+                Title
+              </label>
+              <input
+                type="text"
+                required
+                className="form-control"
+                id="basic-default-BatchName"
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label text-primary fw-bold">
+                 Subject   
+              </label>
+              <input
+                type="text"
+                required
+                className="form-control"
+                value={subject}
+                onChange={(e) => {
+                  setSubject(e.target.value);
+                }}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label
+                className="form-label text-primary fw-bold"
+                htmlFor="basic-default-Students-IDS"
+              >
+                Student IDs
+              </label>
+              <textarea
+                type="text"
+                required
+                className="form-control"
+                id="basic-default-Students-IDS"
+                value={selectedRows}
+                onChange={(e) => {
+                  setSelectedRows(e.target.value);
+                }}
+              />
+            </div>
+            <input className="btn btn-primary" type="submit" value="Create" />
+          </form>
+          <h3>Select Users</h3>
+
+          <div className="table-responsive  bg-white rounded p-2 shadow-sm">
             <table
               id="table"
-              className="table table-striped align-items-center justify-content-center mb-0"
+              className="table  align-items-center justify-content-center mb-0"
             >
               <thead>
                 <tr>
@@ -264,9 +322,6 @@ const ShowAllUsers = () => {
                     >
                       All
                     </button>{" "}
-                  </th>
-                  <th className="text-primary" scope="col">
-                    Actions
                   </th>
                   {keys.map((key) => (
                     <th
@@ -282,7 +337,6 @@ const ShowAllUsers = () => {
               <tfoot>
                 <tr>
                   <th scope="col">Select</th>
-                  <th scope="col">Actions</th>
                   {keys.map((key) => (
                     <th
                       className="text-xs font-weight-bold"
@@ -311,4 +365,4 @@ const ShowAllUsers = () => {
   );
 };
 
-export default ShowAllUsers;
+export default CreateBatch;
