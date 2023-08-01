@@ -8,7 +8,13 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-buttons/js/buttons.flash.js";
 import "datatables.net-buttons/js/buttons.html5.js";
 import "datatables.net-buttons/js/buttons.print.js";
-import { Link } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import EditorToolbar, { modules, formats } from "./Editor";
+import "./style.css";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+
 
 const BoardGame = (props) => {
   const { bg, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
@@ -36,19 +42,29 @@ const BoardGame = (props) => {
   );
 };
 
-const CreateBatch = () => {
+const CreateMail = () => {
   const [bgs, setBgs] = useState([]);
   const [keys, setKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const axiosInstance = useAxiosInstance();
   const [isLoading, setIsLoading] = useState(true);
-
+  const userData = useSelector(state=>state.users.value)
+  
   //Form Feilds
 
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
   const [studentList, setStudentList] = useState("");
-  const [contentObj,setContentObj] = useState([]);
+
+  const [content, setContent] = useState([]);
+  const [contentType, setContentType] = useState("");
+  const [contentImg, setContentImg] = useState("");
+  const [contentPara, setContentPara] = useState("");
+  const [contentLink, setContentLink] = useState("");
+
+  const handleChange = (value) => {
+    setContentPara(value);
+  };
 
   useEffect(() => {
     axiosInstance
@@ -152,10 +168,8 @@ const CreateBatch = () => {
     setSelectedRows(updatedSelectedRows);
   };
 
-  useEffect(() => {
-    console.log(selectedRows);
-  }, [selectedRows]);
 
+  
   const deleteBGS = (id) => {
     var ans = window.confirm(
       "You are trying to delete a USER, Do you want to continue ?"
@@ -201,24 +215,27 @@ const CreateBatch = () => {
       );
     });
   };
-
   const HandleSubmit = (e) => {
     e.preventDefault();
     try {
       var data = {
+        submittedById:userData.id,
+        submittedByRole:userData.role,
+        submittedByName:userData.username,
         title: title,
         subject: subject,
         studentsId: selectedRows,
-        content: contentObj
+        content: content,
       };
       axiosInstance
         .post("/mail/", data)
         .then((result) => {
           if (result.data) {
-            alert(`${result.data.name} Created Successfully`);
+            toast.success(`Mail with title ${result.data.title} is Created Successfully`);
           }
         })
         .catch((err) => {
+          toast.error(`Something went wrong!`);
           console.log(err);
         });
     } catch (error) {
@@ -226,6 +243,28 @@ const CreateBatch = () => {
     }
   };
 
+  const handleImagePic = (e) => {
+    console.log("I am hit");
+    const data = new FormData();
+    var file = e.target.files[0];
+    //var newFile = new File([file], `${firstName}${surName}_${stateVariableName}.jpg`, {type: file.type});
+    data.append("file", file);
+    data.append("upload_preset", "ITMPreset");
+    data.append("cloud_name", "dvg9z8ugk");
+    //data.append("transformation", "w_500,h_500,c_scale,f_jpg");
+    fetch("https://api.cloudinary.com/v1_1/dvg9z8ugk/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setContentImg(data.secure_url);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  
   return (
     <>
       {isLoading ? (
@@ -246,7 +285,7 @@ const CreateBatch = () => {
           </div>
         </div>
       ) : (
-        <div className="container-fluid" style={{ marginTop: "50px" }}>
+        <div className="container-fluid mb-4" style={{ marginTop: "50px" }}>
           <form
             className="bg-white rounded shadow-sm p-2"
             onSubmit={HandleSubmit}
@@ -271,9 +310,7 @@ const CreateBatch = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label text-primary fw-bold">
-                 Subject   
-              </label>
+              <label className="form-label text-primary fw-bold">Subject</label>
               <input
                 type="text"
                 required
@@ -290,24 +327,258 @@ const CreateBatch = () => {
                 className="form-label text-primary fw-bold"
                 htmlFor="basic-default-Students-IDS"
               >
-                Student IDs
+                Student IDs (Use ",")
               </label>
               <textarea
                 type="text"
-                required
+                
                 className="form-control"
                 id="basic-default-Students-IDS"
                 value={selectedRows}
                 onChange={(e) => {
-                  setSelectedRows(e.target.value);
+                  setSelectedRows(e.target.value.split(','));
                 }}
               />
             </div>
-            <input className="btn btn-primary" type="submit" value="Create" />
+
+            <div className="mb-3">
+              <label className="form-label text-primary fw-bold">
+                Content Type
+              </label>
+              <select
+                type="text"
+                
+                className="form-control"
+                value={contentType}
+                onChange={(e) => {
+                  setContentType(e.target.value);
+                }}
+              >
+                <option value={""}>choose</option>
+                <option value={"IMG"}>Image</option>
+                <option value={"PARA"}>Paragraph</option>
+                <option value={"LINK"}>Link</option>
+              </select>
+            </div>
+
+            {contentType === "IMG" && (
+              <form>
+                <input
+                  className="form-control"
+                  type="file"
+                  onChange={(e) => {
+                    e.preventDefault();
+                    handleImagePic(e);
+                  }}
+                />
+
+                <label className="form-label mt-2 text-primary fw-bold">
+                  Image URL
+                </label>
+
+                <input
+                  className="form-control"
+                  value={contentImg}
+                  onChange={(e) => {
+                    setContentImg(e.preventDefault());
+                  }}
+                />
+                {contentImg && (
+                  <div className="">
+                    <img
+                      className="rounded mt-2"
+                      style={{ maxHeight: "300px", width: "auto" }}
+                      src={contentImg}
+                      alt={"image here"}
+                    />
+                  </div>
+                )}
+                <input
+                  disabled={contentImg === ""}
+                  type={"button"}
+                  className="btn btn-outline-primary mt-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+
+                    setContent((prevState) => [
+                      ...prevState,
+                      { type: "IMG", content: contentImg },
+                    ]);
+                    setContentType("");
+                    setContentImg("");
+                  }}
+                  value={"Add Image"}
+                />
+              </form>
+            )}
+
+            {contentType === "LINK" && (
+              <div>
+                <form>
+                  <label className="form-label mt-2 text-primary fw-bold">
+                    Link Url
+                  </label>
+
+                  <input
+                    className="form-control"
+                    value={contentLink}
+                    onChange={(e) => {
+                      setContentLink(e.target.value);
+                    }}
+                  />
+                  {contentLink && (
+                    <div>
+                      <span className="fw-bold">Link </span> -{" "}
+                      <span className="">
+                        <a target="_blank" href={contentLink}>
+                          {contentLink}
+                        </a>
+                      </span>
+                    </div>
+                  )}
+                  <input
+                    disabled={contentLink === ""}
+                    type={"button"}
+                    className="btn btn-outline-primary mt-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+
+                      setContent((prevState) => [
+                        ...prevState,
+                        { type: "LINK", content: contentLink },
+                      ]);
+                      setContentType("");
+                      setContentLink("");
+                    }}
+                    value={"Add Link"}
+                  />
+                </form>
+              </div>
+            )}
+
+            {contentType === "PARA" && (
+              <div>
+                <div className="card w-100 rounded shadow-sm">
+                  <EditorToolbar />
+                  <ReactQuill
+                    theme="snow"
+                    value={contentPara}
+                    onChange={handleChange}
+                    placeholder={"Write something awesome..."}
+                    modules={modules}
+                    formats={formats}
+                  />
+                </div>
+                <input
+                  value={"Add Paragraph"}
+                  disabled={contentPara === ""}
+                  type={"button"}
+                  className="btn btn-outline-primary mt-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setContent((prevState) => [
+                      ...prevState,
+                      { type: "PARA", content: contentPara },
+                    ]);
+                    setContentType("");
+                    setContentPara("");
+                  }}
+                />
+              </div>
+            )}
+
+            <input
+              className="btn btn-primary mt-3"
+              type="submit"
+              value="Create"
+            />
           </form>
-          <h3>Select Users</h3>
+
+          {content.length != 0 && (
+            <div className="p-2 h4 bg-white rounded shadow-sm card w-100">
+              {" "}
+              Preview{" "}
+            </div>
+          )}
+          {content.length != 0 && (
+            <div className="card w-100 py-3 px-3 shadow-sm rounded mb-4">
+              {content.map((elem, index) => {
+                return (
+                  <>
+                    {elem.type === "IMG" ? (
+                      <div className="text-center">
+                        <img
+                          src={elem.content}
+                          style={{ maxHeight: "300px" }}
+                        />
+                        <button
+                          onClick={() => {
+                            setContent(
+                              content.filter((element) => element != elem)
+                            );
+                          }}
+                          className="btn btn-dark btn-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    {elem.type === "LINK" ? (
+                      <div>
+                        <div>
+                          <span className="fw-bold">Link </span> -{" "}
+                          <span className="">
+                            <a target="_blank" href={elem.content}>
+                              {elem.content}
+                            </a>
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setContent(
+                              content.filter((element) => element != elem)
+                            );
+                          }}
+                          className="btn btn-dark btn-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    {elem.type === "PARA" ? (
+                      <div>
+                        <ReactQuill
+                          value={elem.content}
+                          readOnly={true}
+                          theme={"bubble"}
+                        />
+                        <button
+                          onClick={() => {
+                            setContent(
+                              content.filter((element) => element != elem)
+                            );
+                          }}
+                          className="btn btn-dark btn-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                );
+              })}
+            </div>
+          )}
 
           <div className="table-responsive  bg-white rounded p-2 shadow-sm">
+            <h3>Select Users</h3>
+
             <table
               id="table"
               className="table  align-items-center justify-content-center mb-0"
@@ -365,4 +636,4 @@ const CreateBatch = () => {
   );
 };
 
-export default CreateBatch;
+export default CreateMail;

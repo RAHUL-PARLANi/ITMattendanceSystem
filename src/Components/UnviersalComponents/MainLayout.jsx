@@ -13,7 +13,7 @@ const MainLayout = (props) => {
     <div>
       <>
   {/* Layout wrapper */}
-  <div className="layout-wrapper layout-content-navbar">
+  <div  className="layout-wrapper layout-content-navbar">
     <div id='MobileNav' className="layout-container ">{/*layout-menu-expanded*/}
       {/* Menu */}
       <aside
@@ -21,7 +21,7 @@ const MainLayout = (props) => {
         className={`layout-menu menu-vertical menu bg-menu-theme`}
         >
         <div 
-        style={{overflowY:'scroll',height:'100%'}}
+        style={{position:'fixed',height:'90vh', width:'250px'}}
         >
         <div className="app-brand demo">
           <Link to='/admin' className="app-brand-link">
@@ -44,7 +44,7 @@ const MainLayout = (props) => {
            </a>
         </div>
         <div className="menu-inner-shadow" />
-        <ul className="menu-inner py-1">
+        <ul className="menu-inner py-1 " style={{overflowY:'auto'}} >
           {/* Dashboard */}
           
             <NavLink exact="true" to="/admin" activeClassName="active" className="menu-item">
@@ -154,6 +154,25 @@ const MainLayout = (props) => {
               <div data-i18n="Form Elements">Create Mod</div>
             </a>
           </NavLink>
+
+          <li className="menu-header small text-uppercase">
+            <span className="menu-header-text fw-bold">Mail</span>
+          </li>
+          {/* Forms */}
+          
+          <NavLink to={'/showMails'} activeClassName="active" className="menu-item">
+            <a  className="menu-link menu-toggle">
+              <i className="menu-icon tf-icons bx bx-dock-top" />
+              <div data-i18n="Form Layouts">Show Mails</div>
+            </a>
+          </NavLink>
+          
+          <NavLink to='/createMail' activeClassName="active" className="menu-item">
+            <a   className="menu-link menu-toggle">
+              <i className="menu-icon tf-icons bx bx-envelope" />
+              <div data-i18n="Form Elements">Create Mail</div>
+            </a>
+          </NavLink>
           {/* Misc */}
         </ul>
         </div> 
@@ -255,7 +274,7 @@ const MainLayout = (props) => {
               <div className="mb-2 mb-md-0 text-left">
               Copyright © 2023 <b>ITM Gwalior®</b>. All rights reserved.
               </div>
-              <small>Developed by <a style={{color:'inherit'}} target="_blank" href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"><b>Rahul Parlani </b>((ITM Student))</a></small>
+              <small>Developed by <a style={{color:'inherit'}} target="_blank" href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"><b>Rahul Parlani </b>(ITM Student)</a></small>
             </div>
           </footer>
           {/* / Footer */}

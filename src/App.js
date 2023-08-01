@@ -48,6 +48,11 @@ import ShowAllAttendanceSheetsMod from "./Components/ModPanel/UserPanel/showAllS
 import MarkAttendanceSheetMod from "./Components/ModPanel/UserPanel/markAttendanceSheet";
 import VerifyAttendanceSheetMod from "./Components/ModPanel/UserPanel/verifyAttendanceSheet";
 import SingleStudentMarkingMod from "./Components/ModPanel/UserPanel/SingleStudentmarking";
+import ShowMail from "./Components/Mail/showMail";
+import EditMail from "./Components/Mail/editMail";
+import CreateMail from "./Components/Mail/createMail";
+import ShowAllMail from "./Components/Mail/showAllMail";
+import ShowMailUser from "./Components/UserPanel/Mails/showMail";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -195,6 +200,18 @@ const App = () => {
             }
           />
           <Route
+            path="/user/mail/:id"
+            element={
+              isAuthenticated ? (
+                <UserMainLayout>
+                  <ShowMailUser />
+                </UserMainLayout>
+              ) : (
+                <UserLoginPage />
+              )
+            }
+          />
+          <Route
             path="/user/codes"
             element={
               isAuthenticated ? (
@@ -284,6 +301,56 @@ const App = () => {
             }
           />
           
+         {/* Mail Box Routes */}
+         <Route
+            path="/showMail/:id"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                <MainLayout>
+                  <ShowMail />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/editMail/:id"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                <MainLayout>
+                  <EditMail />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/createMail"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                <MainLayout>
+                  <CreateMail />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/showMails"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                <MainLayout>
+                  <ShowAllMail />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+
 
 
           {/*Admin Routes Here */}
