@@ -42,6 +42,7 @@ const UserLoginPage = () => {
               id: res.data.user._id,
               isSuccessFullyRegistered: res.data.user.isSuccessFullyRegistered,
               verified: res.data.user.verified,
+              picUrl:res.data.user.picUrl
             })
           );
           if(res.data.isSuccessFullyRegistered===false){

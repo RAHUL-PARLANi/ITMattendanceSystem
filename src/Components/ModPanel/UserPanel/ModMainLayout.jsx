@@ -113,9 +113,9 @@ const ModMainLayout = (props) => {
                         className="nav-link dropdown-toggle hide-arrow"
                         data-bs-toggle="dropdown"
                       >
-                        <div className="avatar avatar-online">
+                        <div style={{display:'flex',alignItems:'center'}} className="avatar avatar-online">
                           <img
-                            src="../assets/img/avatars/1.png"
+                            src={userData.picUrl}
                             alt=""
                             className="w-px-40 h-auto rounded-circle"
                           />
@@ -126,9 +126,9 @@ const ModMainLayout = (props) => {
                           <a className="dropdown-item">
                             <div className="d-flex">
                               <div className="flex-shrink-0 me-3">
-                                <div className="avatar avatar-online">
+                                <div style={{display:'flex',alignItems:'center'}} className="avatar avatar-online">
                                   <img
-                                    src="../assets/img/avatars/1.png"
+                                    src={userData.picUrl}
                                     alt=""
                                     className="w-px-40 h-auto rounded-circle"
                                   />

@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { login } from "./features/user";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import MainLayout from "./Components/UnviersalComponents/MainLayout";
 import CreateProfile from "./Components/Profile/CreateProfile";
 import LoginPage from "./Components/Login/LoginPage";
@@ -53,8 +53,12 @@ import EditMail from "./Components/Mail/editMail";
 import CreateMail from "./Components/Mail/createMail";
 import ShowAllMail from "./Components/Mail/showAllMail";
 import ShowMailUser from "./Components/UserPanel/Mails/showMail";
+import { onMessageListener } from "./firebaseInit";
 
 const App = () => {
+  onMessageListener().then((payload) => {
+    <Link to={payload.data.link}>{toast.info(`New Mail : `+payload.data.body)}</Link>
+  });
   const dispatch = useDispatch();
   const isModVerified = useSelector(
     (state) => state.attendanceMod.value.isAuthenticated

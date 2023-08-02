@@ -7,6 +7,8 @@ import "../FaceDetection/FaceDetection.css";
 import { CollegeData } from "./CollegeData";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { requestFirebaseNotificationPermission } from "../../firebaseInit";
+
 const CreateProfile = () => {
   const axiosInstance = useAxiosInstance();
   const [page, setPage] = useState(0);
@@ -14,6 +16,12 @@ const CreateProfile = () => {
   const [univercityType, setUnivercityType] = useState("");
   const [univercityName, setUnivercityName] = useState("");
   const [miniLoading, setMiniLoading] = useState(false);
+
+  //notificationToken
+
+  const [notificationToken, setNotificationToken] = useState("");
+  const [picUrl, setPicUrl] = useState("");
+  const [file, setFile] = useState("");
 
   //faceEmbedding
   const [faceEmbedding, setFaceEmbedding] = useState([]);
@@ -188,6 +196,8 @@ const CreateProfile = () => {
       .then((res) => {
         setFormData(res.data);
         setFaceEmbedding(res.data.faceEmbbedingData);
+        setPicUrl(res.data.picUrl)
+        setNotificationToken(res.data.notificationToken)
         setUnivercityName(res.data.currentUnivercity.name || "");
         setUnivercityType(res.data.currentUnivercity.type || "");
         setIsLoading(false);
@@ -214,12 +224,14 @@ const CreateProfile = () => {
         },
         isSuccessFullyRegistered: true,
         faceEmbbedingData: faceEmbedding,
+        picUrl: picUrl,
+        notificationToken: notificationToken,
       })
       .then((res) => {
         setIsLoading(false);
         if (res.data.isSuccessFullyRegistered) {
           toast.success(
-            "Successfully Registered, Now the Page will be reloaded"
+            "Successfully Registered, Now this Page will be reloaded"
           );
           setTimeout(() => {
             window.location.reload();
@@ -229,7 +241,7 @@ const CreateProfile = () => {
       .catch((er) => {
         toast.error("Something went Wrong");
         console.log(er);
-        setIsLoading(false)
+        setIsLoading(false);
       });
   };
 
@@ -259,6 +271,7 @@ const CreateProfile = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setFile(file)
       const reader = new FileReader();
       reader.onloadend = () => {
         setUploadedImage(reader.result);
@@ -302,6 +315,22 @@ const CreateProfile = () => {
         if (detections.alignedRect.score > 0.85) {
           toast.success("Face detected!");
           setFaceEmbedding(detections.descriptor);
+          const data = new FormData();
+          data.append("file", file);
+          data.append("upload_preset", "ITMPreset");
+          data.append("cloud_name", "dvg9z8ugk");
+          //data.append("transformation", "w_500,h_500,c_scale,f_jpg");
+          fetch("https://api.cloudinary.com/v1_1/dvg9z8ugk/image/upload", {
+            method: "post",
+            body: data,
+          })
+            .then((resp) => resp.json())
+            .then((data) => {
+              console.log(data);
+              toast.success('Image Uploaded to Database Successfully')
+              setPicUrl(data.secure_url);
+            })
+            .catch((err) => console.log(err));
         } else {
           toast.warning(
             "No face detected or face score is low.Try again, a face score of 0.85 is recommended"
@@ -817,6 +846,43 @@ const CreateProfile = () => {
                   >
                     {/* <FaceDetection/>  */}
 
+                    <div className="mb-3 col-md-6">
+                      <label className="form-label">
+                        Please allow Notifications by clicking the button below
+                      </label>
+                      <button
+                        type="button"
+                        disabled={userData.isSuccessFullyRegistered === true}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          //console.log('Clicked')
+                          setIsLoading(true);
+                          requestFirebaseNotificationPermission()
+                            .then((firebaseToken) => {
+                              // eslint-disable-next-line no-console
+                              navigator.clipboard.writeText(firebaseToken);
+                              setNotificationToken(firebaseToken);
+                              console.log(firebaseToken);
+                              setIsLoading(false);
+                            })
+                            .catch((err) => {
+                              setIsLoading(false);
+                              console.log(err);
+                            });
+                        }}
+                        className="btn mt-2 mb-2 btn-warning btn-sm"
+                      >
+                        Allow Notifications
+                      </button>
+                      <input
+                        className="form-control"
+                        required
+                        type={"password"}
+                        value={notificationToken}
+                        disabled
+                      />
+                    </div>
+
                     <div>
                       <div className="button-wrapper">
                         <label
@@ -827,7 +893,10 @@ const CreateProfile = () => {
                             className="d-sm-block"
                             style={{ display: "flex" }}
                           >
-                            <span>Click Your Current Photo and upload it.</span>
+                            <span>
+                              Click Your Current Photo from Camera option and
+                              upload it.
+                            </span>
                           </span>
                           <input
                             disabled={
@@ -848,8 +917,7 @@ const CreateProfile = () => {
                           }}
                           className="btn btn-outline-secondary account-image-reset mb-4"
                         >
-                          <i className="bx bx-reset d-block d-sm-none" />
-                          <span className="d-none d-sm-block">Reset</span>
+                          <span className="">Reset</span>
                         </button>
                         <p className="mb-0">
                           <h6>
@@ -864,8 +932,9 @@ const CreateProfile = () => {
                             another photo.
                           </li>
                           <li>
-                            This image will only be used for extracting your
-                            face data and will not be saved in our database.
+                            This image will be used for extracting your
+                            face data which will later be used for face
+                            verification during Attendance so make sure you are identifiable.
                           </li>
                           <li>
                             Please{" "}
@@ -950,7 +1019,7 @@ const CreateProfile = () => {
                     <div className="mt-2">
                       <button
                         type="submit"
-                        disabled={faceEmbedding.length == 0}
+                        disabled={faceEmbedding.length == 0 || picUrl==""}
                         className="btn btn-primary me-2"
                       >
                         Next{" "}

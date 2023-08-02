@@ -19,7 +19,7 @@ const UserMainLayout = (props) => {
               id="layout-menu"
               className={`layout-menu menu-vertical menu bg-menu-theme`}
             >
-              <div style={{ overflowY: "scroll", height: "100%" }}>
+              <div style={{position:'fixed',height:'90vh', width:'250px'}}>
                 <div className="app-brand demo">
                   <Link to="/" className="app-brand-link">
                     {/* <span className="app-brand-logo demo ">
@@ -48,7 +48,7 @@ const UserMainLayout = (props) => {
                   </a>
                 </div>
                 <div className="menu-inner-shadow" />
-                <ul className="menu-inner py-1">
+                <ul className="menu-inner py-1" style={{overflowY:'auto'}}>
                   {/* Dashboard */}
 
                   <NavLink
@@ -157,9 +157,9 @@ const UserMainLayout = (props) => {
                         className="nav-link dropdown-toggle hide-arrow"
                         data-bs-toggle="dropdown"
                       >
-                        <div className="avatar avatar-online">
+                        <div style={{display:'flex',alignItems:'center'}} className="avatar avatar-online">
                           <img
-                            src="../assets/img/avatars/1.png"
+                            src={userData.picUrl}
                             alt=""
                             className="w-px-40 h-auto rounded-circle"
                           />
@@ -170,9 +170,9 @@ const UserMainLayout = (props) => {
                           <a className="dropdown-item">
                             <div className="d-flex">
                               <div className="flex-shrink-0 me-3">
-                                <div className="avatar avatar-online">
+                                <div style={{display:'flex',alignItems:'center'}} className="avatar avatar-online">
                                   <img
-                                    src="../assets/img/avatars/1.png"
+                                    src={userData.picUrl}
                                     alt=""
                                     className="w-px-40 h-auto rounded-circle"
                                   />

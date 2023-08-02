@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../features/user";
 import useAxiosInstance from "../../axiosInstance";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,21 +31,28 @@ const LoginPage = () => {
         password: password,
       })
       .then((res) => {
-        dispatch(
-          login({
-            username: res.data.user.name,
-            tokin: res.data.token,
-            role: res.data.user.role,
-            id: res.data.user._id,
-            isSuccessFullyRegistered:res.data.user.isSuccessFullyRegistered,
-            verified:res.data.user.verified
-          })
-        );
-        localStorage.setItem("ITM-Admin-User",JSON.stringify({email:email,password:password}))
-        setIsLoading(false);
+        if(res.data.user.role==='ADMIN'){
+          dispatch(
+            login({
+              username: res.data.user.name,
+              tokin: res.data.token,
+              role: res.data.user.role,
+              id: res.data.user._id,
+              isSuccessFullyRegistered:res.data.user.isSuccessFullyRegistered,
+              verified:res.data.user.verified,
+              picUrl:res.data.user.picUrl
+            })
+          );
+          toast.success('Sign-in Successfully')
+          localStorage.setItem("ITM-Admin-User",JSON.stringify({email:email,password:password}))
+          setIsLoading(false);
+        }else{
+          toast.error('You are not a Admin')
+        }
       })
       .catch((err) => {
         console.log(err);
+        toast.error('Something Went Wrong')
         setIsLoading(false);
       });
   };

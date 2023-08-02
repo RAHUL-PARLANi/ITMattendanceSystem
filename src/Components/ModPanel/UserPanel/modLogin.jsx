@@ -40,7 +40,8 @@ const ModLoginPage = () => {
                   role: res.data.user.role,
                   id: res.data.user._id,
                   isSuccessFullyRegistered:res.data.user.isSuccessFullyRegistered,
-                  verified:res.data.user.verified
+                  verified:res.data.user.verified,
+                  picUrl:res.data.user.picUrl
                 })
               );
               localStorage.setItem("ITM-Admin-User",JSON.stringify({email:email,password:password}))
