@@ -4,9 +4,10 @@ import useAxiosInstance from "../../../axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/attendanceAdmin";
+import MarkAttendanceTableModbySC from "./AttendanceMarkingTableBySC";
 
 
-const MarkAttendanceSheetMod = () => {
+const MarkAttendanceSheetModBySC = () => {
     
   const axiosInstance = useAxiosInstance();
   const [data, setData] = useState([]);
@@ -53,7 +54,7 @@ const MarkAttendanceSheetMod = () => {
 
   return (
     <div className="container-fluid">
-      <MarkAttendanceTable
+      <MarkAttendanceTableModbySC
         title={"Student List"}
         date={date}
         tableKeys={["Sl.No.", "FullName", "RollNo", date]}
@@ -66,4 +67,4 @@ const MarkAttendanceSheetMod = () => {
   );
 };
 
-export default MarkAttendanceSheetMod;
+export default MarkAttendanceSheetModBySC;

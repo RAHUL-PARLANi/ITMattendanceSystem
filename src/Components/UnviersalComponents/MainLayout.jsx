@@ -150,7 +150,7 @@ const MainLayout = (props) => {
           
           <NavLink to='/createMod' activeClassName="active" className="menu-item">
             <a   className="menu-link menu-toggle">
-              <i className="menu-icon tf-icons bx bx-merge" />
+              <i className="menu-icon tf-icons bx bxs-user-rectangle" />
               <div data-i18n="Form Elements">Create Mod</div>
             </a>
           </NavLink>

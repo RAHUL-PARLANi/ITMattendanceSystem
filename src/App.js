@@ -54,6 +54,9 @@ import CreateMail from "./Components/Mail/createMail";
 import ShowAllMail from "./Components/Mail/showAllMail";
 import ShowMailUser from "./Components/UserPanel/Mails/showMail";
 import { onMessageListener } from "./firebaseInit";
+import MarkAttendanceSheetModBySC from "./Components/ModPanel/UserPanel/markAttendanceSheetBySC";
+import VerifyAttendanceSheetModBySC from "./Components/ModPanel/UserPanel/verifyAttendanceSheetBySC";
+import SingleStudentMarkingModBySC from "./Components/ModPanel/UserPanel/SingleStudentMarkingBySC";
 
 const App = () => {
   onMessageListener().then((payload) => {
@@ -305,6 +308,48 @@ const App = () => {
             }
           />
           
+          {/* By Barcode Way */}
+
+          <Route
+            path="/moderator/secuityCode/markAttendance/:id"
+            element={
+              isAuthenticated && role == "MOD" ? (
+                isModVerified ? (
+                  <ModMainLayout>
+                    <MarkAttendanceSheetModBySC />
+                  </ModMainLayout>
+                ) : (
+                  <ModMainLayout>
+                    <VerifyAttendanceSheetModBySC />
+                  </ModMainLayout>
+                )
+              ) : (
+                <ModLoginPage />
+              )
+            }
+          />
+
+          <Route
+            path="/moderator/secuityCode/markSingleAttendance/:userId/:date/:sid/:id"
+            element={
+              isAuthenticated && role == "MOD" ? (
+                isModVerified ? (
+                  <ModMainLayout>
+                    <SingleStudentMarkingModBySC />
+                  </ModMainLayout>
+                ) : (
+                  <>
+                    <ModMainLayout>
+                      <VerifyAttendanceSheetModBySC />
+                    </ModMainLayout>
+                  </>
+                )
+              ) : (
+                <ModLoginPage />
+              )
+            }
+          />  
+
          {/* Mail Box Routes */}
          <Route
             path="/showMail/:id"

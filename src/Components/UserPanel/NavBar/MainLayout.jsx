@@ -114,7 +114,7 @@ const UserMainLayout = (props) => {
                     <a className="menu-link ">
                    
                       <i className="menu-icon tf-icons bx bx-qr-scan" />
-                      <div data-i18n="Form Layouts">Security Codes</div>
+                      <div data-i18n="Form Layouts">Athentication Codes</div>
                     </a>
                   </NavLink>
                 </ul>
