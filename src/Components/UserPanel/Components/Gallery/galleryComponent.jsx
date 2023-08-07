@@ -19,11 +19,12 @@ const GalleryComponent = (props) => {
             <a
               style={{ display: "flex", alignItems: "center" }}
               className="h5 d-block text-white mt-1 mb-0"
-              href=""
             >
               {title}
             </a>
+            <div style={{maxHeight:'150px',overflowY:'auto'}}> 
             <small className="text-white">{desc}</small>
+            </div>
           </div>
         </div>
       </div>

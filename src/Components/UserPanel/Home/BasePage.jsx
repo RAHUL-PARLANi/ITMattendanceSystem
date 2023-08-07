@@ -1,11 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./style.css";
 import Teams from "../Components/Team/Teams";
 import Testimonials from "../Components/Testimonials/Testimonials";
 import Gallery from "../Components/Gallery/gallery";
 import Solutions from "../Components/Solutions/Solutions";
 import CompanyList from "../Components/CompanyList/CompanyList";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
+
+import useAxiosInstance from "../../../axiosInstance";
+import { toast } from "react-toastify";
 
 const BasePage = () => {
   const [primary, setprimary] = useState("#2124B1");
@@ -17,8 +20,51 @@ const BasePage = () => {
   const teamRef = useRef(null);
   const recruitersRef = useRef(null);
   const contactUs = useRef(null);
-
   const executeScroll = (elemtRed) => elemtRed.current.scrollIntoView();
+
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const axiosInstance = useAxiosInstance();
+
+  //contactUs form fields states
+
+  const [emailCUs, setEmailCUs] = useState("");
+  const [nameCUs, setNameCUs] = useState("");
+  const [subjectCUs, setSubjectCUs] = useState("");
+  const [messageCUs, setMessageCUs] = useState("");
+
+  const [buttonLoading, setButtonLoading] = useState(false);
+  useEffect(() => {
+    axiosInstance
+      .get("/dashboard/userHome")
+      .then((res) => {
+        setData(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        toast.error("Something went wrong");
+      });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          width: "100%",
+          color: primary,
+        }}
+      >
+        <div className="spinner-border spinner-border-lg" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="container-xxl bg-white p-0">
@@ -90,9 +136,10 @@ const BasePage = () => {
                   Recruiters
                 </a>
               </div>
-              <Link to={'/user/home'}><button className="btn btn-primary text-white rounded-pill py-2 px-4 ms-lg-3">
-                Get Started
-              </button>
+              <Link to={"/user/home"}>
+                <button className="btn btn-primary text-white rounded-pill py-2 px-4 ms-lg-3">
+                  Get Started
+                </button>
               </Link>
             </div>
           </nav>
@@ -115,7 +162,7 @@ const BasePage = () => {
                     opportunities.
                   </p>
                   <Link
-                    to='/user/home'
+                    to="/user/home"
                     className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInLeft"
                   >
                     Get Started
@@ -222,23 +269,23 @@ const BasePage = () => {
                   </div>
                 </div>
                 <div className="d-flex align-items-center mt-4">
-                  <a 
-                    style={{color:primary,border:`1px solid ${primary}`}}
+                  <a
+                    style={{ color: primary, border: `1px solid ${primary}` }}
                     className="btn btn-square me-3"
-                    href="https://www.itmgoi.in" target="_blank"
+                    href="https://www.itmgoi.in"
+                    target="_blank"
                   >
                     <i className="bx bx-globe" />
                   </a>
                   <a
-                  
-                  style={{color:primary,border:`1px solid ${primary}`}}
-                  className="btn btn-square me-3"
+                    style={{ color: primary, border: `1px solid ${primary}` }}
+                    className="btn btn-square me-3"
                     href="https://www.linkedin.com/school/itm-gwalior-cp/"
                   >
                     <i className="bx bxl-linkedin"></i>
                   </a>
                   <a
-                    style={{color:primary,border:`1px solid ${primary}`}}
+                    style={{ color: primary, border: `1px solid ${primary}` }}
                     className="btn btn-square me-3"
                     href="https://www.facebook.com/ITMGOIGWALIOR/"
                   >
@@ -275,7 +322,7 @@ const BasePage = () => {
                 What Solutions We Provide
               </h2>
             </div>
-            <Solutions />
+            <Solutions data={data.solutionsData} />
           </div>
         </div>
         {/* Service End */}
@@ -297,7 +344,7 @@ const BasePage = () => {
                 Recent Activities
               </h2>
             </div>
-            <Gallery />
+            <Gallery data={data.galleryData} />
           </div>
         </div>
         {/* Gallery End */}
@@ -323,7 +370,7 @@ const BasePage = () => {
             </h2>
           </div>
           <div className="container-xxl">
-            <Testimonials colour={primary} />
+            <Testimonials colour={primary} data={data.testimonialsData} />
           </div>
         </div>
         {/* Testimonial End */}
@@ -345,7 +392,7 @@ const BasePage = () => {
                 Meet Our Team Members
               </h2>
             </div>
-            <Teams colour={primary} />
+            <Teams colour={primary} data={data.teamData} />
           </div>
         </div>
         {/* Team End */}
@@ -438,7 +485,31 @@ const BasePage = () => {
 
               <div className="col-md-6 col-lg-3" ref={contactUs}>
                 <h5 className="text-white mb-4">Contact Us</h5>
-                <form>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setButtonLoading(true);
+                    axiosInstance
+                      .post("/contactus", {
+                        name: nameCUs,
+                        email: emailCUs,
+                        subject: subjectCUs,
+                        message: messageCUs,
+                      })
+                      .then((elem) => {
+                        if (elem.data) {
+                          toast.success(
+                            "Your Message has been Successfully sent to TAP Cell"
+                          );
+                        }
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                        toast.error("Something went wrong");
+                      });
+                    setButtonLoading(false);
+                  }}
+                >
                   <div className="row g-3">
                     <div className="col-md-6">
                       <div className="">
@@ -447,6 +518,11 @@ const BasePage = () => {
                           type="text"
                           className="form-control"
                           id="name"
+                          required
+                          value={nameCUs}
+                          onChange={(e) => {
+                            setNameCUs(e.target.value);
+                          }}
                           placeholder="Your Name"
                         />
                       </div>
@@ -458,6 +534,11 @@ const BasePage = () => {
                           type="email"
                           className="form-control"
                           id="email"
+                          required
+                          value={emailCUs}
+                          onChange={(e) => {
+                            setEmailCUs(e.target.value);
+                          }}
                           placeholder="Your Email"
                         />
                       </div>
@@ -469,6 +550,11 @@ const BasePage = () => {
                           type="text"
                           className="form-control"
                           id="subject"
+                          required
+                          value={subjectCUs}
+                          onChange={(e) => {
+                            setSubjectCUs(e.target.value);
+                          }}
                           placeholder="Subject"
                         />
                       </div>
@@ -479,18 +565,38 @@ const BasePage = () => {
                           className="form-control"
                           placeholder="Leave a message here"
                           id="message"
+                          required
+                          value={messageCUs}
+                          onChange={(e) => {
+                            setMessageCUs(e.target.value);
+                          }}
                           style={{ height: 100 }}
                           defaultValue={""}
                         />
                       </div>
                     </div>
                     <div className="col-12">
-                      <button
-                        className="btn btn-primary w-50 py-1"
-                        type="submit"
-                      >
-                        Send Message
-                      </button>
+                      {buttonLoading ? (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                          }}
+                          disabled
+                          className="btn btn-primary py-1"
+                          type="button"
+                        >
+                          <div
+                            className="spinner-border spinner-border-lg"
+                            role="status"
+                          >
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        </button>
+                      ) : (
+                        <button className="btn btn-primary py-1" type="submit">
+                          Send Message
+                        </button>
+                      )}
                     </div>
                   </div>
                 </form>
@@ -530,9 +636,9 @@ const BasePage = () => {
                       className="border-bottom"
                       href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"
                     >
-                      Rahul Parlani 
-                    </a>
-                    {" "}(ITM Student)
+                      Rahul Parlani
+                    </a>{" "}
+                    (ITM Student)
                   </small>
                 </div>
               </div>

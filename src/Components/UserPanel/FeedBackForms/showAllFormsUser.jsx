@@ -19,6 +19,7 @@ const ShowAllFormsUser = () => {
       })
       .catch((err) => {
         toast.error("Something went wrong");
+        setIsLoading(false)
       });
   }, []);
 

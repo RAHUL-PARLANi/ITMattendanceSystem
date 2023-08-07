@@ -1,4 +1,4 @@
-import "./page-auth.css";
+import "./style.css";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { login } from "../../../features/user";
 import useAxiosInstance from "../../../axiosInstance";
 import { toast } from "react-toastify";
 
-const ModLoginPage = () => {
+const CMLoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const axiosInstance = useAxiosInstance();
   const [email, setEmail] = useState("");
@@ -15,8 +15,8 @@ const ModLoginPage = () => {
   const dispatch = useDispatch();
   const history = useNavigate();
  useEffect(() => {
-   if (localStorage.getItem("ITM-Mod-User")) {
-     const data = JSON.parse(localStorage.getItem("ITM-Mod-User"));
+   if (localStorage.getItem("ITM-CM-User")) {
+     const data = JSON.parse(localStorage.getItem("ITM-CM-User"));
      //console.log(data)
      setEmail(data.email)
      setPassword(data.password)
@@ -31,7 +31,7 @@ const ModLoginPage = () => {
         password: password,
       })
       .then((res) => {
-        if(res.data.user.role==='MOD'){
+        if(res.data.user.role==='CM'){
 
             dispatch(
                 login({
@@ -44,10 +44,10 @@ const ModLoginPage = () => {
                   picUrl:res.data.user.picUrl
                 })
               );
-              localStorage.setItem("ITM-Mod-User",JSON.stringify({email:email,password:password}))
+              localStorage.setItem("ITM-CM-User",JSON.stringify({email:email,password:password}))
               toast.success('Signned Sucessfully')  
         }else{
-            toast.warning('Sorry, we can not Signin you. you are not a Moderator')
+            toast.warning('Sorry, we can not Signin you. you are not a Content Manager')
         }
         setIsLoading(false);
       })
@@ -94,7 +94,7 @@ const ModLoginPage = () => {
                     </a>
                   </div>
                   {/* /Logo */}
-                  <h4 className="mb-2">Welcome to Moderator Panel</h4>
+                  <h5 className="mb-2">Welcome to Content Mangement Panel</h5>
                   <p className="mb-4">Please sign-in to your account</p>
                   <form className="mb-4" onSubmit={handleSubmit}>
                     <div className="mb-3">
@@ -132,6 +132,19 @@ const ModLoginPage = () => {
                           placeholder="············"
                           aria-describedby="password"
                         />
+                        {passHide?
+                        <button onClick={(e)=>{
+                            e.preventDefault()
+                            setPassHide(false)
+                        }} className="btn btn-primary">
+                        <i className='bx bx-show'></i>
+                        </button> :<button onClick={(e)=>{
+                            e.preventDefault()
+                            setPassHide(true)
+                        }} className="btn btn-primary">
+                        <i className='bx bx-hide'></i>
+                        </button>    
+                    }
                       </div>
                     </div>
                     <div className="mb-3">
@@ -143,10 +156,10 @@ const ModLoginPage = () => {
                       </button>
                     </div>
                   </form>
-                  <div style={{display:'flex',width:'100%',justifyContent:'center'}}>
+                  <div >
                   <button onClick={()=>{
-                    localStorage.removeItem("ITM-Mod-User")
-                  }} className="btn btn-outline-dark btn-sm">Remove Saved Passwword</button>
+                    localStorage.removeItem("ITM-CM-User")
+                  }} className="btn btn-outline-primary btn-sm">Remove Saved Password</button>
                 </div>
                 </div>
               </div>
@@ -161,4 +174,4 @@ const ModLoginPage = () => {
   );
 };
 
-export default ModLoginPage;
+export default CMLoginPage;

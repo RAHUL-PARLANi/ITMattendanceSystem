@@ -57,6 +57,19 @@ import { onMessageListener } from "./firebaseInit";
 import MarkAttendanceSheetModBySC from "./Components/ModPanel/UserPanel/markAttendanceSheetBySC";
 import VerifyAttendanceSheetModBySC from "./Components/ModPanel/UserPanel/verifyAttendanceSheetBySC";
 import SingleStudentMarkingModBySC from "./Components/ModPanel/UserPanel/SingleStudentMarkingBySC";
+import CMLayout from "./Components/CMPanel/Component/CMLayout";
+import CMLoginPage from "./Components/CMPanel/Component/CMLogin";
+import CMHome from "./Components/CMPanel/Component/CMHome";
+import CreateGallery from "./Components/CMPanel/Gallery/createGallery";
+import ShowAllGallery from "./Components/CMPanel/Gallery/showGallery";
+import EditGallery from "./Components/CMPanel/Gallery/editGallery";
+import CreateTestimonials from "./Components/CMPanel/Testimonials/createTestimonials";
+import ShowAllTestimonials from "./Components/CMPanel/Testimonials/showTestimonials";
+import EditTestimonials from "./Components/CMPanel/Testimonials/editTestimonials";
+import ShowAllTeams from "./Components/CMPanel/Team/showTeam";
+import EditTeam from "./Components/CMPanel/Team/editTeam";
+import ShowAllSolutions from "./Components/CMPanel/Solution/showSolution";
+import EditSolution from "./Components/CMPanel/Solution/editSolution";
 
 const App = () => {
   onMessageListener().then((payload) => {
@@ -692,7 +705,157 @@ const App = () => {
               )
             }
           />
+
+          {/* Gallery */}
+
+          <Route
+            path="/cm"
+            element={
+              isAuthenticated && (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  <CMHome />
+                </CMLayout>
+              ) : (
+                <CMLoginPage/>
+              )
+            }
+          />  
+
+          {/*Gallery Routes*/}
+          <Route
+            path="/createGallery"
+            element={
+              isAuthenticated && (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  <CreateGallery />
+                </CMLayout>
+              ) : (
+                <CMLoginPage/>
+              )
+            }
+          />
+          <Route
+            path="/showGallery"
+            element={
+              isAuthenticated &&  (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  <ShowAllGallery />
+                </CMLayout>
+              ) : (
+                <CMLoginPage />
+              )
+            }
+          />
+          <Route
+            path="/editGallery/:id"
+            element={
+              isAuthenticated &&  (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  < EditGallery/>
+                </CMLayout>
+              ) : (
+                <CMLoginPage />
+              )
+            }
+          />
+
+          {/* Testimonials */}
+
+          {/*Gallery Routes*/}
+          <Route
+            path="/createTestimonial"
+            element={
+              isAuthenticated && (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  <CreateTestimonials />
+                </CMLayout>
+              ) : (
+                <CMLoginPage/>
+              )
+            }
+          />
+          <Route
+            path="/showTestimonial"
+            element={
+              isAuthenticated &&  (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  <ShowAllTestimonials />
+                </CMLayout>
+              ) : (
+                <CMLoginPage />
+              )
+            }
+          />
+          <Route
+            path="/editTestimonial/:id"
+            element={
+              isAuthenticated &&  (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  < EditTestimonials/>
+                </CMLayout>
+              ) : (
+                <CMLoginPage />
+              )
+            }
+          />
+
+        {/* Teams */}
+
+        <Route
+            path="/showTeam"
+            element={
+              isAuthenticated &&  (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  <ShowAllTeams />
+                </CMLayout>
+              ) : (
+                <CMLoginPage />
+              )
+            }
+          />
+          <Route
+            path="/editTeam/:id"
+            element={
+              isAuthenticated &&  (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  < EditTeam/>
+                </CMLayout>
+              ) : (
+                <CMLoginPage />
+              )
+            }
+          />
+
+          {/* Solution */}
+
+        <Route
+            path="/showSolution"
+            element={
+              isAuthenticated &&  (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  <ShowAllSolutions />
+                </CMLayout>
+              ) : (
+                <CMLoginPage />
+              )
+            }
+          />
+          <Route
+            path="/editSolution/:id"
+            element={
+              isAuthenticated &&  (role == "CM" || role == 'ADMIN') ? (
+                <CMLayout>
+                  < EditSolution/>
+                </CMLayout>
+              ) : (
+                <CMLoginPage />
+              )
+            }
+          />    
+
         </Routes>
+
+
       </BrowserRouter>
     </>
   );

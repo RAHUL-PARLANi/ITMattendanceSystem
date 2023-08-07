@@ -1,8 +1,8 @@
 import React from "react";
-import { TeamData } from "./TeamData";
 import TeamComponent from "./TeamComponent";
 const Teams = (props) => {
  const colour = props.colour
+ const TeamData = props.data
   return (
     <div>
       <div 

@@ -4,11 +4,11 @@ import "./testimonial.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.js";
-import { TestimonialsData } from './TestimonialsData'
 import TestimonialsComponent from "./TestimonialsComponent";
 
-const Testimonials = () => {
+const Testimonials = (props) => {
   const sliderRef = useRef(null);
+  const TestimonialsData = props.data
   const [primary, setprimary] = useState("#6610f2");
   useEffect(() => {
     // Initialize the Slick slider inside the useEffect hook

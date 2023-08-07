@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import GalleryComponent from "./galleryComponent";
-import { GalleryData } from "./galleryData";
 
 const Gallery = (props) => {
+  const GalleryData = props.data 
   const [filter , setFilter] = useState("placements")
   return (
     <div>

@@ -1,8 +1,8 @@
 import React from "react";
-import { SolutionData } from "./SolutionsData";
 import SolutionsComponent from "./SolutionsComponent";
 
-const Solutions = () => {
+const Solutions = (props) => {
+  const SolutionData = props.data
   return (
     <div className="row g-4">
       {SolutionData.map((elem) => {

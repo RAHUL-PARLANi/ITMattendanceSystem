@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../features/user";
 import { NavLink, Link } from "react-router-dom";
 
-const UserMainLayout = (props) => {
+const CMLayout = (props) => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.users.value);
 
@@ -19,9 +19,11 @@ const UserMainLayout = (props) => {
               id="layout-menu"
               className={`layout-menu menu-vertical menu bg-menu-theme`}
             >
-              <div style={{position:'fixed',height:'90vh', width:'250px'}}>
+              <div
+                style={{ position: "fixed", height: "90vh", width: "250px" }}
+              >
                 <div className="app-brand demo">
-                  <Link to="/" className="app-brand-link">
+                  <Link to="/cm" className="app-brand-link">
                     {/* <span className="app-brand-logo demo ">
               <img height={'25px'} src='ITM_LOGO.png' alt='Logo' />
             </span> */}
@@ -48,73 +50,95 @@ const UserMainLayout = (props) => {
                   </a>
                 </div>
                 <div className="menu-inner-shadow" />
-                <ul className="menu-inner py-1" style={{overflowY:'auto'}}>
+                <ul className="menu-inner py-1 " style={{ overflowY: "auto" }}>
                   {/* Dashboard */}
 
                   <NavLink
                     exact="true"
-                    to="/user/home"
+                    to="/cm"
                     activeClassName="active"
                     className="menu-item"
                   >
                     <a className="menu-link">
                       <i className="menu-icon tf-icons bx bx-home-circle" />
-                      <div data-i18n="Analytics">Home</div>
+                      <div data-i18n="Analytics">Dashboard</div>
                     </a>
                   </NavLink>
+
+                  <NavLink
+                    to="/ShowTeam"
+                    activeClassName="active"
+                    className="menu-item"
+                  >
+                    <a className="menu-link">
+                      <i className="menu-icon tf-icons bx bx-group" />
+                      <div data-i18n="Analytics">Team</div>
+                    </a>
+                  </NavLink>
+
+                  <NavLink
+                    to="/ShowSolution"
+                    activeClassName="active"
+                    className="menu-item"
+                  >
+                    <a className="menu-link">
+                      <i className="menu-icon tf-icons bx bx-palette" />
+                      <div data-i18n="Analytics">Solution</div>
+                    </a>
+                  </NavLink>
+
+
                   {/* Layouts */}
+                  <li className="menu-header small text-uppercase">
+                    <span className="menu-header-text fw-bold">Gallery</span>
+                  </li>
+                  {/* Cards */}
                   <NavLink
-                    to={"/user/showforms"}
+                    to={"/showGallery"}
                     activeClassName="active"
                     className="menu-item"
                   >
-                    <a className="menu-link ">
-                      <i className="menu-icon tf-icons bx  bx bx-collection" />
-                      <div data-i18n="Boxicons">Feedback Forms</div>
-                    </a>
-                  </NavLink>
-                  {/* Forms */}
-                  <NavLink
-                    to="/user/showSheets"
-                    activeClassName="active"
-                    className="menu-item"
-                  >
-                    <a className="menu-link ">
-                      <i className="menu-icon tf-icons bx bx-spreadsheet" />
-                      <div data-i18n="Form Elements">Attendance</div>
+                    <a className="menu-link menu-toggle">
+                      <i className="menu-icon tf-icons bx bx-dock-top" />
+                      <div data-i18n="Boxicons">Show Gallery</div>
                     </a>
                   </NavLink>
                   <NavLink
-                    to={"/user/batches"}
                     activeClassName="active"
+                    to={"/createGallery"}
                     className="menu-item"
                   >
-                    <a className="menu-link ">
-                      <i className="menu-icon tf-icons bx bx-label" />
-                      <div data-i18n="Form Layouts">Batches</div>
+                    <a className="menu-link menu-toggle">
+                      <i className="menu-icon tf-icons bx bx-images" />
+                      <div data-i18n="Basic">Create Gallery</div>
                     </a>
                   </NavLink>
 
+                  {/* Testimonials*/}
+                  <li className="menu-header small text-uppercase">
+                    <span className="menu-header-text fw-bold">
+                      Testimonials
+                    </span>
+                  </li>
+                  {/* Cards */}
                   <NavLink
-                    to={"/user/mails"}
+                    to={"/showTestimonial"}
                     activeClassName="active"
                     className="menu-item"
                   >
-                    <a className="menu-link ">
-                      <i className="menu-icon tf-icons bx bx-envelope" />
-                      <div data-i18n="Form Layouts">Mails</div>
+                    <a className="menu-link menu-toggle">
+                      <i className="menu-icon tf-icons bx bx-dock-top" />
+                      <div data-i18n="Boxicons">Show Testimonial</div>
                     </a>
                   </NavLink>
-
                   <NavLink
-                    to={"/user/codes"}
                     activeClassName="active"
+                    to={"/createTestimonial"}
                     className="menu-item"
                   >
-                    <a className="menu-link ">
-                   
-                      <i className="menu-icon tf-icons bx bx-qr-scan" />
-                      <div data-i18n="Form Layouts">Athentication Codes</div>
+                    <a className="menu-link menu-toggle">
+                      <i className="menu-icon tf-icons bx bxs-quote-left" />
+                      <div data-i18n="Basic">Create Testimonial</div>
                     </a>
                   </NavLink>
                 </ul>
@@ -125,7 +149,7 @@ const UserMainLayout = (props) => {
             <div className="layout-page">
               {/* Navbar */}
               <nav
-                className="layout-navbar  shadow-sm container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+                className="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
                 id="layout-navbar"
               >
                 <div className="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -144,11 +168,11 @@ const UserMainLayout = (props) => {
                   </a>
                 </div>
                 <div
-                  className="navbar-nav-right  d-flex align-items-center"
+                  className="navbar-nav-right d-flex align-items-center"
                   id="navbar-collapse"
                 >
-                  <span className='app-brand-text h4 menu-text fw-bold mb-0'>
-                    ITM TAP Cell Portal 
+                  <span className='className="app-brand-text demo menu-text fw-bolder '>
+                    TAP Cell's OFFICIAL SYSTEM
                   </span>
                   <ul className="navbar-nav flex-row align-items-center ms-auto">
                     {/* User */}
@@ -157,7 +181,10 @@ const UserMainLayout = (props) => {
                         className="nav-link dropdown-toggle hide-arrow"
                         data-bs-toggle="dropdown"
                       >
-                        <div style={{display:'flex',alignItems:'center'}} className="avatar avatar-online">
+                        <div
+                          style={{ display: "flex", alignItems: "center" }}
+                          className="avatar avatar-online"
+                        >
                           <img
                             src={userData.picUrl}
                             alt=""
@@ -170,7 +197,13 @@ const UserMainLayout = (props) => {
                           <a className="dropdown-item">
                             <div className="d-flex">
                               <div className="flex-shrink-0 me-3">
-                                <div style={{display:'flex',alignItems:'center'}} className="avatar avatar-online">
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                  className="avatar avatar-online"
+                                >
                                   <img
                                     src={userData.picUrl}
                                     alt=""
@@ -194,7 +227,7 @@ const UserMainLayout = (props) => {
                         </li>
                         <Link
                           style={{ color: "inherit", textDecoration: "none" }}
-                          to={"/user/profile"}
+                          to={"/profile"}
                         >
                           <li>
                             <a className="dropdown-item">
@@ -264,4 +297,4 @@ const UserMainLayout = (props) => {
   );
 };
 
-export default UserMainLayout;
+export default CMLayout;

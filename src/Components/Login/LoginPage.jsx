@@ -90,12 +90,7 @@ const LoginPage = () => {
                   {/* Logo */}
                   <div className="app-brand justify-content-center">
                     <a className="app-brand-link gap-2">
-                      <span
-                        style={{ textTransform: "uppercase" }}
-                        className="app-brand-text demo menu-text fw-bolder text-primary ms-2"
-                      >
-                        ITM
-                      </span>
+                      <img src={'ITM_LOGO.png'} height={'100px'}/>
                     </a>
                   </div>
                   {/* /Logo */}
