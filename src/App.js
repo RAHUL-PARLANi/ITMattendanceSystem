@@ -70,6 +70,7 @@ import ShowAllTeams from "./Components/CMPanel/Team/showTeam";
 import EditTeam from "./Components/CMPanel/Team/editTeam";
 import ShowAllSolutions from "./Components/CMPanel/Solution/showSolution";
 import EditSolution from "./Components/CMPanel/Solution/editSolution";
+import ContactusMessages from "./Components/Batch/contactus";
 
 const App = () => {
   onMessageListener().then((payload) => {
@@ -429,6 +430,19 @@ const App = () => {
               )
             }
           />
+          <Route
+            path="/showContactUs"
+            element={
+              isAuthenticated ? (
+                <MainLayout>
+                  <ContactusMessages />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          {/* contactusMessages */}
           <Route
             path="/admin"
             element={

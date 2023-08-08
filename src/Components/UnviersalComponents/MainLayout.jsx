@@ -62,7 +62,13 @@ const MainLayout = (props) => {
               <div data-i18n="Analytics">Start Attendance</div>
             </a>
           </NavLink>
-          
+
+          <NavLink  to='/showContactUs' activeClassName="active" className="menu-item ">
+            <a  className="menu-link">
+              <i className="menu-icon tf-icons bx bx-message" />
+              <div data-i18n="Analytics">Messages</div>
+            </a>
+          </NavLink>
           {/* Layouts */}
           <li className="menu-header small text-uppercase">
             <span className="menu-header-text fw-bold">User</span>
@@ -131,7 +137,7 @@ const MainLayout = (props) => {
           
           <NavLink to='/createBatch' activeClassName="active" className="menu-item">
             <a   className="menu-link menu-toggle">
-              <i className="menu-icon tf-icons bx bx-merge" />
+              <i className="menu-icon tf-icons bx bx-copy" />
               <div data-i18n="Form Elements">Create Batch</div>
             </a>
           </NavLink>
@@ -150,7 +156,7 @@ const MainLayout = (props) => {
           
           <NavLink to='/createMod' activeClassName="active" className="menu-item">
             <a   className="menu-link menu-toggle">
-              <i className="menu-icon tf-icons bx bxs-user-rectangle" />
+              <i className="menu-icon tf-icons bx bx-user-pin" />
               <div data-i18n="Form Elements">Create Mod</div>
             </a>
           </NavLink>

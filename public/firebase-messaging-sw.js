@@ -24,12 +24,4 @@ messaging.onBackgroundMessage((payload) => {
     };
   
     self.registration.showNotification(payload.data.title, notificationOptions);
-  });
-
-  self.addEventListener('notificationclick', (event) => {
-    event.notification.close(); // Close the notification
-
-    // Get the custom link from the notification data
-    const clickAction = event.notification.data.link || 'https://itmtapcell.netlify.app/user/mails'; // Replace with your default URL
-    event.waitUntil(clients.openWindow(clickAction));
-});  
+  });  
