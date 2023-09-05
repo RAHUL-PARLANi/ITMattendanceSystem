@@ -17,12 +17,14 @@ const ShowMailUser = () => {
       .then((res) => {
         setData(res.data);
         setIsLoading(false);
-        if (res.data.studentsId) {
+        if (res.data.studentsId.length!==0) {
           if (res.data.studentsId.find((elem) => elem == userData.id)) {
             setIsVisible(true);
           } else {
             setIsVisible(false);
           }
+        }else{
+          setIsVisible(true)
         }
       })
       .catch((err) => {
