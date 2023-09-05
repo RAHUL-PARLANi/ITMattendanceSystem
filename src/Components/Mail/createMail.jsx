@@ -14,14 +14,15 @@ import EditorToolbar, { modules, formats } from "./Editor";
 import "./style.css";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const BoardGame = (props) => {
   const { bg, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
     props;
 
   const handleCheckboxChange = () => {
-    handleRowSelect(bg._id);
+    handleRowSelect(bg._id, bg.WorkingEmailId);
   };
 
   return (
@@ -48,8 +49,9 @@ const CreateMail = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const axiosInstance = useAxiosInstance();
   const [isLoading, setIsLoading] = useState(true);
-  const userData = useSelector(state=>state.users.value)
-  
+  const userData = useSelector((state) => state.users.value);
+  const [selectedEmails, setSelectedEmails] = useState([]);
+
   //Form Feilds
 
   const [title, setTitle] = useState("");
@@ -62,6 +64,51 @@ const CreateMail = () => {
   const [contentPara, setContentPara] = useState("");
   const [contentLink, setContentLink] = useState("");
 
+  //bcc , cc , mailMessage,
+
+  const [bcc, setBcc] = useState("");
+  const [cc, setCc] = useState("");
+  const [mailMessage, setMailMessage] = useState("");
+
+  // MailMessage Error
+
+  const [mailMessageError,setMailMessageError] = useState("");
+
+  useEffect(() => {
+    if(mailMessage === "" || mailMessage === "<p><br></p>"){
+      setMailMessageError("Message can not be empty!")
+    }else{
+      setMailMessageError("")
+    }
+    console.log(mailMessage)
+  }, [mailMessage])
+  
+
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      axiosInstance
+        .post("/mail/sendGmails", {
+          tokens: tokenResponse,
+          bccRecipients:bcc.split(','),
+          ccRecipients:cc.split(','),
+          subject: subject,
+          recipients: selectedEmails,
+          message: mailMessage,
+        })
+        .then((res) => {
+          if (res.data["Email sent "]) {
+            toast.success("Mail Sent Successfully !");
+          }
+        })
+        .catch((err) => {
+          toast.error("Error in Sending Mail");
+          console.log(err);
+        });
+    },
+    scope: "https://www.googleapis.com/auth/gmail.send",
+    redirect_uri: "http://localhost:3000/createmails",
+  });
+
   const handleChange = (value) => {
     setContentPara(value);
   };
@@ -71,13 +118,39 @@ const CreateMail = () => {
       .get("/users/all")
       .then((res) => {
         setBgs(res.data);
-        const allKeys = Array.from(
-          new Set(
-            res.data.reduce((keys, obj) => {
-              return keys.concat(Object.keys(obj));
-            }, [])
-          )
-        );
+        const allKeys = [
+          "rollNo",
+          "name",
+          "gender",
+          "batch",
+          "branch",
+          "univercityName",
+          "univercityType",
+          "_id",
+          "role",
+          //"email",
+          // "verified",
+          "WorkingEmailId",
+          "aggregatePercentageGraduation",
+          //"busFacility",
+          "dateOfBirth",
+          "fatherName",
+          "graduationBranch",
+          "historyOfBacklogs",
+          "noOfCurrentBacklogs",
+          //"notificationToken",
+          "phoneNumber",
+          //"picUrl",
+          "tenthBoardName",
+          "tenthMarksPercentage",
+          "tenthPassingYear",
+          "tweelthBoardName",
+          "tweelthMarksPercentage",
+          "tweelthPassingYear",
+          "univercityNameGraduation",
+          "yearOfPassingGraduation",
+          "youHaveLaptop",
+        ];
         setKeys(allKeys);
         setIsLoading(false);
       })
@@ -152,13 +225,22 @@ const CreateMail = () => {
       .rows({ search: "applied" })
       .data()
       .toArray()
-      .flatMap((elem) => elem[1]);
+      .flatMap((elem) => elem[8]);
     setSelectedRows((prevState) => {
       setSelectedRows([...prevState, ...filteredData]);
     });
+
+    const filteredDataEmails = table
+      .rows({ search: "applied" })
+      .data()
+      .toArray()
+      .flatMap((elem) => elem[10]);
+    setSelectedEmails((prevState) => {
+      setSelectedEmails([...prevState, ...filteredDataEmails]);
+    });
   };
 
-  const handleRowSelect = (id) => {
+  const handleRowSelect = (id, email) => {
     let updatedSelectedRows;
     if (selectedRows.includes(id)) {
       updatedSelectedRows = selectedRows.filter((rowId) => rowId !== id);
@@ -166,10 +248,18 @@ const CreateMail = () => {
       updatedSelectedRows = [...selectedRows, id];
     }
     setSelectedRows(updatedSelectedRows);
+
+    let updatedSelectedEmails;
+    if (selectedEmails.includes(email)) {
+      updatedSelectedEmails = selectedEmails.filter(
+        (rowEmail) => rowEmail !== email
+      );
+    } else {
+      updatedSelectedEmails = [...selectedEmails, email];
+    }
+    setSelectedEmails(updatedSelectedEmails);
   };
 
-
-  
   const deleteBGS = (id) => {
     var ans = window.confirm(
       "You are trying to delete a USER, Do you want to continue ?"
@@ -219,9 +309,9 @@ const CreateMail = () => {
     e.preventDefault();
     try {
       var data = {
-        submittedById:userData.id,
-        submittedByRole:userData.role,
-        submittedByName:userData.username,
+        submittedById: userData.id,
+        submittedByRole: userData.role,
+        submittedByName: userData.username,
         title: title,
         subject: subject,
         studentsId: selectedRows,
@@ -231,7 +321,9 @@ const CreateMail = () => {
         .post("/mail/", data)
         .then((result) => {
           if (result.data) {
-            toast.success(`Mail with title ${result.data.title} is Created Successfully`);
+            toast.success(
+              `Mail with title ${result.data.title} is Created Successfully`
+            );
           }
         })
         .catch((err) => {
@@ -264,7 +356,6 @@ const CreateMail = () => {
       .catch((err) => console.log(err));
   };
 
-  
   return (
     <>
       {isLoading ? (
@@ -331,12 +422,11 @@ const CreateMail = () => {
               </label>
               <textarea
                 type="text"
-                
                 className="form-control"
                 id="basic-default-Students-IDS"
                 value={selectedRows}
                 onChange={(e) => {
-                  setSelectedRows(e.target.value.split(','));
+                  setSelectedRows(e.target.value.split(","));
                 }}
               />
             </div>
@@ -347,7 +437,6 @@ const CreateMail = () => {
               </label>
               <select
                 type="text"
-                
                 className="form-control"
                 value={contentType}
                 onChange={(e) => {
@@ -490,9 +579,153 @@ const CreateMail = () => {
             <input
               className="btn btn-primary mt-3"
               type="submit"
-              value="Create"
+              value="Send"
             />
+
+            <input
+              className="btn btn-outline-primary ms-2 mt-3"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#basicModal"
+              //onClick={()=>window.location=('http://localhost:5000/gmail/auth')}
+              //onClick={()=>login()}
+              value="Send with Gmail"
+            />
+
+            {/* <OAuth2Login
+              authorizationUrl="http://localhost:5000/gmail/auth"
+              responseType="code"
+              clientId="634927151835-vqs5lvcit044kv34im1brabdjrr78voi.apps.googleusercontent.com"
+              redirectUri="http://localhost:5000/gmail/auth/callback"
+              onSuccess={response => console.log(`suncwaasss `,response)}
+              onFailure={response => console.log(response)}/>, */}
           </form>
+
+          <div
+            className="modal fade"
+            id="basicModal"
+            tabIndex={-1}
+            aria-hidden="true"
+          >
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title text-primary" id="exampleModalLabel1">
+                    Mail Via Gmail
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  />
+                </div>
+                <div className="modal-body">
+                  <form onSubmit={(e)=>{
+                    e.preventDefault()
+                    login()
+                    }}>
+                    <h5>
+                      Here your gmail Id will be used for sending mail to
+                      selected users.
+                    </h5>
+
+                    <div className="mb-3">
+                      <label className="form-label text-primary fw-bold">
+                        BCC(Optional)(Use , for multiple)
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={bcc}
+                        onChange={(e) => {
+                          setBcc(e.target.value);
+                        }}
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label text-primary fw-bold">
+                        CC(Optional)(Use , for multiple)
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={cc}
+                        onChange={(e) => {
+                          setCc(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label text-primary fw-bold">
+                        Subject
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        className="form-control"
+                        value={subject}
+                        onChange={(e) => {
+                          setSubject(e.target.value);
+                        }}
+                      />
+                    </div>
+                    {mailMessageError&&<div className="text-primary mb-1"><i className='bx bx-error-circle me-2'></i>{mailMessageError}</div>}
+                    <div className="w-100 mb-3">
+                      <label className="form-label text-primary fw-bold">
+                        Message
+                      </label>
+
+                      <EditorToolbar />
+                      <ReactQuill
+                        theme="snow"
+                        value={mailMessage}
+                        onChange={(value) => {
+                          setMailMessage(value);
+                        }}
+                        placeholder={"Write something awesome..."}
+                        modules={modules}
+                        formats={formats}
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label
+                        className="form-label text-primary fw-bold"
+                        htmlFor="basic-default-Students-IDS"
+                      >
+                        Selected Email IDs (Use ",")
+                      </label>
+                      <textarea
+                        type="text"
+                        className="form-control"
+                        required
+                        id="basic-default-Students-IDS"
+                        value={selectedEmails}
+                        onChange={(e) => {
+                          setSelectedEmails(e.target.value.split(","));
+                        }}
+                      />
+                    </div>
+
+                    <div className="modal-footer">
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button type="submit" className="btn btn-primary">
+                        Send
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {content.length != 0 && (
             <div className="p-2 h4 bg-white rounded shadow-sm card w-100">

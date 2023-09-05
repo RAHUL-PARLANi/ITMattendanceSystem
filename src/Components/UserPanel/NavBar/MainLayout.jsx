@@ -22,9 +22,9 @@ const UserMainLayout = (props) => {
               <div style={{position:'fixed',height:'90vh', width:'250px'}}>
                 <div className="app-brand demo">
                   <Link to="/" className="app-brand-link">
-                    {/* <span className="app-brand-logo demo ">
-              <img height={'25px'} src='ITM_LOGO.png' alt='Logo' />
-            </span> */}
+                    <span className="app-brand-logo demo ">
+                      <img height={'50px'} src='ITM_LOGO.png' alt='Logo' />
+                    </span>
                     <span
                       style={{ textTransform: "uppercase" }}
                       className="app-brand-text demo menu-text fw-bolder text-primary ms-2"
@@ -138,7 +138,7 @@ const UserMainLayout = (props) => {
                         .getElementById("MobileNav")
                         .classList.add("menu-open");
                     }}
-                    className="nav-item nav-link px-0 me-xl-4"
+                    className="nav-item nav-link px-0 me-xl-4 text-primary"
                   >
                     <i className="bx bx-menu bx-sm" />
                   </a>
@@ -147,7 +147,7 @@ const UserMainLayout = (props) => {
                   className="navbar-nav-right  d-flex align-items-center"
                   id="navbar-collapse"
                 >
-                  <span className='app-brand-text h4 menu-text fw-bold mb-0'>
+                  <span className='app-brand-text text-primary h4 menu-text fw-bold mb-0'>
                     ITM TAP Cell Portal 
                   </span>
                   <ul className="navbar-nav flex-row align-items-center ms-auto">
@@ -174,6 +174,7 @@ const UserMainLayout = (props) => {
                                   <img
                                     src={userData.picUrl}
                                     alt=""
+                                    height={'50px'}
                                     className="w-px-40 h-auto rounded-circle"
                                   />
                                 </div>
@@ -244,7 +245,7 @@ const UserMainLayout = (props) => {
                         target="_blank"
                         href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"
                       >
-                        <b>Rahul Parlani </b>(ITM Student)
+                        <b>Rahul Parlani </b>(ITM Student CS'24)
                       </a>
                     </small>
                   </div>

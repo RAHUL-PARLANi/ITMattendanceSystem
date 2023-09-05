@@ -9,6 +9,7 @@ import "datatables.net-buttons/js/buttons.flash.js";
 import "datatables.net-buttons/js/buttons.html5.js";
 import "datatables.net-buttons/js/buttons.print.js";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const BoardGame = (props) => {
   const { bg, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
@@ -54,20 +55,54 @@ const CreateBatch = () => {
       .get("/users/all")
       .then((res) => {
         setBgs(res.data);
-        const allKeys = Array.from(
-          new Set(
-            res.data.reduce((keys, obj) => {
-              return keys.concat(Object.keys(obj));
-            }, [])
-          )
-        );
-        setKeys(allKeys);
+        // const allKeys = Array.from(
+        //   new Set(
+        //     res.data.reduce((keys, obj) => {
+        //       return keys.concat(Object.keys(obj));
+        //     }, [])
+        //   )
+        // );
+        // console.log(allKeys)
+        // setKeys(allKeys);
+        setKeys([
+          "rollNo",
+          "name",
+          "gender",
+          "batch",
+          "branch",
+          "univercityName",
+          "univercityType",
+          "_id",
+          "role",
+          // "email",
+          // "verified",
+          "WorkingEmailId",
+          "aggregatePercentageGraduation",
+          //"busFacility",
+          "dateOfBirth",
+          "fatherName",
+          "graduationBranch",
+          "historyOfBacklogs",
+          "noOfCurrentBacklogs",
+          //"notificationToken",
+          "phoneNumber",
+          //"picUrl",
+          "tenthBoardName",
+          "tenthMarksPercentage",
+          "tenthPassingYear",
+          "tweelthBoardName",
+          "tweelthMarksPercentage",
+          "tweelthPassingYear",
+          "univercityNameGraduation",
+          "yearOfPassingGraduation",
+          "youHaveLaptop",
+      ])
         setIsLoading(false);
       })
       .catch((error) => console.log(error));
   }, []);
   useEffect(() => {
-    if (!$.fn.DataTable.isDataTable("#myTable")) {
+    if (!$.fn.DataTable.isDataTable("#table")) {
       $(document).ready(function () {
         setTimeout(function () {
           $("#table")
@@ -135,7 +170,7 @@ const CreateBatch = () => {
       .rows({ search: "applied" })
       .data()
       .toArray()
-      .flatMap((elem) => elem[1]);
+      .flatMap((elem) => elem[8]);
     setSelectedRows((prevState) => {
       setSelectedRows([...prevState, ...filteredData]);
     });
@@ -213,11 +248,15 @@ const CreateBatch = () => {
         .post("/batch/", data)
         .then((result) => {
           if (result.data) {
-            alert(`${result.data.name} Created Successfully`);
+            toast.success(`${result.data.name} Created Successfully`);
           }
         })
         .catch((err) => {
-          console.log(err);
+          if(err.response.data.errors.msg){
+            toast.warning('Batch with this Name already Exists!')
+          }else{
+            toast.error('Something went wrong!');
+          }
         });
     } catch (error) {
       console.log("Something went Wrong");
@@ -340,6 +379,7 @@ const CreateBatch = () => {
                       className="text-xs font-weight-bold"
                       key={key + "-footer"}
                     >
+                      {key}
                       <input
                         type="text"
                         placeholder={"Search " + key}

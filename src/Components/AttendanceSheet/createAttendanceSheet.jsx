@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAxiosInstance from "../../axiosInstance";
+import { toast } from "react-toastify";
 
 const CreateAttendanceSheet = () => {
   const axiosInstance = useAxiosInstance();
@@ -108,11 +109,15 @@ const CreateAttendanceSheet = () => {
     axiosInstance
       .post("/attendancesheet/", data)
       .then((response) => {
-        alert(`${response.data.sheetName} created successfully!`);
+        toast.success(`${response.data.sheetName} created successfully!`);
         setIsLoading(false);
       })
       .catch((err) => {
-        alert("Something Went Wrong");
+        if(err.response.data.errors.msg){
+          toast.warning('The Attendance sheet with this Name, module, starting date and ending state already exists.')
+        }else{
+          toast.error('Something went wrong!')
+        }
         setIsLoading(false);
       });
   };
@@ -217,21 +222,14 @@ const CreateAttendanceSheet = () => {
             </div>
           </div>
 
-          {offDates && (
+          {offDates.length!=0 && (
             <div className="mb-3">
               <label className="form-label" htmlFor="SelectedOffDates">
                 Selcted Off Dates
               </label>
-              <div style={{ display: "flex" }}>
-                <textarea
-                  className="form-control"
-                  type={"text"}
-                  id="SelectedOffDates"
-                  value={offDates}
-                  onChange={(e) => {
-                    setOffDates(e.target.value);
-                  }}
-                />
+              <div style={{ display: "flex",flexWrap:'wrap' }}>
+                {offDates.map(elem=>{ return <button type='button' onClick={()=>{setOffDates(offDates.filter(res=>res!==elem))}} className="btn btn-outline-primary btn-sm m-1">{elem}<i className='ms-2 bx bx-x-circle' ></i></button>
+                })}
               </div>
             </div>
           )}
@@ -269,6 +267,7 @@ const CreateAttendanceSheet = () => {
               </label>
               <div style={{ display: "flex" }}>
                 <textarea
+                  disabled
                   className="form-control"
                   type={"text"}
                   id="SelectedStudents"

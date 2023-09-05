@@ -9,6 +9,7 @@ import "datatables.net-buttons/js/buttons.flash.js";
 import "datatables.net-buttons/js/buttons.html5.js";
 import "datatables.net-buttons/js/buttons.print.js";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const BoardGame = (props) => {
   const { bg, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
@@ -60,13 +61,39 @@ const ShowBatch = () => {
       setBatchName(res.data.name)
       setDesc(res.data.desciption)
       setBgs2(res.data.studentsData)
-      const allKeys = Array.from(
-        new Set(
-          res.data.studentsData.reduce((keys, obj) => {
-            return keys.concat(Object.keys(obj));
-          }, [])
-        )
-      );
+      const allKeys = [
+        "rollNo",
+        "name",
+        "gender",
+        "batch",
+        "branch",
+        "univercityName",
+        "univercityType",
+        "_id",
+        "role",
+        // "email",
+        // "verified",
+        "WorkingEmailId",
+        "aggregatePercentageGraduation",
+        //"busFacility",
+        "dateOfBirth",
+        "fatherName",
+        "graduationBranch",
+        "historyOfBacklogs",
+        "noOfCurrentBacklogs",
+        //"notificationToken",
+        "phoneNumber",
+        //"picUrl",
+        "tenthBoardName",
+        "tenthMarksPercentage",
+        "tenthPassingYear",
+        "tweelthBoardName",
+        "tweelthMarksPercentage",
+        "tweelthPassingYear",
+        "univercityNameGraduation",
+        "yearOfPassingGraduation",
+        "youHaveLaptop",
+    ]
       setKeys2(allKeys);
       
     })
@@ -74,13 +101,39 @@ const ShowBatch = () => {
       .get("/users/all")
       .then((res) => {
         setBgs(res.data);
-        const allKeys = Array.from(
-          new Set(
-            res.data.reduce((keys, obj) => {
-              return keys.concat(Object.keys(obj));
-            }, [])
-          )
-        );
+        const allKeys = [
+          "rollNo",
+          "name",
+          "gender",
+          "batch",
+          "branch",
+          "univercityName",
+          "univercityType",
+          "_id",
+          "role",
+          // "email",
+          // "verified",
+          "WorkingEmailId",
+          "aggregatePercentageGraduation",
+          //"busFacility",
+          "dateOfBirth",
+          "fatherName",
+          "graduationBranch",
+          "historyOfBacklogs",
+          "noOfCurrentBacklogs",
+          //"notificationToken",
+          "phoneNumber",
+          //"picUrl",
+          "tenthBoardName",
+          "tenthMarksPercentage",
+          "tenthPassingYear",
+          "tweelthBoardName",
+          "tweelthMarksPercentage",
+          "tweelthPassingYear",
+          "univercityNameGraduation",
+          "yearOfPassingGraduation",
+          "youHaveLaptop",
+      ]
         setKeys(allKeys);
         setIsLoading(false);
       })
@@ -217,7 +270,7 @@ const ShowBatch = () => {
       .rows({ search: "applied" })
       .data()
       .toArray()
-      .flatMap((elem) => elem[1]);
+      .flatMap((elem) => elem[8]);
     setSelectedRows((prevState) => {
       setSelectedRows([...prevState, ...filteredData]);
     });
@@ -311,11 +364,15 @@ const ShowBatch = () => {
         .patch("/batch/"+window.location.href.split('/').pop(), data)
         .then((result) => {
           if (result.data) {
-            alert(`${result.data.name} Edited Successfully`);
+            toast.success(`${result.data.name} Edited Successfully`);
           }
         })
         .catch((err) => {
-          console.log(err);
+          if(err.response.data.errors.msg){
+            toast.warning('Another Batch with this Name Exists!')
+          }else{
+            toast.error('Something went wrong!');
+          }
         });
     } catch (error) {
       console.log("Something went Wrong");
@@ -399,7 +456,7 @@ const ShowBatch = () => {
                 }}
               />
             </div>
-            <input className="btn btn-primary" type="submit" value="Edit" />
+            <input className="btn btn-primary" type="submit" value="Save" />
           </form>
           
           <h3 className="mt-3 p-2  bg-white rounded shadow-sm">Students List</h3>
@@ -433,6 +490,7 @@ const ShowBatch = () => {
                       className="text-xs font-weight-bold"
                       key={key + "-footer"}
                     >
+                      {key}
                       <input
                         type="text"
                         placeholder={"Search " + key}
@@ -489,6 +547,7 @@ const ShowBatch = () => {
                       className="text-xs font-weight-bold"
                       key={key + "-footer"}
                     >
+                      {key}
                       <input
                         type="text"
                         placeholder={"Search " + key}

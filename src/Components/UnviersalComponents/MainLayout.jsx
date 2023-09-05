@@ -25,9 +25,9 @@ const MainLayout = (props) => {
         >
         <div className="app-brand demo">
           <Link to='/admin' className="app-brand-link">
-            {/* <span className="app-brand-logo demo ">
-              <img height={'25px'} src='ITM_LOGO.png' alt='Logo' />
-            </span> */}
+            <span className="app-brand-logo demo ">
+              <img height={'50px'} src='ITM_LOGO.png' alt='Logo' />
+            </span>
             <span style={{'textTransform':'uppercase'}} className="app-brand-text demo menu-text fw-bolder text-primary ms-2">
               ITM
             </span>
@@ -143,6 +143,25 @@ const MainLayout = (props) => {
           </NavLink>
 
           <li className="menu-header small text-uppercase">
+            <span className="menu-header-text fw-bold">Mail</span>
+          </li>
+          {/* Forms */}
+          
+          <NavLink to={'/showMails'} activeClassName="active" className="menu-item">
+            <a  className="menu-link menu-toggle">
+              <i className="menu-icon tf-icons bx bx-dock-top" />
+              <div data-i18n="Form Layouts">Show Mails</div>
+            </a>
+          </NavLink>
+          
+          <NavLink to='/createMail' activeClassName="active" className="menu-item">
+            <a   className="menu-link menu-toggle">
+              <i className="menu-icon tf-icons bx bx-envelope" />
+              <div data-i18n="Form Elements">Create Mail</div>
+            </a>
+          </NavLink>
+
+          <li className="menu-header small text-uppercase">
             <span className="menu-header-text fw-bold">Attendance Moderators</span>
           </li>
           {/* Forms */}
@@ -162,23 +181,24 @@ const MainLayout = (props) => {
           </NavLink>
 
           <li className="menu-header small text-uppercase">
-            <span className="menu-header-text fw-bold">Mail</span>
+            <span className="menu-header-text fw-bold">Content Moderators</span>
           </li>
           {/* Forms */}
           
-          <NavLink to={'/showMails'} activeClassName="active" className="menu-item">
+          <NavLink to={'/showAllCM'} activeClassName="active" className="menu-item">
             <a  className="menu-link menu-toggle">
               <i className="menu-icon tf-icons bx bx-dock-top" />
-              <div data-i18n="Form Layouts">Show Mails</div>
+              <div data-i18n="Form Layouts">Show CMs</div>
             </a>
           </NavLink>
           
-          <NavLink to='/createMail' activeClassName="active" className="menu-item">
+          <NavLink to='/createCM' activeClassName="active" className="menu-item">
             <a   className="menu-link menu-toggle">
-              <i className="menu-icon tf-icons bx bx-envelope" />
-              <div data-i18n="Form Elements">Create Mail</div>
+              <i className="menu-icon tf-icons bx bx-user-pin" />
+              <div data-i18n="Form Elements">Create CM</div>
             </a>
           </NavLink>
+
           {/* Misc */}
         </ul>
         </div> 
@@ -206,7 +226,7 @@ const MainLayout = (props) => {
             className="navbar-nav-right d-flex align-items-center"
             id="navbar-collapse"
           > 
-          <span className='className="app-brand-text demo menu-text fw-bolder '>TAP Cell's OFFICIAL SYSTEM</span>
+          <span className='className="app-brand-text demo menu-text fw-bolder'>TAP Cell's OFFICIAL SYSTEM</span>
             <ul className="navbar-nav flex-row align-items-center ms-auto">
               {/* User */}
               <li className="nav-item navbar-dropdown dropdown-user dropdown">
@@ -280,7 +300,7 @@ const MainLayout = (props) => {
               <div className="mb-2 mb-md-0 text-left">
               Copyright © 2023 <b>ITM Gwalior®</b>. All rights reserved.
               </div>
-              <small>Developed by <a style={{color:'inherit'}} target="_blank" href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"><b>Rahul Parlani </b>(ITM Student)</a></small>
+              <small>Developed by <a style={{color:'inherit'}} target="_blank" href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"><b>Rahul Parlani </b>(ITM Student CS'24)</a></small>
             </div>
           </footer>
           {/* / Footer */}

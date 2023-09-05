@@ -190,13 +190,15 @@ const Table = ( props ) => {
               <tfoot>
                 <tr>
                   {keys?.map((key) => (
+                      
                     <th
                       className="text-xs font-weight-bold"
                       key={key + "-footer"}
                     >
+                      
                       <input
                         type="text"
-                        placeholder={"Search " + key}
+                        placeholder={key}
                         onChange={(e) => {
                           const table = $(props.tableId || "#table").DataTable();
                           table
@@ -206,6 +208,7 @@ const Table = ( props ) => {
                         }}
                       />
                     </th>
+                    
                   ))}
                 </tr>
               </tfoot>

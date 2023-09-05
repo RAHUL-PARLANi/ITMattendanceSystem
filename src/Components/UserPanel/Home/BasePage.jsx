@@ -11,7 +11,9 @@ import useAxiosInstance from "../../../axiosInstance";
 import { toast } from "react-toastify";
 
 const BasePage = () => {
-  const [primary, setprimary] = useState("#2124B1");
+  const [primary, setprimary] = useState("#ba0018");
+  const [secondary, setsecondary] = useState("#1D1D27");
+
   const homeRef = useRef(null);
   const aboutRef = useRef(null);
   const serviceRef = useRef(null);
@@ -137,7 +139,10 @@ const BasePage = () => {
                 </a>
               </div>
               <Link to={"/user/home"}>
-                <button className="btn btn-primary text-white rounded-pill py-2 px-4 ms-lg-3">
+                
+                <button 
+                style={{backgroundColor:secondary,color:'white'}}
+                className="btn btn-white text-white rounded-pill py-2 px-4 ms-lg-3">
                   Get Started
                 </button>
               </Link>
@@ -151,7 +156,7 @@ const BasePage = () => {
             <div className="container my-5 py-5 px-lg-5">
               <div className="row g-5 py-5">
                 <div className="col-lg-6 text-center text-lg-start">
-                  <h1 className="text-white mb-4 animated zoomIn">
+                  <h1 style={{color:secondary}} className="text-white mb-4 animated zoomIn">
                     Welcome to ITM TAP Cell: Empowering Your Career Growth
                   </h1>
                   <p className="text-white pb-3 h6 animated zoomIn">
@@ -163,6 +168,7 @@ const BasePage = () => {
                   </p>
                   <Link
                     to="/user/home"
+                    style={{color:'black'}}
                     className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInLeft"
                   >
                     Get Started
@@ -204,7 +210,7 @@ const BasePage = () => {
                     ITM TAP Cell: Forging Pathways to Career Success
                   </h2>
                 </div>
-                <p className="mb-4 h6">
+                <p style={{color:'black'}} className="mb-4  h6">
                   ITM Gwalior has always given training, augmentation and
                   placements an utmost priority and to implement it into action
                   an exclusive training, augmentation and placement assistance
@@ -463,19 +469,19 @@ const BasePage = () => {
                 </p>
                 <div className="d-flex pt-2">
                   <a
-                    className="btn btn-outline-primary btn-square me-3 text-white"
+                    className="btn btn-outline-light btn-square me-3 text-white"
                     href="https://www.itmgoi.in"
                   >
                     <i className="bx bx-globe" />
                   </a>
                   <a
-                    className="btn btn-outline-primary btn-square me-3 text-white"
+                    className="btn btn-outline-light btn-square me-3 text-white"
                     href="https://www.linkedin.com/in/tap-cell-661019213/"
                   >
                     <i className="bx bxl-linkedin"></i>
                   </a>
                   <a
-                    className="btn btn-outline-primary btn-square me-3 text-white"
+                    className="btn btn-outline-light btn-square me-3 text-white"
                     href="https://www.facebook.com/ITMGOIGWALIOR/"
                   >
                     <i className="bx bxl-facebook"></i>
@@ -593,7 +599,7 @@ const BasePage = () => {
                           </div>
                         </button>
                       ) : (
-                        <button className="btn btn-primary py-1" type="submit">
+                        <button className="btn btn-dark py-1" type="submit">
                           Send Message
                         </button>
                       )}
@@ -638,7 +644,7 @@ const BasePage = () => {
                     >
                       Rahul Parlani
                     </a>{" "}
-                    (ITM Student)
+                    (ITM Student CS'24)
                   </small>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAxiosInstance from "../../axiosInstance";
+import { toast } from "react-toastify";
 
 const EditFeedBackForm = () => {
   const [FormTillNow, setFormTillNow] = useState([]);
@@ -59,7 +60,7 @@ const EditFeedBackForm = () => {
     axiosInstance.patch('/feedbackform/formField',Data).then(
       res=>{
           if(res.data.acknowledged){
-            alert('Updated')
+            toast.success('Updated')
           }        
       }
     ).catch(err=>{
@@ -93,11 +94,15 @@ const EditFeedBackForm = () => {
     }
     axiosInstance.patch('/feedbackform/'+window.location.href.split('/').pop(),data)
     .then(res=>{
-      alert(`${res.data.formName} is Edited Successfully !`)
+      toast.success(`${res.data.formName} is Edited Successfully !`)
     })
     .catch(err=>{
       console.log(err)
-      alert('Something Went Wrong !')
+      if(err.response.data.errors.msg){
+        toast.warning('A Feedback Form with this Name Already Exists!')
+      }else{
+        toast.error('Something Went Wrong !')
+      }
     })
   }
   

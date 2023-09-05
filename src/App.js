@@ -71,6 +71,8 @@ import EditTeam from "./Components/CMPanel/Team/editTeam";
 import ShowAllSolutions from "./Components/CMPanel/Solution/showSolution";
 import EditSolution from "./Components/CMPanel/Solution/editSolution";
 import ContactusMessages from "./Components/Batch/contactus";
+import CreateCM from "./Components/CMPanel/AdminPanel/createCM";
+import ShowAllCMs from "./Components/CMPanel/AdminPanel/showCM";
 
 const App = () => {
   onMessageListener().then((payload) => {
@@ -166,7 +168,7 @@ const App = () => {
                   <ShowForm />
                 </UserMainLayout>
               ) : (
-                <LoginPage />
+                <UserLoginPage />
               )
             }
           />
@@ -613,6 +615,32 @@ const App = () => {
               isAuthenticated && role == "ADMIN" ? (
                 <MainLayout>
                   <ShowAllMods />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+
+           {/* Content Moderator*/} 
+         <Route
+            path="/createCM"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                <MainLayout>
+                  <CreateCM />
+                </MainLayout>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/showAllCM"
+            element={
+              isAuthenticated && role == "ADMIN" ? (
+                <MainLayout>
+                  <ShowAllCMs />
                 </MainLayout>
               ) : (
                 <LoginPage />

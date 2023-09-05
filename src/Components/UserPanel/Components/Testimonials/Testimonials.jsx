@@ -9,7 +9,7 @@ import TestimonialsComponent from "./TestimonialsComponent";
 const Testimonials = (props) => {
   const sliderRef = useRef(null);
   const TestimonialsData = props.data
-  const [primary, setprimary] = useState("#6610f2");
+  const [primary, setprimary] = useState(props.colour);
   useEffect(() => {
     // Initialize the Slick slider inside the useEffect hook
     if (sliderRef.current) {

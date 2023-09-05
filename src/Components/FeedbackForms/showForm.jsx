@@ -10,12 +10,15 @@ const ShowForm = () => {
   const axiosInstance = useAxiosInstance();
   const [isLoading, setIsLoading] = useState(true);
   const history = useNavigate();
-
+  
   const [FormTillNow, setFormTillNow] = useState([]);
   const [formData, setFormData] = useState({});
 
   const [alreadyResponded, setAlreadyResponded] = useState(false);
   const [isVisibile, setIsVisibile] = useState();
+  const [isOn,setIsOn] = useState(false);
+
+  const [refresh,setRefresh] = useState(0);
 
   useEffect(() => {
     setIsLoading(true);
@@ -25,7 +28,11 @@ const ShowForm = () => {
         setData(res.data);
         setFormTillNow(res.data.customFields);
         setIsLoading(false);
-
+        if(userData.role==='ADMIN'){
+          setIsOn(true)
+        }else{
+          setIsOn(res.data.isOn);
+        }
         if (res.data.data.find((elem) => elem.submittedBy == userData.id)) {
           setAlreadyResponded(true);
         }
@@ -46,7 +53,7 @@ const ShowForm = () => {
         console.log(err);
         setIsLoading(false);
       });
-  }, []);
+  }, [refresh]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -90,7 +97,7 @@ const ShowForm = () => {
       )
       .then((res) => {
         toast.success("Your data has been successfully submitted!");
-        window.location.reload();
+        setRefresh(1);          
       })
       .catch((err) => {
         console.log(err);
@@ -133,6 +140,16 @@ const ShowForm = () => {
       <div className="container-fluid mt-4">
         <div className="card w-100 shadow-sm rounded p-2">
           You have aready responed to this form.
+        </div>
+      </div>
+    );
+  }
+
+  if (isOn==false) {
+    return (
+      <div className="container-fluid mt-4">
+        <div className="card w-100 shadow-sm rounded p-2">
+          This form is not currently accepting responses.
         </div>
       </div>
     );

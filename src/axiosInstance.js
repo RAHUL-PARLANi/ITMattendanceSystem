@@ -12,7 +12,6 @@ const useAxiosInstance = () => {
       Authorization: `Bearer ${token}`,
     },
   });
-
   return axiosInstance;
 };
 

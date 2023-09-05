@@ -1,9 +1,11 @@
 /********** Template CSS **********/
+/* primary - #2124B1; */
+/* secondary - #4777F5 */
 :root {
-    --primary: #2124B1;
-    --secondary: #4777F5;
+    --primary: #ba0018;
+    --secondary: #1D1D27;
     --light: #F7FAFF;
-    --dark: #1D1D27;
+    --dark: black;
 }
 
 
@@ -235,7 +237,7 @@ h6,
     height: 10px;
     top: 2px;
     left: 0;
-    background: rgba(33, 66, 177, .5);
+    background: /*rgba(33, 66, 177, .5);*/ #ba001996
 }
 
 .section-title h6::after {
@@ -265,8 +267,8 @@ h6,
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--light);
-    background: url(../img/icon-shape-primary.png) center center no-repeat;
+    color: var(--light); 
+    background: url(../img/icon-shape-red.png) center center no-repeat;
     transition: .5s;
 }
 

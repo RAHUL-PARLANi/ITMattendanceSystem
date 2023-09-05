@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAxiosInstance from "../../../axiosInstance";
 import { toast } from "react-toastify";
 
-const CreateMod = () => {
+const CreateCM = () => {
   const axiosInstance = useAxiosInstance();
   const [name,setName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,7 +43,7 @@ const CreateMod = () => {
   const handleSubmit = () => {
     setIsLoading(true);
     const data = {
-      role: "MOD",
+      role: "CM",
       name: name,
       email: email,
       password: password,
@@ -51,7 +51,7 @@ const CreateMod = () => {
     axiosInstance
       .post("/register/", data)
       .then((response) => {
-        toast.success(`${response.data.user.name} (MOD) created successfully!`);
+        toast.success(`${response.data.user.name} (CM) created successfully!`);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -92,7 +92,7 @@ const CreateMod = () => {
             handleSubmit();
           }}
         >
-          <h4 className="py-2 text-primary">Create Attendance Moderator</h4>
+          <h4 className="py-2 text-primary">Create Content Moderators</h4>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
               Name
@@ -107,7 +107,7 @@ const CreateMod = () => {
               onChange={(e) => {
                 setName(e.target.value);
               }}
-              placeholder="Enter Mod Name"
+              placeholder="Enter Content Moderator Name"
               autoFocus="true"
             />
           </div>
@@ -126,7 +126,7 @@ const CreateMod = () => {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-              placeholder="Enter Mod Email"
+              placeholder="Enter Content Moderator Email"
             />
           </div>
           <div className="mb-3 form-password-toggle">
@@ -162,11 +162,11 @@ const CreateMod = () => {
             type="submit"
             disabled={emailMessage!="" || passwordMessage!=""}
             className="btn btn-primary"
-            value={"Create Moderator"}
+            value={"Create Content Moderator"}
           />
         </form>
       </div>
     </>
   );
 };
-export default CreateMod;
+export default CreateCM;

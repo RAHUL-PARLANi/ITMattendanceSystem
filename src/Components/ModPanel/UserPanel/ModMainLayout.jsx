@@ -22,9 +22,9 @@ const ModMainLayout = (props) => {
               <div style={{ overflowY: "scroll", height: "100%" }}>
                 <div className="app-brand demo">
                   <Link to="/mod" className="app-brand-link">
-                    {/* <span className="app-brand-logo demo ">
-              <img height={'25px'} src='ITM_LOGO.png' alt='Logo' />
-            </span> */}
+                    <span className="app-brand-logo demo ">
+                      <img height={'50px'} src='ITM_LOGO.png' alt='Logo' />
+                    </span>
                     <span
                       style={{ textTransform: "uppercase" }}
                       className="app-brand-text demo menu-text fw-bolder text-primary ms-2"
@@ -200,7 +200,7 @@ const ModMainLayout = (props) => {
                         target="_blank"
                         href="https://www.linkedin.com/in/rahul-parlani-b02a0a226/"
                       >
-                        <b>Rahul Parlani</b> {" "} (ITM Student)
+                        <b>Rahul Parlani</b> {" "} (ITM Student CS'24)
                       </a>
                     </small>
                   </div>

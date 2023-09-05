@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useAxiosInstance from "../../axiosInstance";
 import $ from "jquery";
+import { toast } from "react-toastify";
 
 const BoardGame = (props) => {
   const { bg, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
@@ -303,11 +304,15 @@ const EditAttendanceSheet = () => {
     axiosInstance
       .patch("/attendancesheet/"+window.location.href.split('/').pop(), data)
       .then((response) => {
-        alert(`${response.data.sheetName} Edited successfully!`);
+        toast.success(`${response.data.sheetName} Edited successfully!`);
         setIsLoading(false);
       })
       .catch((err) => {
-        alert("Something Went Wrong");
+        if(err.response.data.errors.msg){
+          toast.warning('The Attendance sheet with this Name, module, starting date and ending state already exists.')
+        }else{
+          toast.error('Something went wrong!')
+        }
         setIsLoading(false);
       });
   };
@@ -589,22 +594,14 @@ const EditAttendanceSheet = () => {
             </div>
           </div>
 
-          {offDates && (
+          {offDates.length!=0 && (
             <div className="mb-3">
               <label className="form-label" htmlFor="SelectedOffDates">
                 Selcted Off Dates
               </label>
-              <div style={{ display: "flex" }}>
-                <textarea
-                  className="form-control"
-                  type={"text"}
-                  disabled
-                  id="SelectedOffDates"
-                  value={offDates}
-                  onChange={(e) => {
-                    setOffDates(e.target.value);
-                  }}
-                />
+              <div style={{ display: "flex",flexWrap:'wrap' }}>
+                {offDates.map(elem=>{ return <button type='button' className="btn btn-outline-primary btn-sm m-1">{elem}</button>
+                })}
               </div>
             </div>
           )}

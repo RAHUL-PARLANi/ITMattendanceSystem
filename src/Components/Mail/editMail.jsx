@@ -71,13 +71,39 @@ const EditMail = () => {
       .get("/users/all")
       .then((res) => {
         setBgs(res.data);
-        const allKeys = Array.from(
-          new Set(
-            res.data.reduce((keys, obj) => {
-              return keys.concat(Object.keys(obj));
-            }, [])
-          )
-        );
+        const allKeys = [
+          "rollNo",
+          "name",
+          "gender",
+          "batch",
+          "branch",
+          "univercityName",
+          "univercityType",
+          "_id",
+          "role",
+          // "email",
+          // "verified",
+          "WorkingEmailId",
+          "aggregatePercentageGraduation",
+          //"busFacility",
+          "dateOfBirth",
+          "fatherName",
+          "graduationBranch",
+          "historyOfBacklogs",
+          "noOfCurrentBacklogs",
+          //"notificationToken",
+          "phoneNumber",
+          //"picUrl",
+          "tenthBoardName",
+          "tenthMarksPercentage",
+          "tenthPassingYear",
+          "tweelthBoardName",
+          "tweelthMarksPercentage",
+          "tweelthPassingYear",
+          "univercityNameGraduation",
+          "yearOfPassingGraduation",
+          "youHaveLaptop",
+      ]
         setKeys(allKeys);
         setIsLoading(false);
       })

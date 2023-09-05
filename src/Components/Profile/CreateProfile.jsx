@@ -231,7 +231,7 @@ const CreateProfile = () => {
         setIsLoading(false);
         if (res.data.isSuccessFullyRegistered) {
           toast.success(
-            "Successfully Registered, Now this Page will be reloaded"
+            "Successfully Registered, Now this Page will be reloaded and you have to relogin again"
           );
           setTimeout(() => {
             window.location.reload();
@@ -848,21 +848,17 @@ const CreateProfile = () => {
 
                     <div className="mb-3 col-md-6">
                       <label className="form-label">
-                        Please allow Notifications by clicking the button below
+                        Please allow Notifications by clicking the button below(Optional)
                       </label>
                       <button
                         type="button"
-                        disabled={userData.isSuccessFullyRegistered === true}
                         onClick={(e) => {
                           e.preventDefault();
                           //console.log('Clicked')
                           setIsLoading(true);
                           requestFirebaseNotificationPermission()
                             .then((firebaseToken) => {
-                              // eslint-disable-next-line no-console
-                              navigator.clipboard.writeText(firebaseToken);
                               setNotificationToken(firebaseToken);
-                              console.log(firebaseToken);
                               setIsLoading(false);
                             })
                             .catch((err) => {
@@ -874,13 +870,13 @@ const CreateProfile = () => {
                       >
                         Allow Notifications
                       </button>
-                      <input
+                      {/* <input
                         className="form-control"
                         required
                         type={"password"}
                         value={notificationToken}
                         disabled
-                      />
+                      /> */}
                     </div>
 
                     <div>
@@ -899,9 +895,6 @@ const CreateProfile = () => {
                             </span>
                           </span>
                           <input
-                            disabled={
-                              userData.isSuccessFullyRegistered === true
-                            }
                             type="file"
                             id="upload"
                             className="account-file-input form-control"
@@ -1016,6 +1009,18 @@ const CreateProfile = () => {
                         </div>
                       )}
                     </div>
+                    {userData.isSuccessFullyRegistered === true && 
+                    <button
+                    type="button"
+                    onClick={(e)=>{
+                      handleSubmit(e)}
+                    }  
+                    disabled={faceEmbedding.length == 0 || picUrl==""}
+                    className="btn btn-primary me-2"
+                  >
+                     Update Face
+                    </button>
+                    }
                     <div className="mt-2">
                       <button
                         type="submit"

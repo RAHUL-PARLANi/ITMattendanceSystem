@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useAxiosInstance from "../../axiosInstance";
+import useAxiosInstance from "../../../axiosInstance";
 import $ from "jquery";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -9,7 +9,6 @@ import "datatables.net-buttons/js/buttons.flash.js";
 import "datatables.net-buttons/js/buttons.html5.js";
 import "datatables.net-buttons/js/buttons.print.js";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const BoardGame = (props) => {
   const { bg, keys, deleteBGS, BlockBGS, handleRowSelect, selectedRows } =
@@ -26,16 +25,35 @@ const BoardGame = (props) => {
           type="checkbox"
           checked={selectedRows.includes(bg._id)}
           onChange={handleCheckboxChange}
-          className="m-2"
         />
+      </td>
+      <td className="text-xs font-weight-bold">
+        <Link to={"/edituser/" + bg._id}>
+          <button
+            onClick={() => {}}
+            type="button"
+            className="btn btn-icon btn-primary m-1"
+          >
+            <span className="tf-icons bx bx-edit-alt"></span>
+          </button>
+        </Link>
         <button
-          onClick={() => deleteBGS(bg._id)}
-          className="btn btn-warning m-2"
+          onClick={() => {
+            deleteBGS(bg._id);
+          }}
+          type="button"
+          className="btn btn-icon btn-warning m-1"
         >
-          Delete
+          <span className="tf-icons bx bx-trash"></span>
         </button>
-        <button onClick={() => BlockBGS(bg._id)} className="btn btn-dark m-2">
-          Approve
+        <button
+          onClick={() => {
+            BlockBGS(bg._id);
+          }}
+          type="button"
+          className="btn btn-icon btn-dark m-1"
+        >
+          <span className="tf-icons bx bx-lock-alt"></span>
         </button>
       </td>
       {keys.map((key) => (
@@ -47,35 +65,31 @@ const BoardGame = (props) => {
   );
 };
 
-const ShowRequests = () => {
+const ShowAllCMs = () => {
   const [bgs, setBgs] = useState([]);
   const [keys, setKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const axiosInstance = useAxiosInstance();
   const [isLoading, setIsLoading] = useState(true);
 
-  //Form Feilds
-
-  const [batchName, setBatchName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [studentList, setStudentList] = useState("");
-
   useEffect(() => {
     axiosInstance
-      .get("/request/all")
+      .get("/users/allCM")
       .then((res) => {
         setBgs(res.data);
-        const allKeys = Array.from(
-          new Set(
-            res.data.reduce((keys, obj) => {
-              return keys.concat(Object.keys(obj));
-            }, [])
-          )
-        );
-        setKeys(allKeys);
+        // const allKeys = Array.from(
+        //   new Set(
+        //     res.data.reduce((keys, obj) => {
+        //       return keys.concat(Object.keys(obj));
+        //     }, [])
+        //   )
+        // );
+        setKeys(['_id','name','email','role','gender','phoneNumber']);
         setIsLoading(false);
       })
-      .catch((error) => console.log(error));
+      .catch((error) =>{console.log(error)
+      setIsLoading(false)
+      });
   }, []);
   useEffect(() => {
     if (!$.fn.DataTable.isDataTable("#myTable")) {
@@ -138,20 +152,13 @@ const ShowRequests = () => {
         }, 2500);
       });
     }
-  }, [isLoading]);
-
+  }, [isLoading])
+  
   const handleSelectAll = () => {
     const table = $("#table").DataTable();
-    const filteredData = table
-      .rows({ search: "applied" })
-      .data()
-      .toArray()
-      .flatMap((elem) => elem[1]);
-    setSelectedRows((prevState) => {
-      setSelectedRows([...prevState, ...filteredData]);
-    });
-  };
-
+    const filteredData = table.rows({ search: "applied" }).data().toArray().flatMap(elem=>elem[2])
+    setSelectedRows(filteredData)
+   };
   const handleRowSelect = (id) => {
     let updatedSelectedRows;
     if (selectedRows.includes(id)) {
@@ -162,13 +169,17 @@ const ShowRequests = () => {
     setSelectedRows(updatedSelectedRows);
   };
 
+  useEffect(() => {
+    console.log(selectedRows);
+  }, [selectedRows]);
+
   const deleteBGS = (id) => {
     var ans = window.confirm(
-      "You are trying to delete a Request, Do you want to continue ?"
+      "You are trying to delete a Mod Record, Do you want to continue ?"
     );
     if (ans) {
       axiosInstance
-        .delete("/request/" + id)
+        .delete("/users/" + id)
         .then((res) => alert(res.data.msg))
         .catch((err) => {
           alert("Something Went Wrong");
@@ -179,16 +190,22 @@ const ShowRequests = () => {
 
   const BlockBGS = (id) => {
     var ans = window.confirm(
-      "You are trying to approve a Request, Do you want to continue ?"
+      "You are trying to Block a USER, Do you want to continue ?"
     );
     if (ans) {
       axiosInstance
-        .patch("/request/userdata/" + id)
-        .then((res) => alert("Successfull"))
+        .patch("/users/block/" + id)
+        .then((res) => {
+          if(res.data.verified){
+            alert(`${res.data.name} is blocked`)
+          }else{
+            alert(`${res.data.name} is unblocked`)
+          }
+        })
         .catch((err) => {
           alert("Something Went Wrong");
         });
-      //setBgs(bgs.filter((el) => el._id !== id));
+   //   setBgs(bgs.filter((el) => el._id !== id));
     }
   };
 
@@ -206,24 +223,6 @@ const ShowRequests = () => {
         />
       );
     });
-  };
-
-  const HandleSubmit = (e) => {
-    e.preventDefault();
-    try {
-      axiosInstance
-        .post("/request/userdatas", { IdList: selectedRows })
-        .then((result) => {
-          if (result.data) {
-            toast.success(`Approved Successfully`);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log("Something went Wrong");
-    }
   };
 
   return (
@@ -247,41 +246,11 @@ const ShowRequests = () => {
         </div>
       ) : (
         <div className="container-fluid" style={{ marginTop: "50px" }}>
-          <form
-            className="bg-white rounded shadow-sm p-2"
-            onSubmit={HandleSubmit}
-          >
-            <div className="mb-3">
-              <label
-                className="form-label text-primary fw-bold"
-                htmlFor="basic-default-Students-IDS"
-              >
-                IDs
-              </label>
-              <textarea
-                type="text"
-                required
-                className="form-control"
-                id="basic-default-Students-IDS"
-                value={selectedRows}
-                onChange={(e) => {
-                  setSelectedRows(e.target.value);
-                }}
-              />
-            </div>
-            <input
-              className="btn btn-primary"
-              type="submit"
-              value="Approve All"
-            />
-          </form>
-          
-          <h3 className="bg-white p-2 rounded shadow-sm" >Requests List</h3>
-
-          <div className="table-responsive  bg-white rounded p-2 shadow-sm">
+          <h1>All Content Moderators</h1>
+          <div className="table-responsive bg-white rounded p-2 shadow-sm">
             <table
               id="table"
-              className="table  align-items-center justify-content-center mb-0"
+              className="table table-striped align-items-center justify-content-center mb-0"
             >
               <thead>
                 <tr>
@@ -293,6 +262,9 @@ const ShowRequests = () => {
                     >
                       All
                     </button>{" "}
+                  </th>
+                  <th className="text-primary" scope="col">
+                    Actions
                   </th>
                   {keys.map((key) => (
                     <th
@@ -308,6 +280,7 @@ const ShowRequests = () => {
               <tfoot>
                 <tr>
                   <th scope="col">Select</th>
+                  <th scope="col">Actions</th>
                   {keys.map((key) => (
                     <th
                       className="text-xs font-weight-bold"
@@ -324,7 +297,6 @@ const ShowRequests = () => {
                             .draw();
                         }}
                       />
-                      {key}
                     </th>
                   ))}
                 </tr>
@@ -337,4 +309,4 @@ const ShowRequests = () => {
   );
 };
 
-export default ShowRequests;
+export default ShowAllCMs;

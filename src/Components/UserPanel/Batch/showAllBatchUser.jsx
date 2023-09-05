@@ -75,7 +75,7 @@ const ShowAllBatchUser = () => {
                     {elem.desciption}
                   </p>
                   <p style={{ textTransform: "capitalize" }} class="card-text">
-                    <span className="fw-bold">Total :</span>{" "}
+                    <span className="fw-bold">Total Student :</span>{" "}
                     {elem.studentsId.length}
                   </p>
                   <div
@@ -115,13 +115,13 @@ const ShowAllBatchUser = () => {
                       </div>
                     </div>
                   </div>
-                  <button
+                  {/* <button
                     data-bs-toggle="modal"
                     data-bs-target={`#largeModal${index}`}
                     class="btn btn-primary"
                   >
                     View Student List
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

@@ -13,7 +13,7 @@ const TestimonialsComponent = (props) => {
           ></i>
         </h4>
         <div className="template-demo">
-          <p style={{ color: "black" }}>{review}</p>
+          <p style={{height:'180px',overflowY:'auto' , color: "black"}}>{review}</p>
         </div>
 
         <hr />
@@ -32,7 +32,7 @@ const TestimonialsComponent = (props) => {
           </div>
           <div style={{ width: "80%" }} className="">
             <div className="profile">
-              <h4 className="cust-name text-dark">{name}</h4>
+              <h4 style={{width:'100%'}} className="cust-name text-dark">{name}</h4>
               <p className="cust-profession text-dark">{designation}</p>
             </div>
           </div>

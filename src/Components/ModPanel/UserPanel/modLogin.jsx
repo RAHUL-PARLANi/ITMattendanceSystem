@@ -14,6 +14,7 @@ const ModLoginPage = () => {
   const [passHide, setPassHide] = useState(true);
   const dispatch = useDispatch();
   const history = useNavigate();
+  
   useEffect(() => {
     if (localStorage.getItem("ITM-Mod-User")) {
       const data = JSON.parse(localStorage.getItem("ITM-Mod-User"));
@@ -22,6 +23,7 @@ const ModLoginPage = () => {
       setPassword(data.password);
     }
   }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -49,7 +51,7 @@ const ModLoginPage = () => {
               "ITM-Mod-User",
               JSON.stringify({ email: email, password: password })
             );
-            toast.success("Signned Sucessfully");
+            toast.success("Sign-in Sucessfully");
           } else {
             toast.warning(
               "Sorry, we can not Signin you. you are not a Moderator"
@@ -62,9 +64,39 @@ const ModLoginPage = () => {
       })
       .catch((err) => {
         console.log(err);
+        toast.error(err.response.data.errors.msg)
         setIsLoading(false);
       });
   };
+
+  const [passwordMessage,setPasswordMessage] = useState("");
+  const [emailMessage,setEmailMassage] = useState("");
+
+  useEffect(() => {
+    if(password.length<5){
+      setPasswordMessage("Password length must be 5!");
+    }
+    else{
+      setPasswordMessage("");
+    }
+    if(password.length===0){
+      setPasswordMessage("");
+    }
+
+    if(isValidGmailAddress(email)===false){
+      setEmailMassage('Email must have @gmail.com');
+    }else{
+      setEmailMassage("");
+    }
+    if(email.length===0){
+      setEmailMassage("");
+    }
+  }, [email,password])
+
+  function isValidGmailAddress(email) {
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+    return gmailRegex.test(email);
+  }
 
   return (
     <>
@@ -107,6 +139,7 @@ const ModLoginPage = () => {
                       <p className="mb-4">Please sign-in to your account</p>
                       <form className="mb-4" onSubmit={handleSubmit}>
                         <div className="mb-3">
+                        {emailMessage!=""&&<div className="text-primary mb-1"><i className='bx bx-error-circle me-2'></i>{emailMessage}</div>}            
                           <label htmlFor="email" className="form-label">
                             Email
                           </label>
@@ -125,6 +158,7 @@ const ModLoginPage = () => {
                           />
                         </div>
                         <div className="mb-3 form-password-toggle">
+                        {passwordMessage!=""&&<div className="text-primary mb-1"><i className='bx bx-error-circle me-2'></i>{passwordMessage}</div>}
                           <div className="d-flex justify-content-between">
                             <label className="form-label" htmlFor="password">
                               Password
@@ -132,6 +166,7 @@ const ModLoginPage = () => {
                           </div>
                           <div className="input-group input-group-merge">
                             <input
+                              required
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
                               type={passHide == true ? "password" : "text"}
@@ -147,6 +182,8 @@ const ModLoginPage = () => {
                           <button
                             className="btn btn-primary d-grid w-100"
                             type="submit"
+                            disabled={emailMessage!="" || passwordMessage!=""}
+            
                           >
                             Sign in
                           </button>

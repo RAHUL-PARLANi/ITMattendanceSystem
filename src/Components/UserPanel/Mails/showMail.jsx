@@ -10,12 +10,20 @@ const ShowMailUser = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const axiosInstance = useAxiosInstance();
+  const [isVisible,setIsVisible] = useState(false);
   useEffect(() => {
     axiosInstance
       .get("/mail/user/" + window.location.href.split("/").pop())
       .then((res) => {
         setData(res.data);
         setIsLoading(false);
+        if (res.data.studentsId) {
+          if (res.data.studentsId.find((elem) => elem == userData.id)) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        }
       })
       .catch((err) => {
         alert("Something went wrong");
@@ -42,6 +50,17 @@ const ShowMailUser = () => {
       </div>
     );
   }
+
+  if (isVisible === false) {
+    return (
+      <div className="container-fluid mt-4">
+        <div className="card w-100 shadow-sm rounded p-2">
+          You don't have access to this Mail.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container-fluid mb-4">
       <div className="h4 text-primary card w-100 rounded shadow-sm mt-4 p-2">
